@@ -6,12 +6,17 @@ namespace nwo5::editor::object {
     SILLY_API_DLL size_t count();
 
     SILLY_API_DLL cocos2d::CCArray* getAll(bool pCopy = false);
-    SILLY_API_DLL cocos2d::CCArray* getWithGroup(int pGroup);
+    /// @note will copy anyway (creating a new empty ccarray) if pGroup doesnt have a m_groupDict entry
+    SILLY_API_DLL cocos2d::CCArray* getWithGroup(int pGroup, bool pCopy = false);
 
     SILLY_API_DLL std::vector<int> groups(GameObject* pObj);
     SILLY_API_DLL std::vector<int> groups(std::span<GameObject*> pObjs, bool pSort = false);
     SILLY_API_DLL std::vector<int> groups(cocos2d::CCArray* pObjs, bool pSort = false);
+    /// check if an object has groups
+    /// @returns true if object has any groups, false otherwise
     SILLY_API_DLL bool hasGroups(GameObject* pObj);
+    /// check if an object has a group
+    /// @returns true if object has group or group is 0
     SILLY_API_DLL bool hasGroup(GameObject* pObj, int pGroup);
     SILLY_API_DLL bool sharesGroup(std::span<GameObject*> pObjs, int pGroup);
     SILLY_API_DLL bool sharesGroup(cocos2d::CCArray* pObjs, int pGroup);
@@ -24,18 +29,39 @@ namespace nwo5::editor::object {
 
     SILLY_API_DLL bool canSelectLayer(GameObject* pObj);
 
+    /// get bounds of objects
+    /// @param pAddSize adds scaled content size of the objects to the position checked
+    /// @returns bounds or CCRectZero, origin is the center of the bottom left most object, size is distance to the top rght most objects center
     SILLY_API_DLL cocos2d::CCRect bounds(std::span<GameObject*> pObjs, bool pAddSize = false);
+    /// get bounds of objects
+    /// @param pAddSize adds scaled content size of the objects to the position checked
+    /// @returns bounds or CCRectZero, origin is the center of the bottom left most object, size is distance to the top rght most objects center
     SILLY_API_DLL cocos2d::CCRect bounds(cocos2d::CCArray* pObjs, bool pAddSize = false);
     SILLY_API_DLL cocos2d::CCPoint center(std::span<GameObject*> pObjs, bool pIgnoreParent = false);
     SILLY_API_DLL cocos2d::CCPoint center(cocos2d::CCArray* pObjs, bool pIgnoreParent = false);
 
+    /// get (grid)size of object
     SILLY_API_DLL float size(GameObject* pObj);
-    SILLY_API_DLL float sizeForID(int pID);
+    /// get (grid)size of object id
+    SILLY_API_DLL float size(int pID);
 
+    /// gets grid snapped pos of object
+    /// @param pGridSize grid size object is snapped to
+    /// @returns pos of object snapped to pGridSize
     SILLY_API_DLL cocos2d::CCPoint snappedPos(GameObject* pObj, float pGridSize = 30.0f);
 
+    SILLY_API_DLL void addGroup(GameObject* pObj, int pGroup);
+    SILLY_API_DLL void addGroup(std::span<GameObject*> pObjs, int pGroup);
+    SILLY_API_DLL void addGroup(cocos2d::CCArray* pObjs, int pGroup);
+    SILLY_API_DLL void removeGroup(GameObject* pObj, int pGroup);
+    SILLY_API_DLL void removeGroup(std::span<GameObject*> pObjs, int pGroup);
+    SILLY_API_DLL void removeGroup(cocos2d::CCArray* pObjs, int pGroup);
+
+    /// deletes object
     SILLY_API_DLL void remove(GameObject* pObj, bool pUndo = false);
+    /// deletes objects
     SILLY_API_DLL void remove(std::span<GameObject*> pObjs, bool pUndo = false);
+    /// deletes objects
     SILLY_API_DLL void remove(cocos2d::CCArray* pObjs, bool pUndo = false);
 
     SILLY_API_DLL void move(GameObject* pObj, cocos2d::CCPoint pTo, bool pUndo = false);

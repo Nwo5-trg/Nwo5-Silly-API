@@ -23,15 +23,13 @@ namespace nwo5::editor {
     SILLY_API_DLL void setLayer(int pLayer);
     SILLY_API_DLL void lockLayer(int pLayer = currentLayer());
 
+    namespace impl {
+        SILLY_API_DLL int nextFreeGroupFast(int pOffset = 1);
+    }
     /// @param pOffset search starts from this gid, clamped from 1-9999
-    /// @note does not account for all edge cases yet
+    /// @note only accounts for target gid and center gid rn, ill do like sequence/advrand checks and stuff l8r
     /// @returns next free gid or 0 if all 9999 groups are used
     SILLY_API_DLL int nextFreeGroup(int pOffset = 1, bool pCheckTargetGroups = false);
-    /// loops thru group dict keys instead of checking every object individually
-    /// @param pOffset search starts from this gid, clamped from 1-9999
-    /// @note ***only*** checks for objects that have groups, not targeted groups or the like
-    /// @returns next free gid or 0 if all 9999 groups are used
-    SILLY_API_DLL int nextFreeGroupFast(int pOffset = 1);
 
     constexpr cocos2d::CCPoint AUTO_CENTER{std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
 

@@ -10,9 +10,9 @@ namespace nwo5::editor::object {
     cocos2d::CCArray* getAll(bool pCopy) {
         return pCopy ? CCArray::createWithArray(layer()->m_objects) : layer()->m_objects;
     }
-    cocos2d::CCArray* getWithGroup(int pGroup) {
+    cocos2d::CCArray* getWithGroup(int pGroup, bool pCopy) {
         if (auto ptr = layer()->m_groupDict->objectForKey(pGroup)) {
-            return static_cast<CCArray*>(ptr);
+            return pCopy ? CCArray::createWithArray(static_cast<CCArray*>(ptr)) : static_cast<CCArray*>(ptr);
         }
         else {
             return CCArray::create();
@@ -94,7 +94,12 @@ namespace nwo5::editor::object {
         return false;
     }
     bool hasGroup(GameObject* pObj, int pGroup) {
-        return pObj->m_groups && std::ranges::contains(*pObj->m_groups, pGroup);
+        if (!pGroup) {
+            return true;
+        }
+        else {
+            return pObj->m_groups && std::ranges::contains(*pObj->m_groups, pGroup);
+        }
     }
     bool sharesGroup(std::span<GameObject*> pObjs, int pGroup) {
         if (pObjs.empty()) {
@@ -271,9 +276,9 @@ namespace nwo5::editor::object {
     }
 
     float size(GameObject* pObj) {
-        return sizeForID(id(pObj)); 
+        return size(id(pObj)); 
     }
-    float sizeForID(int pID) {
+    float size(int pID) {
         return ObjectToolbox::sharedState()->gridNodeSizeForKey(pID); 
     }
 
@@ -289,7 +294,38 @@ namespace nwo5::editor::object {
         } + offset;
     }
 
+    void addGroup(GameObject* pObj, int pGroup) {
+        layer()->addToGroup(pObj, pGroup, false);
+    }
+    void addGroup(std::span<GameObject*> pObjs, int pGroup) {
+        for (auto obj : pObjs) {
+            layer()->addToGroup(obj, pGroup, false);
+        }
+    }
+    void addGroup(cocos2d::CCArray* pObjs, int pGroup) {
+        for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
+            layer()->addToGroup(obj, pGroup, false);
+        }
+    }
+    void removeGroup(GameObject* pObj, int pGroup) {
+        layer()->removeFromGroup(pObj, pGroup);
+    }
+    void removeGroup(std::span<GameObject*> pObjs, int pGroup) {
+        for (auto obj : pObjs) {
+            layer()->removeFromGroup(obj, pGroup);
+        }
+    }
+    void removeGroup(cocos2d::CCArray* pObjs, int pGroup) {
+        for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
+            layer()->removeFromGroup(obj, pGroup);
+        }
+    }
+
     void remove(GameObject* pObj, bool pUndo) {
+        if (pUndo) {
+            layer()->addToUndoList(UndoObject::create(pObj, UndoCommand::Delete), false);
+        }
+
         editor::selection::remove(pObj);
 
         layer()->removeObject(pObj, !pUndo);

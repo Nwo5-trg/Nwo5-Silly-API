@@ -137,10 +137,38 @@ namespace nwo5::editor {
 
         layer()->m_currentLayer = ret;
     }
+    
+    namespace impl {
+        int nextFreeGroupFast(int pOffset) {
+            pOffset = std::clamp(pOffset, 1, 9999);
 
+            auto keys = layer()->m_groupDict->allKeys();
+
+            if (!keys->count()) {
+                return pOffset;
+            }
+
+            std::set<int> usedGroups;
+
+            for (auto key : CCArrayExt<CCInteger*>(keys)) {
+                usedGroups.insert(key->getValue());
+            }
+
+            for (auto it = usedGroups.lower_bound(pOffset); it != usedGroups.end(); it++) {
+                if (*it == pOffset) {
+                    pOffset++;
+                } 
+                else {
+                    return pOffset;
+                }
+            }
+            
+            return pOffset > constants::MAX_GROUPS ? 0 : pOffset;
+        }
+    }
     int nextFreeGroup(int pOffset, bool pCheckTargetGroups) {
         if (!pCheckTargetGroups) {
-            return nextFreeGroupFast(pOffset);
+            return impl::nextFreeGroupFast(pOffset);
         }
 
         pOffset = std::clamp(pOffset, 1, 9999);
@@ -170,32 +198,6 @@ namespace nwo5::editor {
                     usedGroups.insert(group);
                 }
             }
-        }
-
-        for (auto it = usedGroups.lower_bound(pOffset); it != usedGroups.end(); it++) {
-            if (*it == pOffset) {
-                pOffset++;
-            } 
-            else {
-                return pOffset;
-            }
-        }
-        
-        return pOffset > constants::MAX_GROUPS ? 0 : pOffset;
-    }
-    int nextFreeGroupFast(int pOffset) {
-        pOffset = std::clamp(pOffset, 1, 9999);
-
-        auto keys = layer()->m_groupDict->allKeys();
-
-        if (!keys->count()) {
-            return pOffset;
-        }
-
-        std::set<int> usedGroups;
-
-        for (auto key : CCArrayExt<CCInteger*>(keys)) {
-            usedGroups.insert(key->getValue());
         }
 
         for (auto it = usedGroups.lower_bound(pOffset); it != usedGroups.end(); it++) {
