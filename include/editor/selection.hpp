@@ -82,12 +82,48 @@ namespace nwo5::editor::selection {
     SILLY_API_DLL cocos2d::CCRect bounds();
     SILLY_API_DLL cocos2d::CCPoint center(bool pIgnoreParent = false);
 
-    SILLY_API_DLL void add(GameObject* pObj, bool pUndo = false, bool pUseFilter = false, bool pAlsoCheckLayers = true);
-    SILLY_API_DLL void add(std::span<GameObject*> pObjs, bool pUndo = false, bool pUseFilter = false, bool pAlsoCheckLayers = true);
-    SILLY_API_DLL void add(cocos2d::CCArray* pObjs, bool pUndo = false, bool pUseFilter = false, bool pAlsoCheckLayers = true);
-    SILLY_API_DLL void set(GameObject* pObj, bool pUndo = false, bool pUseFilter = false, bool pAlsoCheckLayers = true);
-    SILLY_API_DLL void set(std::span<GameObject*> pObjs, bool pUndo = false, bool pUseFilter = false, bool pAlsoCheckLayers = true);
-    SILLY_API_DLL void set(cocos2d::CCArray* pObjs, bool pUndo = false, bool pUseFilter = false, bool pAlsoCheckLayers = true);
+    /// add object to selection
+    /// @param pObj obj to select
+    /// @param pUndo make the selection undoable
+    /// @param pUseFilter whether to check select filter
+    /// @param pAlsoCheckLayers whether to also check if objects layers are selectable (editor::object::canSelectLayer)
+    /// @param pApplyLinkControls if true and object selected belongs to a link group, the rest of the linked group will be selected (however robtop handles that no promises)
+    SILLY_API_DLL void add(GameObject* pObj, bool pUndo = false, bool pUseFilter = false, bool pAlsoCheckLayers = true, bool pApplyLinkControls = false);
+    /// add objects to selection
+    /// @param pObjs obj to select
+    /// @param pUndo make the selection undoable
+    /// @param pUseFilter whether to check select filter
+    /// @param pAlsoCheckLayers whether to also check if objects layers are selectable (editor::object::canSelectLayer)
+    /// @param pApplyLinkControls if true and object selected belongs to a link group, the rest of the linked group will be selected (however robtop handles that no promises)
+    SILLY_API_DLL void add(std::span<GameObject*> pObjs, bool pUndo = false, bool pUseFilter = false, bool pAlsoCheckLayers = true, bool pApplyLinkControls = false);
+    /// add objects to selection
+    /// @param pObjs obj to select
+    /// @param pUndo make the selection undoable
+    /// @param pUseFilter whether to check select filter
+    /// @param pAlsoCheckLayers whether to also check if objects layers are selectable (editor::object::canSelectLayer)
+    /// @param pApplyLinkControls if true and object selected belongs to a link group, the rest of the linked group will be selected (however robtop handles that no promises)
+    SILLY_API_DLL void add(cocos2d::CCArray* pObjs, bool pUndo = false, bool pUseFilter = false, bool pAlsoCheckLayers = true, bool pApplyLinkControls = false);
+    /// set selection to only object
+    /// @param pObj obj to select
+    /// @param pUndo make the selection undoable
+    /// @param pUseFilter whether to check select filter
+    /// @param pAlsoCheckLayers whether to also check if objects layers are selectable (editor::object::canSelectLayer)
+    /// @param pApplyLinkControls if true and object selected belongs to a link group, the rest of the linked group will be selected (however robtop handles that no promises)
+    SILLY_API_DLL void set(GameObject* pObj, bool pUndo = false, bool pUseFilter = false, bool pAlsoCheckLayers = true, bool pApplyLinkControls = false);
+    /// set selection to only objects
+    /// @param pObjs obj to select
+    /// @param pUndo make the selection undoable
+    /// @param pUseFilter whether to check select filter
+    /// @param pAlsoCheckLayers whether to also check if objects layers are selectable (editor::object::canSelectLayer)
+    /// @param pApplyLinkControls if true and object selected belongs to a link group, the rest of the linked group will be selected (however robtop handles that no promises)
+    SILLY_API_DLL void set(std::span<GameObject*> pObjs, bool pUndo = false, bool pUseFilter = false, bool pAlsoCheckLayers = true, bool pApplyLinkControls = false);
+    /// set selection to only objects
+    /// @param pObjs obj to select
+    /// @param pUndo make the selection undoable
+    /// @param pUseFilter whether to check select filter
+    /// @param pAlsoCheckLayers whether to also check if objects layers are selectable (editor::object::canSelectLayer)
+    /// @param pApplyLinkControls if true and object selected belongs to a link group, the rest of the linked group will be selected (however robtop handles that no promises)
+    SILLY_API_DLL void set(cocos2d::CCArray* pObjs, bool pUndo = false, bool pUseFilter = false, bool pAlsoCheckLayers = true, bool pApplyLinkControls = false);
 
     SILLY_API_DLL void clear(bool pUndo = false);
     SILLY_API_DLL void remove(GameObject* pObj, bool pUndo = false);

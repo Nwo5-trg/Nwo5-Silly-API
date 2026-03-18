@@ -3,21 +3,32 @@
 using namespace geode::prelude;
 
 namespace nwo5::editor::selection {
-    void add(GameObject* pObj, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers) {
+    void add(GameObject* pObj, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
         if (pUseFilter && pAlsoCheckLayers && !editor::object::canSelectLayer(pObj)) {
             return;
         }
 
-        if (pUndo) {
+        // technically checking twice but idec 
+        if (pUndo && (!pUseFilter || ui()->canSelectObject(pObj))) {
             ui()->createUndoSelectObject(false);
         }
         
-        ui()->selectObject(pObj, !pUseFilter);
+        if (pApplyLinkControls) {
+            ui()->selectObject(pObj, !pUseFilter);
+        }
+        else {
+            const auto ret = ui()->m_stickyControlsEnabled;
+            ui()->m_stickyControlsEnabled = false;
+
+            ui()->selectObject(pObj, !pUseFilter);
+
+            ui()->m_stickyControlsEnabled = ret;
+        }
     }
-    void add(std::span<GameObject*> pObjs, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers) {
+    void add(std::span<GameObject*> pObjs, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
         add(CCArrayExt(pObjs).inner(), pUndo, pUseFilter, pAlsoCheckLayers);
     }
-    void add(cocos2d::CCArray* pObjs, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers) {
+    void add(cocos2d::CCArray* pObjs, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
         const auto checkLayers = pUseFilter && pAlsoCheckLayers;
 
         auto objs = checkLayers ? CCArray::create() : pObjs;
@@ -34,9 +45,19 @@ namespace nwo5::editor::selection {
             ui()->createUndoSelectObject(false);
         }
         
-        ui()->selectObjects(objs, !pUseFilter);
+        if (pApplyLinkControls) {
+            ui()->selectObjects(objs, !pUseFilter);
+        }
+        else {
+            const auto ret = ui()->m_stickyControlsEnabled;
+            ui()->m_stickyControlsEnabled = false;
+
+            ui()->selectObjects(objs, !pUseFilter);
+
+            ui()->m_stickyControlsEnabled = ret;
+        }
     }
-    void set(GameObject* pObj, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers) {
+    void set(GameObject* pObj, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
         if (pUseFilter && pAlsoCheckLayers && !editor::object::canSelectLayer(pObj)) {
             return;
         }
@@ -47,12 +68,22 @@ namespace nwo5::editor::selection {
         
         clear();
         
-        ui()->selectObject(pObj, !pUseFilter);
+        if (pApplyLinkControls) {
+            ui()->selectObject(pObj, !pUseFilter);
+        }
+        else {
+            const auto ret = ui()->m_stickyControlsEnabled;
+            ui()->m_stickyControlsEnabled = false;
+
+            ui()->selectObject(pObj, !pUseFilter);
+
+            ui()->m_stickyControlsEnabled = ret;
+        }
     }
-    void set(std::span<GameObject*> pObjs, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers) {
+    void set(std::span<GameObject*> pObjs, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
         set(CCArrayExt(pObjs).inner(), pUndo, pUseFilter, pAlsoCheckLayers);
     }
-    void set(cocos2d::CCArray* pObjs, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers) {
+    void set(cocos2d::CCArray* pObjs, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
         const auto checkLayers = pUseFilter && pAlsoCheckLayers;
 
         auto objs = checkLayers ? CCArray::create() : pObjs;
@@ -71,7 +102,17 @@ namespace nwo5::editor::selection {
 
         clear();
         
-        ui()->selectObjects(pObjs, !pUseFilter);
+        if (pApplyLinkControls) {
+            ui()->selectObjects(objs, !pUseFilter);
+        }
+        else {
+            const auto ret = ui()->m_stickyControlsEnabled;
+            ui()->m_stickyControlsEnabled = false;
+
+            ui()->selectObjects(objs, !pUseFilter);
+
+            ui()->m_stickyControlsEnabled = ret;
+        }
     }
 
     bool empty() {
