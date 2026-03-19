@@ -98,7 +98,12 @@ namespace nwo5::settings {
                 return;
             }
 
-            m_value = geode::Mod::get()->getSavedValue<T>(m_key);
+            if (geode::Mod::get()->hasSavedValue(m_key)) {
+                m_value = geode::Mod::get()->getSavedValue<T>(m_key);
+            }
+            else {
+                set(m_value);
+            }
 
             m_loaded = true;
         }

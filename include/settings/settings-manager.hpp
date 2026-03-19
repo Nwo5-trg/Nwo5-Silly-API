@@ -109,7 +109,6 @@ namespace nwo5::settings {
         }
 
         /// load all queued settings 
-        /// @note called automatically at $on_mod
         void load() {
             for (auto setting : m_queuedSettings) {
                 bool categorized = false;
