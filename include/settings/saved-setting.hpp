@@ -102,7 +102,7 @@ namespace nwo5::settings {
                 m_value = geode::Mod::get()->getSavedValue<T>(m_key);
             }
             else {
-                set(m_value);
+                set(m_default);
             }
 
             m_loaded = true;
