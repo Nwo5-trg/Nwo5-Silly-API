@@ -18,6 +18,9 @@ namespace nwo5::editor::object {
             return CCArray::create();
         }
     }
+    GameObject* getParent(int pGroup) {
+        layer()->getGroupParent(pGroup);
+    }
 
     std::vector<int> groups(GameObject* pObj) {
         std::vector<int> out;
@@ -126,6 +129,27 @@ namespace nwo5::editor::object {
         }
 
         return true;
+    }
+    bool hasParent(int pGroup) {
+        return getParent(pGroup);
+    }
+    bool hasParent(std::span<GameObject*> pObjs, int pGroup) {
+        auto parent = getParent(pGroup);
+
+        if (!parent) {
+            return false;
+        }
+
+        return std::ranges::contains(pObjs, parent);
+    }
+    bool hasParent(cocos2d::CCArray* pObjs, int pGroup) {
+        auto parent = getParent(pGroup);
+
+        if (!parent) {
+            return false;
+        }
+
+        return pObjs->containsObject(parent);
     }
 
     bool hasColor(GameObject* pObj, int pColor, bool pPrimary) {

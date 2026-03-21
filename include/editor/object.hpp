@@ -8,6 +8,9 @@ namespace nwo5::editor::object {
     SILLY_API_DLL cocos2d::CCArray* getAll(bool pCopy = false);
     /// @note will copy anyway (creating a new empty ccarray) if pGroup doesnt have a m_groupDict entry
     SILLY_API_DLL cocos2d::CCArray* getWithGroup(int pGroup, bool pCopy = false);
+    /// get group parent
+    /// @returns group parent or returns nullptr if group has no group parent
+    SILLY_API_DLL GameObject* getParent(int pGroup);
 
     SILLY_API_DLL std::vector<int> groups(GameObject* pObj);
     SILLY_API_DLL std::vector<int> groups(std::span<GameObject*> pObjs, bool pSort = false);
@@ -20,6 +23,16 @@ namespace nwo5::editor::object {
     SILLY_API_DLL bool hasGroup(GameObject* pObj, int pGroup);
     SILLY_API_DLL bool sharesGroup(std::span<GameObject*> pObjs, int pGroup);
     SILLY_API_DLL bool sharesGroup(cocos2d::CCArray* pObjs, int pGroup);
+    /// check if a group has a group parent
+    /// @returns true if group has a parent, false otherwise
+    SILLY_API_DLL bool hasParent(int pGroup);
+    /// checks if objects contains the group parent for group
+    /// @returns true if objects has groups group parent, false otherwise
+    SILLY_API_DLL bool hasParent(std::span<GameObject*> pObjs, int pGroup);
+    /// checks if objects contains the group parent for group
+    /// @returns true if objects has groups group parent, false otherwise
+    SILLY_API_DLL bool hasParent(cocos2d::CCArray* pObjs, int pGroup);
+
 
     SILLY_API_DLL bool hasColor(GameObject* pObj, int pColor, bool pPrimary);
 
