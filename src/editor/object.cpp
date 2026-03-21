@@ -19,7 +19,7 @@ namespace nwo5::editor::object {
         }
     }
     GameObject* getParent(int pGroup) {
-        layer()->getGroupParent(pGroup);
+        return layer()->getGroupParent(pGroup);
     }
 
     std::vector<int> groups(GameObject* pObj) {
