@@ -50,21 +50,29 @@ namespace nwo5::utils {
     }
 
     namespace impl {
-        SILLY_API_DLL cocos2d::ccColor4F getChroma4F(double pOffset, double pSpeed);
+        SILLY_API_DLL cocos2d::ccColor4F getChroma4F(float pSpeed, float pOffset, float pSaturation, float pValue);
     }
 
+    /// get a chroma color based on the current time
+    /// @param pSpeed how long it should take for color to do a full 360 hue rotation (seconds)
+    /// @param pOffset added to hue (hint, u can use enums)
+    /// @param pSaturation saturation of outputted color
+    /// @param pValue value of outputted color
     template<typename ImplT = cocos2d::ccColor4F, typename Offset = int, typename T = std::decay_t<ImplT>>
-    T getChroma(Offset pOffset, double pSpeed) {
+    T getChroma(float pSpeed, Offset pOffset = Offset{}, float pSaturation = 1.0f, float pValue = 1.0f) {
+        const auto cc4f = nwo5::utils::impl::getChroma4F( // this is just fun template shenanigans icl
+            pSpeed, static_cast<std::conditional_t<std::is_scoped_enum_v<Offset>, std::underlying_type<Offset>, float>>(pOffset), 
+            pSaturation, pValue
+        );
+
         if constexpr (std::same_as<T, cocos2d::ccColor3B>) {
-            return geode::cocos::to3B(
-                cocos2d::ccc4BFromccc4F(nwo5::utils::impl::getChroma4F(static_cast<double>(pOffset), pSpeed))
-            );
+            return {cc4f.r * 255, cc4f.g * 255, cc4f.b * 255};
         }
         else if constexpr (std::same_as<T, cocos2d::ccColor4B>) {
-            return cocos2d::ccc4BFromccc4F(nwo5::utils::impl::getChroma4F(static_cast<double>(pOffset), pSpeed));
+            return cocos2d::ccc4BFromccc4F(cc4f);
         }
         else if constexpr (std::same_as<T, cocos2d::ccColor4F>) {
-            return nwo5::utils::impl::getChroma4F(static_cast<double>(pOffset), pSpeed);
+            return cc4f;
         }
         else {
             static_assert(false, "u cant b that type of gay ;3");

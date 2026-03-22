@@ -22,12 +22,11 @@ namespace nwo5::utils {
     }
 
     namespace impl {
-        ccColor4F getChroma4F(double pOffset, double pSpeed) {
+        ccColor4F getChroma4F(float pSpeed, float pOffset, float pSaturation, float pValue) {
             const auto t = asp::time::SystemTime::now().timeSinceEpoch().seconds<double>();
 
             const auto rgba = cocos2d::extension::CCControlUtils::RGBfromHSV({
-                // not sure if cocos handles hue higher than 360 well so
-                std::fmod((std::fmod(t, pSpeed) / pSpeed) * 360 + pOffset, 360), 1.0, 1.0
+                std::fmod((std::fmod(t, pSpeed) / pSpeed) * 360 + pOffset, 360), pSaturation, pValue
             });
 
             return {
