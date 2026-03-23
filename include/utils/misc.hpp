@@ -49,6 +49,19 @@ namespace nwo5::utils {
         pNode->addEventListener(geode::KeybindSettingPressedEventV3(geode::Mod::get(), std::move(pKeybind)), std::forward<Callback>(pCallback));
     }
 
+    /// casts a numer to another number (but also works with enums)
+    /// another day some more bullshit i learn abt templates this is literally just for chroma to work
+    template<typename T, typename U>
+    requires std::is_arithmetic_v<T> && (std::is_arithmetic_v<U> || std::is_scoped_enum_v<U>)
+    T enumNumCast(U pEnum) {
+        if constexpr (std::is_scoped_enum_v<U>) {
+            return static_cast<T>(std::to_underlying(pEnum));
+        }
+        else {
+            return static_cast<T>(pEnum);
+        }
+    }
+
     namespace impl {
         SILLY_API_DLL cocos2d::ccColor4F getChroma4F(float pSpeed, float pOffset, float pSaturation, float pValue);
     }
@@ -60,10 +73,7 @@ namespace nwo5::utils {
     /// @param pValue value of outputted color
     template<typename ImplT = cocos2d::ccColor4F, typename Offset = float, typename T = std::decay_t<ImplT>>
     T getChroma(float pSpeed, Offset pOffset = Offset{}, float pSaturation = 1.0f, float pValue = 1.0f) {
-        const auto cc4f = nwo5::utils::impl::getChroma4F( // this is just fun template shenanigans icl
-            pSpeed, static_cast<std::conditional_t<std::is_scoped_enum_v<Offset>, std::underlying_type_t<Offset>, float>>(pOffset), 
-            pSaturation, pValue
-        );
+        const auto cc4f = nwo5::utils::impl::getChroma4F(pSpeed, enumNumCast<float>(pOffset), pSaturation, pValue);
 
         if constexpr (std::same_as<T, cocos2d::ccColor3B>) {
             return {static_cast<GLubyte>(cc4f.r * 255), static_cast<GLubyte>(cc4f.g * 255), static_cast<GLubyte>(cc4f.b * 255)};
