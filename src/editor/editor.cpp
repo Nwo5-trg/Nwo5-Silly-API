@@ -3,15 +3,6 @@
 using namespace geode::prelude;
 
 namespace nwo5::editor {
-    EditorUI* ui() {
-        static const auto manager = GameManager::get();
-        return manager->m_levelEditorLayer->m_editorUI;
-    };
-    LevelEditorLayer* layer() {
-        static const auto manager = GameManager::get();
-        return manager->m_levelEditorLayer;
-    }
-
     bool loaded() {
         return layer();
     }

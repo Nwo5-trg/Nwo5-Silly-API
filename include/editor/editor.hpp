@@ -3,8 +3,18 @@
 #include "../export.hpp"
 
 namespace nwo5::editor {
-    SILLY_API_DLL EditorUI* ui();
-    SILLY_API_DLL LevelEditorLayer* layer();
+    /// get editorui and optionally reinterpret_cast it
+    template<typename ImplT = EditorUI, typename T = std::remove_pointer_t<ImplT>>
+    auto ui() {
+        static const auto manager = GameManager::get();
+        return reinterpret_cast<T*>(manager->m_levelEditorLayer->m_editorUI);
+    };
+    /// get leveleditorlayer and optionally reinterpret_cast it
+    template<typename ImplT = LevelEditorLayer, typename T = std::remove_pointer_t<ImplT>>
+    auto layer() {
+        static const auto manager = GameManager::get();
+        return reinterpret_cast<T*>(manager->m_levelEditorLayer);
+    }
     
     SILLY_API_DLL bool loaded();
 
