@@ -448,6 +448,8 @@ namespace nwo5::utils {
         template<typename... Args>
         SetNodeChildren(Args... pArgs)
             : children(pArgs...) {}
+        SetNodeChildren(cocos2d::CCArray* pChildren)
+            : children(geode::cocos::CCArrayExt<cocos2d::CCNode*>(pChildren).to<std::initializer_list>()) {}
         
         void apply(cocos2d::CCNode* pNode) const {
             for (auto child : children) {

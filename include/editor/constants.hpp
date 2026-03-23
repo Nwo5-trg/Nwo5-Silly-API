@@ -14,4 +14,25 @@ namespace nwo5::editor::constants {
 
     constexpr float MIN_ZOOM = 0.1f;
     constexpr float MAX_ZOOM = 4.0f;
+
+    constexpr float SLOW_SPEED = 251.16008f;
+    constexpr float NORMAL_SPEED = 311.5801f;
+    constexpr float FAST_SPEED = 387.42014f;
+    constexpr float FASTER_SPEED = 468.00015f;
+    constexpr float FASTEST_SPEED = 576.0002f;
+    constexpr float SLOW_SPEED_BPS = SLOW_SPEED / GRID_SIZE;
+    constexpr float NORMAL_SPEED_BPS = NORMAL_SPEED / GRID_SIZE;
+    constexpr float FAST_SPEED_BPS = FAST_SPEED / GRID_SIZE;
+    constexpr float FASTER_SPEED_BPS = FASTER_SPEED / GRID_SIZE;
+    constexpr float FASTEST_SPEED_BPS = FASTEST_SPEED / GRID_SIZE;
+
+    constexpr float toSpeed(Speed pSpeed) {
+        switch (pSpeed) {
+            case Speed::Normal: return NORMAL_SPEED;
+            case Speed::Slow: return SLOW_SPEED;
+            case Speed::Fast: return FAST_SPEED;
+            case Speed::Faster: return FASTER_SPEED;
+            case Speed::Fastest: return FASTEST_SPEED;
+        }
+    }
 }
