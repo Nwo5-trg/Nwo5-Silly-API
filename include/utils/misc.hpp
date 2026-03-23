@@ -66,7 +66,7 @@ namespace nwo5::utils {
         );
 
         if constexpr (std::same_as<T, cocos2d::ccColor3B>) {
-            return {cc4f.r * 255, cc4f.g * 255, cc4f.b * 255};
+            return {static_cast<GLubyte>(cc4f.r * 255), static_cast<GLubyte>(cc4f.g * 255), static_cast<GLubyte>(cc4f.b * 255)};
         }
         else if constexpr (std::same_as<T, cocos2d::ccColor4B>) {
             return cocos2d::ccc4BFromccc4F(cc4f);
