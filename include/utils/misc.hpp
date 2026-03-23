@@ -58,10 +58,10 @@ namespace nwo5::utils {
     /// @param pOffset added to hue (hint, u can use enums)
     /// @param pSaturation saturation of outputted color
     /// @param pValue value of outputted color
-    template<typename ImplT = cocos2d::ccColor4F, typename Offset = int, typename T = std::decay_t<ImplT>>
+    template<typename ImplT = cocos2d::ccColor4F, typename Offset = float, typename T = std::decay_t<ImplT>>
     T getChroma(float pSpeed, Offset pOffset = Offset{}, float pSaturation = 1.0f, float pValue = 1.0f) {
         const auto cc4f = nwo5::utils::impl::getChroma4F( // this is just fun template shenanigans icl
-            pSpeed, static_cast<std::conditional_t<std::is_scoped_enum_v<Offset>, std::underlying_type<Offset>, float>>(pOffset), 
+            pSpeed, static_cast<std::conditional_t<std::is_scoped_enum_v<Offset>, std::underlying_type_t<Offset>, float>>(pOffset), 
             pSaturation, pValue
         );
 

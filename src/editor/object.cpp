@@ -2,15 +2,27 @@
 
 using namespace geode::prelude;
 
+class $modify(UtilsEditorUI, EditorUI) {
+    struct Fields {
+        bool shouldMove = true;
+    };
+
+    void moveObject(GameObject* obj, CCPoint amount) {
+        if (m_fields->shouldMove) {
+            EditorUI::moveObject(obj, amount);
+        }
+    }
+};
+
 namespace nwo5::editor::object {
     size_t count() {
         return getAll()->count();
     }
 
-    cocos2d::CCArray* getAll(bool pCopy) {
+    CCArray* getAll(bool pCopy) {
         return pCopy ? CCArray::createWithArray(layer()->m_objects) : layer()->m_objects;
     }
-    cocos2d::CCArray* getWithGroup(int pGroup, bool pCopy) {
+    CCArray* getWithGroup(int pGroup, bool pCopy) {
         if (auto ptr = layer()->m_groupDict->objectForKey(pGroup)) {
             return pCopy ? CCArray::createWithArray(static_cast<CCArray*>(ptr)) : static_cast<CCArray*>(ptr);
         }
@@ -60,7 +72,7 @@ namespace nwo5::editor::object {
 
         return out;
     }
-    std::vector<int> groups(cocos2d::CCArray* pObjs, bool pSort) {
+    std::vector<int> groups(CCArray* pObjs, bool pSort) {
         std::unordered_set<int> groups;
 
         for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
@@ -117,7 +129,7 @@ namespace nwo5::editor::object {
 
         return true;
     }
-    bool sharesGroup(cocos2d::CCArray* pObjs, int pGroup) {
+    bool sharesGroup(CCArray* pObjs, int pGroup) {
         if (!pObjs->count()) {
             return false;
         }
@@ -142,7 +154,7 @@ namespace nwo5::editor::object {
 
         return std::ranges::contains(pObjs, parent);
     }
-    bool hasParent(cocos2d::CCArray* pObjs, int pGroup) {
+    bool hasParent(CCArray* pObjs, int pGroup) {
         auto parent = getParent(pGroup);
 
         if (!parent) {
@@ -176,7 +188,7 @@ namespace nwo5::editor::object {
 
         return out;
     }
-    std::vector<int> ids(cocos2d::CCArray* pObjs, bool pSort) {
+    std::vector<int> ids(CCArray* pObjs, bool pSort) {
         std::unordered_set<int> ids;
 
         for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
@@ -196,7 +208,7 @@ namespace nwo5::editor::object {
         return editor::layerSelectable(pObj->m_editorLayer) || editor::layerSelectable(pObj->m_editorLayer2);
     }
 
-    cocos2d::CCRect bounds(std::span<GameObject*> pObjs, bool pAddSize) {
+    CCRect bounds(std::span<GameObject*> pObjs, bool pAddSize) {
         if (pObjs.empty()) {
             return CCRectZero;
         }
@@ -216,7 +228,7 @@ namespace nwo5::editor::object {
 
         return {min, max - min};
     }
-    cocos2d::CCRect bounds(cocos2d::CCArray* pObjs, bool pAddSize) {
+    CCRect bounds(CCArray* pObjs, bool pAddSize) {
         if (!pObjs->count()) {
             return CCRectZero;
         }
@@ -236,7 +248,7 @@ namespace nwo5::editor::object {
 
         return {min, max - min};
     }
-    cocos2d::CCPoint center(std::span<GameObject*> pObjs, bool pIgnoreParent) {
+    CCPoint center(std::span<GameObject*> pObjs, bool pIgnoreParent) {
         if (pObjs.empty()) {
             return CCPointZero;
         }
@@ -267,7 +279,7 @@ namespace nwo5::editor::object {
 
         return (min + max) / 2;
     }
-    cocos2d::CCPoint center(cocos2d::CCArray* pObjs, bool pIgnoreParent) {
+    CCPoint center(CCArray* pObjs, bool pIgnoreParent) {
         if (!pObjs->count()) {
             return CCPointZero;
         }
@@ -326,7 +338,7 @@ namespace nwo5::editor::object {
             layer()->addToGroup(obj, pGroup, false);
         }
     }
-    void addGroup(cocos2d::CCArray* pObjs, int pGroup) {
+    void addGroup(CCArray* pObjs, int pGroup) {
         for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
             layer()->addToGroup(obj, pGroup, false);
         }
@@ -339,7 +351,7 @@ namespace nwo5::editor::object {
             layer()->removeFromGroup(obj, pGroup);
         }
     }
-    void removeGroup(cocos2d::CCArray* pObjs, int pGroup) {
+    void removeGroup(CCArray* pObjs, int pGroup) {
         for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
             layer()->removeFromGroup(obj, pGroup);
         }
@@ -356,7 +368,7 @@ namespace nwo5::editor::object {
     }
     void remove(std::span<GameObject*> pObjs, bool pUndo) {
         if (pUndo && !pObjs.empty()) {
-            layer()->addToUndoList(UndoObject::createWithArray(CCArrayExt<GameObject*>(pObjs).inner(), UndoCommand::DeleteMulti), false);
+            layer()->addToUndoList(UndoObject::createWithArray(CCArrayExt(pObjs).inner(), UndoCommand::DeleteMulti), false);
         }
 
         editor::selection::remove(pObjs);
@@ -365,7 +377,7 @@ namespace nwo5::editor::object {
             layer()->removeObject(obj, true);
         }
     }
-    void remove(cocos2d::CCArray* pObjs, bool pUndo) {
+    void remove(CCArray* pObjs, bool pUndo) {
         if (pUndo && pObjs->count()) {
             layer()->addToUndoList(UndoObject::createWithArray(pObjs, UndoCommand::DeleteMulti), false);
         }
@@ -377,23 +389,23 @@ namespace nwo5::editor::object {
         }
     }
 
-    void move(GameObject* pObj, cocos2d::CCPoint pTo, bool pUndo) {
+    void move(GameObject* pObj, CCPoint pTo, bool pUndo) {
         moveBy(pObj, pTo - pObj->getRealPosition());
     }
-    void move(std::span<GameObject*> pObjs, cocos2d::CCPoint pTo, bool pUndo, CCPoint pCenter) {
+    void move(std::span<GameObject*> pObjs, CCPoint pTo, bool pUndo, CCPoint pCenter) {
         moveBy(pObjs, pTo - (pCenter == editor::AUTO_CENTER ? center(pObjs) : pCenter));
     }
-    void move(cocos2d::CCArray* pObjs, cocos2d::CCPoint pTo, bool pUndo, CCPoint pCenter) {
+    void move(CCArray* pObjs, CCPoint pTo, bool pUndo, CCPoint pCenter) {
         moveBy(pObjs, pTo - (pCenter == editor::AUTO_CENTER ? center(pObjs) : pCenter));
     }
-    void moveBy(GameObject* pObj, cocos2d::CCPoint pOff, bool pUndo) {
+    void moveBy(GameObject* pObj, CCPoint pOff, bool pUndo) {
         if (pUndo) {
             editor::impl::createUndoObject(UndoCommand::Transform);
         }
 
         ui()->moveObject(pObj, pOff);
     }
-    void moveBy(std::span<GameObject*> pObjs, cocos2d::CCPoint pOff, bool pUndo) {
+    void moveBy(std::span<GameObject*> pObjs, CCPoint pOff, bool pUndo) {
         if (pObjs.empty()) {
             return;
         }
@@ -406,7 +418,7 @@ namespace nwo5::editor::object {
             ui()->moveObject(obj, pOff);
         }
     }
-    void moveBy(cocos2d::CCArray* pObjs, cocos2d::CCPoint pOff, bool pUndo) {
+    void moveBy(CCArray* pObjs, CCPoint pOff, bool pUndo) {
         if (!pObjs->count()) {
             return;
         }
@@ -420,7 +432,76 @@ namespace nwo5::editor::object {
         }
     }
 
-    void scale(std::span<GameObject*> pObjs, float pX, float pY, bool pUndo, cocos2d::CCPoint pCenter, bool pMove) {
+    void rotate(GameObject* pObj, float pTo, GameObject* pBase, bool pUndo, CCPoint pCenter, bool pMove) {
+        rotateBy(pObj, pTo - pBase->getObjectRotation(), pUndo, pCenter, pMove);
+    }
+    void rotate(std::span<GameObject*> pObjs, float pTo, GameObject* pBase, bool pUndo, CCPoint pCenter, bool pMove) {
+        rotateBy(pObjs, pTo - pBase->getObjectRotation(), pUndo, pCenter, pMove);
+    }
+    void rotate(CCArray* pObjs, float pTo, GameObject* pBase, bool pUndo, CCPoint pCenter, bool pMove) {
+        rotateBy(pObjs, pTo - pBase->getObjectRotation(), pUndo, pCenter, pMove);
+    }
+    void rotateBy(GameObject* pObj, float pTo, bool pUndo, CCPoint pCenter, bool pMove) {
+        rotateBy(CCArray::createWithObject(pObj), pTo, pUndo, pCenter, pMove);
+    }
+    void rotateBy(std::span<GameObject*> pObjs, float pTo, bool pUndo, CCPoint pCenter, bool pMove) {
+        rotateBy(CCArrayExt(pObjs).inner(), pTo, pUndo, pCenter, pMove);
+    }
+    void rotateBy(CCArray* pObjs, float pTo, bool pUndo, CCPoint pCenter, bool pMove) {
+        if (!pObjs->count()) {
+            return;
+        }
+
+        if (pCenter == editor::AUTO_CENTER) {
+            pCenter = center(pObjs);
+        }
+
+        if (pUndo) {
+            editor::impl::createUndoObject(UndoCommand::Transform);
+        }
+
+        // i dont wanna rewrite rotate logic so for now the better edit way™ will have to do
+        auto& shouldMove = reinterpret_cast<UtilsEditorUI*>(ui())->m_fields->shouldMove;
+        shouldMove = pMove;
+
+        ui()->rotateObjects(pObjs, pTo, pCenter);
+
+        shouldMove = true;
+    }
+
+    void scale(GameObject* pObj, float pX, float pY, bool pUndo) {
+        scaleBy(pObj, pX / (pObj->m_scaleX ? pObj->m_scaleX : 1.0f), pY / (pObj->m_scaleY ? pObj->m_scaleY : 1.0f), pUndo);
+    }
+    void scale(GameObject* pObj, float pTo, bool pUndo) {
+        const float maxScale = std::max(pObj->m_scaleX, pObj->m_scaleY);
+
+        if (!maxScale) {
+            return;
+        }
+
+        const auto mod = pTo / maxScale;
+
+        scaleBy(pObj, mod, mod, pUndo);
+    }
+    void scaleX(GameObject* pObj, float pTo, bool pUndo) {
+        const float maxScale = pObj->m_scaleX;
+
+        if (!maxScale) {
+            return;
+        }
+
+        scaleXBy(pObj, pTo / maxScale, pUndo);
+    }
+    void scaleY(GameObject* pObj, float pTo, bool pUndo) {
+        const float maxScale = pObj->m_scaleY;
+
+        if (!maxScale) {
+            return;
+        }
+
+        scaleYBy(pObj, pTo / maxScale, pUndo);
+    }
+    void scale(std::span<GameObject*> pObjs, float pX, float pY, bool pUndo, CCPoint pCenter, bool pMove) {
         CCPoint maxScale = {std::numeric_limits<float>::lowest(), std::numeric_limits<float>::lowest()};
 
         for (auto obj : pObjs) {
@@ -430,7 +511,7 @@ namespace nwo5::editor::object {
 
         scaleBy(pObjs, pX / (maxScale.x ? maxScale.x : 1.0f), pY / (maxScale.y ? maxScale.y : 1.0f), pUndo, pCenter, pMove);
     }
-    void scale(std::span<GameObject*> pObjs, float pTo, bool pUndo, cocos2d::CCPoint pCenter, bool pMove) {
+    void scale(std::span<GameObject*> pObjs, float pTo, bool pUndo, CCPoint pCenter, bool pMove) {
         float maxScale = std::numeric_limits<float>::lowest();
 
         for (auto obj : pObjs) {
@@ -445,7 +526,7 @@ namespace nwo5::editor::object {
 
         scaleBy(pObjs, mod, mod, pUndo, pCenter, pMove);
     }
-    void scaleX(std::span<GameObject*> pObjs, float pTo, bool pUndo, cocos2d::CCPoint pCenter, bool pMove) {
+    void scaleX(std::span<GameObject*> pObjs, float pTo, bool pUndo, CCPoint pCenter, bool pMove) {
         float maxScale = std::numeric_limits<float>::lowest();
 
         for (auto obj : pObjs) {
@@ -458,7 +539,7 @@ namespace nwo5::editor::object {
 
         scaleXBy(pObjs, pTo / maxScale, pUndo, pCenter, pMove);
     }
-    void scaleY(std::span<GameObject*> pObjs, float pTo, bool pUndo, cocos2d::CCPoint pCenter, bool pMove) {
+    void scaleY(std::span<GameObject*> pObjs, float pTo, bool pUndo, CCPoint pCenter, bool pMove) {
         float maxScale = std::numeric_limits<float>::lowest();
 
         for (auto obj : pObjs) {
@@ -471,7 +552,7 @@ namespace nwo5::editor::object {
 
         scaleYBy(pObjs, pTo / maxScale, pUndo, pCenter, pMove);
     }
-    void scale(cocos2d::CCArray* pObjs, float pX, float pY, bool pUndo, cocos2d::CCPoint pCenter, bool pMove) {
+    void scale(CCArray* pObjs, float pX, float pY, bool pUndo, CCPoint pCenter, bool pMove) {
         CCPoint maxScale = {std::numeric_limits<float>::lowest(), std::numeric_limits<float>::lowest()};
 
         for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
@@ -481,7 +562,7 @@ namespace nwo5::editor::object {
 
         scaleBy(pObjs, pX / (maxScale.x ? maxScale.x : 1.0f), pY / (maxScale.y ? maxScale.y : 1.0f), pUndo, pCenter, pMove);
     }
-    void scale(cocos2d::CCArray* pObjs, float pTo, bool pUndo, cocos2d::CCPoint pCenter, bool pMove) {
+    void scale(CCArray* pObjs, float pTo, bool pUndo, CCPoint pCenter, bool pMove) {
         float maxScale = std::numeric_limits<float>::lowest();
 
         for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
@@ -496,7 +577,7 @@ namespace nwo5::editor::object {
 
         scaleBy(pObjs, mod, mod, pUndo, pCenter, pMove);
     }
-    void scaleX(cocos2d::CCArray* pObjs, float pTo, bool pUndo, cocos2d::CCPoint pCenter, bool pMove) {
+    void scaleX(CCArray* pObjs, float pTo, bool pUndo, CCPoint pCenter, bool pMove) {
         float maxScale = std::numeric_limits<float>::lowest();
 
         for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
@@ -509,7 +590,7 @@ namespace nwo5::editor::object {
 
         scaleXBy(pObjs, pTo / maxScale, pUndo, pCenter, pMove);
     }
-    void scaleY(cocos2d::CCArray* pObjs, float pTo, bool pUndo, cocos2d::CCPoint pCenter, bool pMove) {
+    void scaleY(CCArray* pObjs, float pTo, bool pUndo, CCPoint pCenter, bool pMove) {
         float maxScale = std::numeric_limits<float>::lowest();
 
         for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
@@ -522,7 +603,44 @@ namespace nwo5::editor::object {
 
         scaleYBy(pObjs, pTo / maxScale, pUndo, pCenter, pMove);
     }
-    void scaleBy(std::span<GameObject*> pObjs, float pX, float pY, bool pUndo, cocos2d::CCPoint pCenter, bool pMove) {
+    void scaleBy(GameObject* pObj, float pX, float pY, bool pUndo) {
+        if (pUndo) {
+            editor::impl::createUndoObject(UndoCommand::Transform);
+        }
+
+        if (pX != 1.0f) {
+            pObj->updateCustomScaleX(pObj->m_scaleX * pX);
+        }
+        if (pY != 1.0f) {
+            pObj->updateCustomScaleY(pObj->m_scaleY * pY);
+        }
+    }
+    void scaleBy(GameObject* pObj, float pMod, bool pUndo) {
+        scaleBy(pObj, pMod, pMod, pUndo);
+    }
+    void scaleXBy(GameObject* pObj, float pMod, bool pUndo) {
+        if (!pMod || pMod == 1.0f) {
+            return;
+        }
+
+        if (pUndo) {
+            editor::impl::createUndoObject(UndoCommand::Transform);
+        }
+
+        pObj->updateCustomScaleX(pObj->m_scaleX * pMod);
+    }
+    void scaleYBy(GameObject* pObj, float pMod, bool pUndo) {
+        if (!pMod || pMod == 1.0f) {
+            return;
+        }
+
+        if (pUndo) {
+            editor::impl::createUndoObject(UndoCommand::Transform);
+        }
+
+        pObj->updateCustomScaleY(pObj->m_scaleY * pMod);
+    }
+    void scaleBy(std::span<GameObject*> pObjs, float pX, float pY, bool pUndo, CCPoint pCenter, bool pMove) {
         if (pObjs.empty()) {
             return;
         }
@@ -548,10 +666,10 @@ namespace nwo5::editor::object {
             }
         }
     }
-    void scaleBy(std::span<GameObject*> pObjs, float pMod, bool pUndo, cocos2d::CCPoint pCenter, bool pMove) {
+    void scaleBy(std::span<GameObject*> pObjs, float pMod, bool pUndo, CCPoint pCenter, bool pMove) {
         scaleBy(pObjs, pMod, pMod, pUndo, pCenter, pMove);
     }
-    void scaleXBy(std::span<GameObject*> pObjs, float pMod, bool pUndo, cocos2d::CCPoint pCenter, bool pMove) {
+    void scaleXBy(std::span<GameObject*> pObjs, float pMod, bool pUndo, CCPoint pCenter, bool pMove) {
         if (pObjs.empty() || !pMod || pMod == 1.0f) {
             return;
         }
@@ -572,7 +690,7 @@ namespace nwo5::editor::object {
             obj->updateCustomScaleX(obj->m_scaleX * pMod);
         }
     }
-    void scaleYBy(std::span<GameObject*> pObjs, float pMod, bool pUndo, cocos2d::CCPoint pCenter, bool pMove) {
+    void scaleYBy(std::span<GameObject*> pObjs, float pMod, bool pUndo, CCPoint pCenter, bool pMove) {
         if (pObjs.empty() || !pMod || pMod == 1.0f) {
             return;
         }
@@ -593,7 +711,7 @@ namespace nwo5::editor::object {
             obj->updateCustomScaleY(obj->m_scaleY * pMod);
         }
     }
-    void scaleBy(cocos2d::CCArray* pObjs, float pX, float pY, bool pUndo, cocos2d::CCPoint pCenter, bool pMove) {
+    void scaleBy(CCArray* pObjs, float pX, float pY, bool pUndo, CCPoint pCenter, bool pMove) {
         if (!pObjs->count()) {
             return;
         }
@@ -619,10 +737,10 @@ namespace nwo5::editor::object {
             }
         }
     }
-    void scaleBy(cocos2d::CCArray* pObjs, float pMod, bool pUndo, cocos2d::CCPoint pCenter, bool pMove) {
+    void scaleBy(CCArray* pObjs, float pMod, bool pUndo, CCPoint pCenter, bool pMove) {
         scaleBy(pObjs, pMod, pMod, pUndo, pCenter, pMove);
     }
-    void scaleXBy(cocos2d::CCArray* pObjs, float pMod, bool pUndo, cocos2d::CCPoint pCenter, bool pMove) {
+    void scaleXBy(CCArray* pObjs, float pMod, bool pUndo, CCPoint pCenter, bool pMove) {
         if (!pObjs->count() || !pMod || pMod == 1.0f) {
             return;
         }
@@ -643,7 +761,7 @@ namespace nwo5::editor::object {
             obj->updateCustomScaleX(obj->m_scaleX * pMod);
         }
     }
-    void scaleYBy(cocos2d::CCArray* pObjs, float pMod, bool pUndo, cocos2d::CCPoint pCenter, bool pMove) {
+    void scaleYBy(CCArray* pObjs, float pMod, bool pUndo, CCPoint pCenter, bool pMove) {
         if (!pObjs->count() || !pMod || pMod == 1.0f) {
             return;
         }

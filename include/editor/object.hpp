@@ -84,6 +84,17 @@ namespace nwo5::editor::object {
     SILLY_API_DLL void moveBy(std::span<GameObject*> pObjs, cocos2d::CCPoint pOff, bool pUndo = false);
     SILLY_API_DLL void moveBy(cocos2d::CCArray* pObjs, cocos2d::CCPoint pOff, bool pUndo = false);
 
+    SILLY_API_DLL void rotate(GameObject* pObj, float pTo, GameObject* pBase, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
+    SILLY_API_DLL void rotate(std::span<GameObject*> pObjs, float pTo, GameObject* pBase, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
+    SILLY_API_DLL void rotate(cocos2d::CCArray* pObjs, float pTo, GameObject* pBase, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
+    SILLY_API_DLL void rotateBy(GameObject* pObj, float pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
+    SILLY_API_DLL void rotateBy(std::span<GameObject*> pObjs, float pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
+    SILLY_API_DLL void rotateBy(cocos2d::CCArray* pObjs, float pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
+
+    SILLY_API_DLL void scale(GameObject* pObj, float pX, float pY, bool pUndo = false);
+    SILLY_API_DLL void scale(GameObject* pObj, float pTo, bool pUndo = false);
+    SILLY_API_DLL void scaleX(GameObject* pObj, float pTo, bool pUndo = false);
+    SILLY_API_DLL void scaleY(GameObject* pObj, float pTo, bool pUndo = false);
     SILLY_API_DLL void scale(std::span<GameObject*> pObjs, float pX, float pY, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
     SILLY_API_DLL void scale(std::span<GameObject*> pObjs, float pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
     SILLY_API_DLL void scaleX(std::span<GameObject*> pObjs, float pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
@@ -92,6 +103,10 @@ namespace nwo5::editor::object {
     SILLY_API_DLL void scale(cocos2d::CCArray* pObjs, float pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
     SILLY_API_DLL void scaleX(cocos2d::CCArray* pObjs, float pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
     SILLY_API_DLL void scaleY(cocos2d::CCArray* pObjs, float pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
+    SILLY_API_DLL void scaleBy(GameObject* pObj, float pX, float pY, bool pUndo = false);
+    SILLY_API_DLL void scaleBy(GameObject* pObj, float pMod, bool pUndo = false);
+    SILLY_API_DLL void scaleXBy(GameObject* pObj, float pMod, bool pUndo = false);
+    SILLY_API_DLL void scaleYBy(GameObject* pObj, float pMod, bool pUndo = false);
     SILLY_API_DLL void scaleBy(std::span<GameObject*> pObjs, float pX, float pY, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
     SILLY_API_DLL void scaleBy(std::span<GameObject*> pObjs, float pMod, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
     SILLY_API_DLL void scaleXBy(std::span<GameObject*> pObjs, float pMod, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
