@@ -1,4 +1,5 @@
 #include <editor/include.hpp>
+#include <Geode/modify/EditorUI.hpp>
 
 using namespace geode::prelude;
 
