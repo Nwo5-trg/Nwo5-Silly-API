@@ -3,6 +3,24 @@
 #include "../export.hpp"
 
 namespace nwo5::editor {
+    namespace impl {
+        struct EditTabButton {
+            using SpriteFunc = geode::Function<cocos2d::CCSprite*() const>;
+
+            std::string key;
+            int prio;
+
+            float scale;
+            SpriteFunc spriteFunc;
+            cocos2d::SEL_MenuHandler callback;
+        };
+
+        SILLY_API_DLL int nextFreeGroupFast(int pOffset = 1);
+        SILLY_API_DLL void createUndoObject(UndoCommand pCommand);
+        SILLY_API_DLL void toggleMoveObject(bool pMove);
+        SILLY_API_DLL CCMenuItemSpriteExtra* createEditTabButton(const EditTabButton& pButton);
+    }
+
     /// get editorui and optionally reinterpret_cast it
     template<typename ImplT = EditorUI, typename T = std::remove_pointer_t<ImplT>>
     auto ui() {
@@ -33,17 +51,45 @@ namespace nwo5::editor {
     SILLY_API_DLL void setLayer(int pLayer);
     SILLY_API_DLL void lockLayer(int pLayer = currentLayer());
 
-    namespace impl {
-        SILLY_API_DLL int nextFreeGroupFast(int pOffset = 1);
-    }
+    /// get next free group
     /// @param pOffset search starts from this gid, clamped from 1-9999
     /// @note only accounts for target gid and center gid rn, ill do like sequence/advrand checks and stuff l8r
     /// @returns next free gid or 0 if all 9999 groups are used
     SILLY_API_DLL int nextFreeGroup(int pOffset = 1, bool pCheckTargetGroups = false);
 
-    constexpr cocos2d::CCPoint AUTO_CENTER{std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
+    /// register an edit tab button 
+    /// use literally wherever that runs before editorui init (or atleast before setupmovemenu)
+    /// if registered multiple times does nothing
+    /// @param pSprite sprite
+    /// @param pKey identify the edit tab button with this, in overloads this is sprite name
+    /// @param pScale sprite scale
+    /// @param pPrio priority, priority in the negtives will move past vanilla editor buttons,
+    /// @param pCallback callback
+    /// @returns if the button was registered for the first time
+    SILLY_API_DLL bool registerEditTabButton(impl::EditTabButton::SpriteFunc pSprite, std::string pKey, float pScale, int pPrio, cocos2d::SEL_MenuHandler pCallback);
+    SILLY_API_DLL bool registerEditTabButton(std::string pSprite, float pScale, int pPrio, cocos2d::SEL_MenuHandler pCallback);
+    SILLY_API_DLL bool registerEditTabButton(std::string pSprite, int pPrio, cocos2d::SEL_MenuHandler pCallback);
+    SILLY_API_DLL bool registerEditTabButton(std::string pSprite, cocos2d::SEL_MenuHandler pCallback);
+    SILLY_API_DLL bool registerEditTabButtonFrame(std::string pSprite, float pScale, int pPrio, cocos2d::SEL_MenuHandler pCallback);
+    SILLY_API_DLL bool registerEditTabButtonFrame(std::string pSprite, int pPrio, cocos2d::SEL_MenuHandler pCallback);
+    SILLY_API_DLL bool registerEditTabButtonFrame(std::string pSprite, cocos2d::SEL_MenuHandler pCallback);
+    /// unregister an edit tab button
+    /// use literally wherever that runs before editorui init (or atleast before setupmovemenu)
+    /// @param pKey will remove edit tab button with this key
+    /// @param pRestore only matters for robtop buttons, remove button from remove queue
+    /// @note for vanilla buttons use their node ids
+    /// @returns if the button was unregistered
+    SILLY_API_DLL bool unregisterEditTabButton(const std::string& pKey, bool pRestore = false);
+    /// get an edit tab button
+    /// @param pKey key of button to get
+    /// @note for vanilla buttons use their node ids
+    /// @note I AM NOT RESPONSIBLE FOR SHIT CRASHING WHEN FW ROBTOP BUTTONS
+    /// @returns button or nullptr
+    SILLY_API_DLL CCMenuItemSpriteExtra* getEditTabButton(const std::string& pKey);
+    /// toggle an edit tab button
+    /// @param pKey of button to toggle
+    /// @note for vanilla buttons use their node ids
+    SILLY_API_DLL void toggleEditTabButton(const std::string& pKey, bool pOn);
 
-    namespace impl {
-        SILLY_API_DLL void createUndoObject(UndoCommand pCommand);
-    }
+    constexpr cocos2d::CCPoint AUTO_CENTER{std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
 }

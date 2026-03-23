@@ -3,12 +3,23 @@
 #include "../export.hpp"
 
 namespace nwo5::utils {
+    namespace impl {
+        SILLY_API_DLL cocos2d::ccColor4F getChroma4F(float pSpeed, float pOffset, float pSaturation, float pValue);
+    }
+
     /// fuck u geode for not having a substr overload (as of writing this idk abt v5)
     SILLY_API_DLL size_t stringCount(std::string_view pString, std::string_view pSubstr);
     SILLY_API_DLL size_t stringCount(std::string_view pString, char pSubstr);
     /// ccmenuitemtoggler triggers callback before its actually toggled so
     /// technically breaks when calling with togglewithcallback but idk fuck robtop
     SILLY_API_DLL bool isToggled(cocos2d::CCObject* pToggler);
+
+    SILLY_API_DLL void removeAllObjects(cocos2d::CCArray* pArray, bool pRelease = false);
+    SILLY_API_DLL void removeObjectsFromArray(cocos2d::CCArray* pArray, cocos2d::CCArray* pOther, bool pRelease = false);
+    SILLY_API_DLL cocos2d::CCArray* sharedObjects(cocos2d::CCArray* pArray, cocos2d::CCArray* pOther);
+    SILLY_API_DLL std::optional<unsigned int> findObject(cocos2d::CCArray* pArray, cocos2d::CCObject* pObj);
+    SILLY_API_DLL cocos2d::CCArray* objectsBefore(cocos2d::CCArray* pArray, cocos2d::CCObject* pObj, bool pInclusive = true);
+    SILLY_API_DLL cocos2d::CCArray* objectsAfter(cocos2d::CCArray* pArray, cocos2d::CCObject* pObj, bool pInclusive = true);
 
     template<typename T>
     T random(T pMin, T pMax) {
@@ -60,10 +71,6 @@ namespace nwo5::utils {
         else {
             return static_cast<T>(pEnum);
         }
-    }
-
-    namespace impl {
-        SILLY_API_DLL cocos2d::ccColor4F getChroma4F(float pSpeed, float pOffset, float pSaturation, float pValue);
     }
 
     /// get a chroma color based on the current time

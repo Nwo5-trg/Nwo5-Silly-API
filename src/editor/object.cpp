@@ -1,19 +1,6 @@
 #include <editor/include.hpp>
-#include <Geode/modify/EditorUI.hpp>
 
 using namespace geode::prelude;
-
-class $modify(UtilsEditorUI, EditorUI) {
-    struct Fields {
-        bool shouldMove = true;
-    };
-
-    void moveObject(GameObject* obj, CCPoint amount) {
-        if (m_fields->shouldMove) {
-            EditorUI::moveObject(obj, amount);
-        }
-    }
-};
 
 namespace nwo5::editor::object {
     size_t count() {
@@ -462,12 +449,11 @@ namespace nwo5::editor::object {
         }
 
         // i dont wanna rewrite rotate logic so for now the better edit way™ will have to do
-        auto& shouldMove = reinterpret_cast<UtilsEditorUI*>(ui())->m_fields->shouldMove;
-        shouldMove = pMove;
+        impl::toggleMoveObject(pMove);
 
         ui()->rotateObjects(pObjs, pTo, pCenter);
 
-        shouldMove = true;
+        impl::toggleMoveObject(true);
     }
 
     void scale(GameObject* pObj, float pX, float pY, bool pUndo) {
