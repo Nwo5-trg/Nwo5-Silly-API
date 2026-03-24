@@ -30,28 +30,48 @@ namespace nwo5::editor {
             void createMoveMenu() {
                 EditorUI::createMoveMenu();
                 
+                auto& buttonArray = m_editButtonBar->m_buttonArray;
+
+                std::vector<CCObject*> robtopButtons;
+
+                for (auto obj : buttonArray->asExt()) {
+                    if (!obj->getTag()) {
+                        continue;
+                    }
+
+                    const auto str = static_cast<CCNode*>(obj)->getID().view();
+
+                    // redudant checks but wtv if u make a button withotu this api without a _spr node id thats on u
+                    if (!str.empty() && !str.contains('/') && !str.contains('.') && str.contains('-') ) {
+                        robtopButtons.push_back(obj);
+                    }
+                }
+
                 std::vector<std::pair<int, std::pair<CCArray*, CCObject*>>> editButtons;
 
-                auto i = m_editButtonDict->allKeys()->count();
+                auto i = robtopButtons.size();
 
-                for (auto key : CCArrayExt<CCInteger*>(m_editButtonDict->allKeys())) {
-                    auto obj = m_editButtonDict->objectForKey(key->getValue());
-
+                for (auto obj : robtopButtons) {
                     editButtons.emplace_back(
                         -(i--), std::pair<CCArray*, CCObject*>{
-                            nwo5::utils::objectsBefore(m_editButtonBar->m_buttonArray, obj, false), obj
+                            nwo5::utils::objectsBefore(buttonArray, obj, false), obj
                         }
                     );
                     nwo5::utils::removeObjectsFromArray(
-                        m_editButtonBar->m_buttonArray, 
-                        nwo5::utils::objectsBefore(m_editButtonBar->m_buttonArray, obj, true)
+                        buttonArray, 
+                        nwo5::utils::objectsBefore(buttonArray, obj, true)
                     );
                     
                 }
-                editButtons.emplace_back(
-                    0, std::pair<CCArray*, CCObject*>{CCArray::createWithArray(m_editButtonBar->m_buttonArray), nullptr}
-                );
-                nwo5::utils::removeAllObjects(m_editButtonBar->m_buttonArray);
+
+                CCArray* remainingCustomButtons = CCArray::create();
+
+                for (auto obj : buttonArray->asExt()) {
+                    remainingCustomButtons->addObject(obj);
+                }
+
+                editButtons.emplace_back(0, std::pair<CCArray*, CCObject*>{remainingCustomButtons, nullptr});
+                nwo5::utils::removeAllObjects(buttonArray);
 
                 std::ranges::sort(editButtons, [] (const auto& pA, const auto& pB) {
                     return pA < pB;
@@ -63,13 +83,15 @@ namespace nwo5::editor {
                 for (const auto& [prio, buttons] : editButtons) {
                     const auto& [array, robtop] = buttons;
 
-                    m_editButtonBar->m_buttonArray->addObjectsFromArray(array);
+                    buttonArray->addObjectsFromArray(array);
 
                     while(i < impl::editTabButtons.size() && impl::editTabButtons[i].prio <= prio) {
                         const auto& data = impl::editTabButtons[i++];
-                        auto button = createEditTabButton(data);
 
-                        m_editButtonBar->m_buttonArray->addObject(button);
+                        auto button = createEditTabButton(data);
+                        button->setID(data.key);
+
+                        buttonArray->addObject(button);
                         editTabButtonMap[data.key] = button;
                     }
 
@@ -84,7 +106,7 @@ namespace nwo5::editor {
                     static_cast<CCNode*>(robtop)->setVisible(!shouldBeRemoved);
 
                     if (!shouldBeRemoved) {
-                        m_editButtonBar->m_buttonArray->addObject(robtop);
+                        buttonArray->addObject(robtop);
                     }
                 }
 
