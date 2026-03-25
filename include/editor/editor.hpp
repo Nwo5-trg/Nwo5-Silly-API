@@ -6,19 +6,18 @@ namespace nwo5::editor {
     namespace impl {
         struct EditTabButton {
             using SpriteFunc = geode::Function<cocos2d::CCSprite*() const>;
+            using Callback = geode::CopyableFunction<void(CCMenuItemSpriteExtra*)>;
 
             std::string key;
             int prio;
 
             float scale;
             SpriteFunc spriteFunc;
-            cocos2d::SEL_MenuHandler callback;
+            Callback callback;
         };
 
-        SILLY_API_DLL int nextFreeGroupFast(int pOffset = 1);
         SILLY_API_DLL void createUndoObject(UndoCommand pCommand);
         SILLY_API_DLL void toggleMoveObject(bool pMove);
-        SILLY_API_DLL CCMenuItemSpriteExtra* createEditTabButton(const EditTabButton& pButton);
     }
 
     /// get editorui and optionally reinterpret_cast it
@@ -61,34 +60,39 @@ namespace nwo5::editor {
     /// use literally wherever that runs before editorui init (or atleast before setupmovemenu)
     /// if registered multiple times does nothing
     /// @param pSprite sprite
-    /// @param pKey identify the edit tab button with this, in overloads this is sprite name
+    /// @param pKey identify the edit tab button with this (u should use _spr prefix if u want any hope of mod compatibility btw sowwy not sowwy)
     /// @param pScale sprite scale
-    /// @param pPrio priority, priority in the negtives will move past vanilla editor buttons,
+    /// @param pPrio priority, priority in the negtives will move past robtop editor buttons,
     /// @param pCallback callback
     /// @returns if the button was registered for the first time
-    SILLY_API_DLL bool registerEditTabButton(impl::EditTabButton::SpriteFunc pSprite, std::string pKey, float pScale, int pPrio, cocos2d::SEL_MenuHandler pCallback);
-    SILLY_API_DLL bool registerEditTabButton(std::string pSprite, float pScale, int pPrio, cocos2d::SEL_MenuHandler pCallback);
-    SILLY_API_DLL bool registerEditTabButton(std::string pSprite, int pPrio, cocos2d::SEL_MenuHandler pCallback);
-    SILLY_API_DLL bool registerEditTabButton(std::string pSprite, cocos2d::SEL_MenuHandler pCallback);
-    SILLY_API_DLL bool registerEditTabButtonFrame(std::string pSprite, float pScale, int pPrio, cocos2d::SEL_MenuHandler pCallback);
-    SILLY_API_DLL bool registerEditTabButtonFrame(std::string pSprite, int pPrio, cocos2d::SEL_MenuHandler pCallback);
-    SILLY_API_DLL bool registerEditTabButtonFrame(std::string pSprite, cocos2d::SEL_MenuHandler pCallback);
+    SILLY_API_DLL bool registerEditTabButton(impl::EditTabButton::SpriteFunc pSprite, std::string pKey, float pScale, int pPrio, impl::EditTabButton::Callback pCallback);
+    SILLY_API_DLL bool registerEditTabButton(std::string pSprite, std::string pKey, float pScale, int pPrio, impl::EditTabButton::Callback pCallback);
+    SILLY_API_DLL bool registerEditTabButton(std::string pSprite, std::string pKey, int pPrio, impl::EditTabButton::Callback pCallback);
+    SILLY_API_DLL bool registerEditTabButton(std::string pSprite, std::string pKey, impl::EditTabButton::Callback pCallback);
+    SILLY_API_DLL bool registerEditTabButtonFrame(std::string pSprite, std::string pKey, float pScale, int pPrio, impl::EditTabButton::Callback pCallback);
+    SILLY_API_DLL bool registerEditTabButtonFrame(std::string pSprite, std::string pKey, int pPrio, impl::EditTabButton::Callback pCallback);
+    SILLY_API_DLL bool registerEditTabButtonFrame(std::string pSprite, std::string pKey, impl::EditTabButton::Callback pCallback);
     /// unregister an edit tab button
     /// use literally wherever that runs before editorui init (or atleast before setupmovemenu)
+    /// completely unregisters a button if it was registered in same mod
+    /// otherwise if its a robtop button or button added by another mod will just be made invisible and omitted from buttonarray
     /// @param pKey will remove edit tab button with this key
-    /// @param pRestore only matters for robtop buttons, remove button from remove queue
-    /// @note for vanilla buttons use their node ids
-    /// @returns if the button was unregistered
+    /// @param pRestore only matters for other modded buttons/robtop buttons, remove button from remove list
+    /// @note for robtop buttons use their node ids
+    /// @returns if the button was unregistered/restored
     SILLY_API_DLL bool unregisterEditTabButton(const std::string& pKey, bool pRestore = false);
+    /// get if a button is registered
+    /// @param pKey edit tab button
+    /// @returns basically just checks if the edit tab button is visible and usable
+    SILLY_API_DLL bool isEditTabButtonRegistered(const std::string& pKey);
     /// get an edit tab button
     /// @param pKey key of button to get
-    /// @note for vanilla buttons use their node ids
-    /// @note I AM NOT RESPONSIBLE FOR SHIT CRASHING WHEN FW ROBTOP BUTTONS
-    /// @returns button or nullptr
+    /// @note for robtop buttons use their node ids
+    /// @returns button or searches for a button with the node id pKey (totally safely and totally doesnt just do a nodebyidrecursive call on editbuttonbar)
     SILLY_API_DLL CCMenuItemSpriteExtra* getEditTabButton(const std::string& pKey);
     /// toggle an edit tab button
     /// @param pKey of button to toggle
-    /// @note for vanilla buttons use their node ids
+    /// @note for robtop buttons use their node ids
     SILLY_API_DLL void toggleEditTabButton(const std::string& pKey, bool pOn);
 
     constexpr cocos2d::CCPoint AUTO_CENTER{std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};

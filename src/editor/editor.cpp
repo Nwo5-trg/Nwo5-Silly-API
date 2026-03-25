@@ -11,7 +11,57 @@ namespace nwo5::editor {
         static bool editButtonsLoaded;
         static std::vector<EditTabButton> editTabButtons;
         static std::unordered_map<std::string, CCMenuItemSpriteExtra*> editTabButtonMap;
-        static std::vector<std::string> removedEditTabButtons;
+        static std::unordered_set<std::string> removedEditTabButtons;
+
+        static int nextFreeGroupFast(int pOffset) {
+            pOffset = std::clamp(pOffset, 1, editor::constants::MAX_GROUPS);
+
+            auto keys = layer()->m_groupDict->allKeys();
+
+            if (!keys->count()) {
+                return pOffset;
+            }
+
+            std::set<int> usedGroups;
+
+            for (auto key : CCArrayExt<CCInteger*>(keys)) {
+                usedGroups.insert(key->getValue());
+            }
+
+            for (auto it = usedGroups.lower_bound(pOffset); it != usedGroups.end(); it++) {
+                if (*it == pOffset) {
+                    pOffset++;
+                } 
+                else {
+                    return pOffset;
+                }
+            }
+            
+            return pOffset > editor::constants::MAX_GROUPS ? 0 : pOffset;
+        }
+        static CCMenuItemSpriteExtra* createEditTabButton(const EditTabButton& pButton) {
+            auto button = ui()->getSpriteButton(pButton.spriteFunc(), nullptr, nullptr, pButton.scale, 1, CCPointZero);
+
+            // i *think* this is the correct thing to do cuz i shouldnt be std::move-ing a member var
+            cocos::CCMenuItemExt::assignCallback(button, geode::Function<void(CCMenuItemSpriteExtra*)>{pButton.callback});
+
+            return button;
+        }
+        static void tryRegisterEditTabButton(CCObject* pButton) {
+            if (!pButton) {
+                return;
+            }
+
+            const auto shouldBeRemoved = impl::removedEditTabButtons.contains(
+                static_cast<CCNode*>(pButton)->getID()
+            );
+
+            static_cast<CCNode*>(pButton)->setVisible(!shouldBeRemoved);
+
+            if (!shouldBeRemoved) {
+                ui()->m_editButtonBar->m_buttonArray->addObject(pButton);
+            }
+        }
 
         class $modify(UtilsEditorUI, EditorUI) {
             bool init(LevelEditorLayer* editorLayer) {
@@ -41,8 +91,8 @@ namespace nwo5::editor {
 
                     const auto str = static_cast<CCNode*>(obj)->getID().view();
 
-                    // redudant checks but wtv if u make a button withotu this api without a _spr node id thats on u
-                    if (!str.empty() && !str.contains('/') && !str.contains('.') && str.contains('-') ) {
+                    // i rly dont wanna make more robust checks so if someone adds a non prefixed editor button with a tag thats on them
+                    if (!str.empty() && !str.contains('/') && !str.contains('.') && str.contains("-button")) {
                         robtopButtons.push_back(obj);
                     }
                 }
@@ -91,23 +141,11 @@ namespace nwo5::editor {
                         auto button = createEditTabButton(data);
                         button->setID(data.key);
 
-                        buttonArray->addObject(button);
+                        tryRegisterEditTabButton(button);
                         editTabButtonMap[data.key] = button;
                     }
 
-                    if (!robtop) {
-                        continue;
-                    }
-
-                    const auto shouldBeRemoved = std::ranges::contains(
-                        impl::removedEditTabButtons, std::string{static_cast<CCNode*>(robtop)->getID()}
-                    );
-
-                    static_cast<CCNode*>(robtop)->setVisible(!shouldBeRemoved);
-
-                    if (!shouldBeRemoved) {
-                        buttonArray->addObject(robtop);
-                    }
+                    tryRegisterEditTabButton(robtop);
                 }
 
                 m_editButtonBar->reloadItems(
@@ -119,40 +157,11 @@ namespace nwo5::editor {
             }
         };
 
-        int nextFreeGroupFast(int pOffset) {
-            pOffset = std::clamp(pOffset, 1, editor::constants::MAX_GROUPS);
-
-            auto keys = layer()->m_groupDict->allKeys();
-
-            if (!keys->count()) {
-                return pOffset;
-            }
-
-            std::set<int> usedGroups;
-
-            for (auto key : CCArrayExt<CCInteger*>(keys)) {
-                usedGroups.insert(key->getValue());
-            }
-
-            for (auto it = usedGroups.lower_bound(pOffset); it != usedGroups.end(); it++) {
-                if (*it == pOffset) {
-                    pOffset++;
-                } 
-                else {
-                    return pOffset;
-                }
-            }
-            
-            return pOffset > editor::constants::MAX_GROUPS ? 0 : pOffset;
-        }
         void createUndoObject(UndoCommand pCommand) {
             ui()->createUndoObject(pCommand, false);
         }
         void toggleMoveObject(bool pMove) {
             shouldMoveObject = pMove;
-        }
-        CCMenuItemSpriteExtra* createEditTabButton(const EditTabButton& pButton) {
-            return ui()->getSpriteButton(pButton.spriteFunc(), pButton.callback, nullptr, pButton.scale, 1, CCPointZero);
         }
     }
 
@@ -328,7 +337,7 @@ namespace nwo5::editor {
         return pOffset > constants::MAX_GROUPS ? 0 : pOffset;
     }
 
-    bool registerEditTabButton(impl::EditTabButton::SpriteFunc pSprite, std::string pKey, float pScale, int pPrio, SEL_MenuHandler pCallback) {
+    bool registerEditTabButton(impl::EditTabButton::SpriteFunc pSprite, std::string pKey, float pScale, int pPrio, impl::EditTabButton::Callback pCallback) {
         if (
             std::ranges::find_if(impl::editTabButtons, [&] (const auto& pButton) {
                 return pButton.key == pKey;
@@ -337,31 +346,35 @@ namespace nwo5::editor {
             return false;
         }
 
-        impl::editTabButtons.emplace_back(pKey, pPrio, pScale, std::move(pSprite), pCallback);
+        impl::editTabButtons.emplace_back(std::move(pKey), pPrio, pScale, std::move(pSprite), std::move(pCallback));
 
         std::ranges::sort(impl::editTabButtons, [] (const auto& pA, const auto& pB) {
             return pA.prio < pB.prio;
         });
 
+        if (const auto it = impl::removedEditTabButtons.find(pKey); it != impl::removedEditTabButtons.end()) {
+            impl::removedEditTabButtons.erase(it);
+        }
+
         return true;
     }
-    bool registerEditTabButton(std::string pSprite, float pScale, int pPrio, SEL_MenuHandler pCallback) {
-        return registerEditTabButton([=] () { return CCSprite::create(pSprite.c_str()); }, pSprite, pScale, pPrio, pCallback);
+    bool registerEditTabButton(std::string pSprite, std::string pKey, float pScale, int pPrio, impl::EditTabButton::Callback pCallback) {
+        return registerEditTabButton([=] () { return CCSprite::create(pSprite.c_str()); }, std::move(pKey), pScale, pPrio, std::move(pCallback));
     }
-    bool registerEditTabButton(std::string pSprite, int pPrio, SEL_MenuHandler pCallback) {
-        return registerEditTabButton([=] () { return CCSprite::create(pSprite.c_str()); }, pSprite, 1.0f, pPrio, pCallback);
+    bool registerEditTabButton(std::string pSprite, std::string pKey, int pPrio, impl::EditTabButton::Callback pCallback) {
+        return registerEditTabButton([=] () { return CCSprite::create(pSprite.c_str()); }, std::move(pKey), 1.0f, pPrio, std::move(pCallback));
     }
-    bool registerEditTabButton(std::string pSprite, SEL_MenuHandler pCallback) {
-        return registerEditTabButton([=] () { return CCSprite::create(pSprite.c_str()); }, pSprite, 1.0f, 0, pCallback);
+    bool registerEditTabButton(std::string pSprite, std::string pKey, impl::EditTabButton::Callback pCallback) {
+        return registerEditTabButton([=] () { return CCSprite::create(pSprite.c_str()); }, std::move(pKey), 1.0f, 0, std::move(pCallback));
     }
-    bool registerEditTabButtonFrame(std::string pSprite, float pScale, int pPrio, SEL_MenuHandler pCallback) {
-        return registerEditTabButton([=] () { return CCSprite::createWithSpriteFrameName(pSprite.c_str()); }, pSprite, pScale, pPrio, pCallback);
+    bool registerEditTabButtonFrame(std::string pSprite, std::string pKey, float pScale, int pPrio, impl::EditTabButton::Callback pCallback) {
+        return registerEditTabButton([=] () { return CCSprite::createWithSpriteFrameName(pSprite.c_str()); }, std::move(pKey), pScale, pPrio, std::move(pCallback));
     }
-    bool registerEditTabButtonFrame(std::string pSprite, int pPrio, SEL_MenuHandler pCallback) {
-        return registerEditTabButton([=] () { return CCSprite::createWithSpriteFrameName(pSprite.c_str()); }, pSprite, 1.0f, pPrio, pCallback);
+    bool registerEditTabButtonFrame(std::string pSprite, std::string pKey, int pPrio, impl::EditTabButton::Callback pCallback) {
+        return registerEditTabButton([=] () { return CCSprite::createWithSpriteFrameName(pSprite.c_str()); }, std::move(pKey), 1.0f, pPrio, std::move(pCallback));
     }
-    bool registerEditTabButtonFrame(std::string pSprite, SEL_MenuHandler pCallback) {
-        return registerEditTabButton([=] () { return CCSprite::createWithSpriteFrameName(pSprite.c_str()); }, pSprite, 1.0f, 0, pCallback);
+    bool registerEditTabButtonFrame(std::string pSprite, std::string pKey, impl::EditTabButton::Callback pCallback) {
+        return registerEditTabButton([=] () { return CCSprite::createWithSpriteFrameName(pSprite.c_str()); }, std::move(pKey), 1.0f, 0, std::move(pCallback));
     }
     bool unregisterEditTabButton(const std::string& pKey, bool pRestore) {
         if (
@@ -371,23 +384,22 @@ namespace nwo5::editor {
         ) {
             impl::editTabButtonMap.erase((*it).key);
             impl::editTabButtons.erase(it);
+        }
+
+        const auto it = impl::removedEditTabButtons.find(pKey);
+
+        if (it == impl::removedEditTabButtons.end() && !pRestore) {
+            impl::removedEditTabButtons.insert(pKey);
+
+            return true;
+        }
+        else if (it != impl::removedEditTabButtons.end() && pRestore) {
+            impl::removedEditTabButtons.erase(it);
 
             return true;
         }
 
-        const auto it = std::ranges::find(impl::removedEditTabButtons, pKey);
-
-        if (it == impl::removedEditTabButtons.end() && !pRestore) {
-            impl::removedEditTabButtons.push_back(pKey);
-        }
-        else if (it != impl::removedEditTabButtons.end() && pRestore) {
-            impl::removedEditTabButtons.erase(it);
-        }
-        else {
-            return false;
-        }
-
-        return true;
+        return false;
     }
     CCMenuItemSpriteExtra* getEditTabButton(const std::string& pKey) {
         if (!ui() || !impl::editButtonsLoaded) {
@@ -398,7 +410,7 @@ namespace nwo5::editor {
             return (*it).second;
         }
 
-        return nullptr;
+        return static_cast<CCMenuItemSpriteExtra*>(ui()->m_editButtonBar->getChildByIDRecursive(pKey));
     }
     void toggleEditTabButton(const std::string& pKey, bool pOn) {
         auto button = getEditTabButton(pKey);
@@ -407,8 +419,15 @@ namespace nwo5::editor {
             return;
         }
 
-        // lowkey robtop does it differently but who cares
-        button->setColor(pOn ? ccWHITE : ccc3(150, 150, 150));
+        button->getChildByType<ButtonSprite*>(0)->setColor(pOn ? ccWHITE : ccc3(150, 150, 150));
         button->setEnabled(pOn);
+    }
+    bool isEditTabButtonRegistered(const std::string& pKey) {
+        if (auto button = getEditTabButton(pKey)) {
+            return button->isVisible();
+        }
+        else {
+            return false;
+        }
     }
 }
