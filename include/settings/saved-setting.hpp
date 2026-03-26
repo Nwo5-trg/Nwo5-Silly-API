@@ -115,8 +115,9 @@ namespace nwo5::settings {
         }
 
         /// gets type enum for templated type
-        virtual SettingType type() const override {
-            return getSettingType<T>();
+        template<typename Enum = SettingType>
+        Enum type() const {
+            return static_cast<Enum>(getSettingType<T>());
         }
     };
 

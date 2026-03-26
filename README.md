@@ -3,7 +3,7 @@ a bunch of utils for my mods to make my life easier
 
 if ur not a dev this is useless to u
 
-if u wanna use this mod for some reason docs are mostly in headers, otherwise heres an overview
+if u wanna use this mod for some reason theres a bunch of documentation in headers, otherwise heres an overview
 
 ## Editor
 make fw the editor hopefully easier :3
@@ -29,6 +29,8 @@ one of the most important functions from here is `nwo5::editor::update()`
 most/all editor functions in the api dont actually update stuff like editor buttons or info label
 so you need to do that with this function :3
 
+also theres an overcomplicated system for adding new edit tab buttons so no more *createmovemenu* hooks !
+
 ### Object
 everything related to getting data from/manipulating objs
 
@@ -49,9 +51,6 @@ class $modify(EditorUI) {
     }
 };
 ```
-
-### Selection
-makes managing the editor selection a little easier
 
 ## Settings Cache
 part of this mod is a way to cache/easily access geode settings thru inline variables

@@ -5,54 +5,54 @@
 
 namespace nwo5::settings {
     enum class SettingType {
-        Bool,
-        Int,
-        Float,
-        RGB,
-        RGBA,
-        File,
-        String,
-        Custom
+        Custom = 0,
+        Bool = 1,
+        Int = 2,
+        Float = 3,
+        RGB = 4,
+        RGBA = 5,
+        File = 6,
+        String = 7
     };
 
     template<typename ImplT, typename T = std::decay_t<ImplT>>
-    constexpr SettingType getSettingType() {
-        return SettingType::Custom;
+    constexpr int getSettingType() {
+        return static_cast<int>(SettingType::Custom);
     }
     template<typename ImplT, typename T = std::decay_t<ImplT>>
     requires std::same_as<T, bool>
-    constexpr SettingType getSettingType() {
-        return SettingType::Bool;
+    constexpr int getSettingType() {
+        return static_cast<int>(SettingType::Bool);
     }
     template<typename ImplT, typename T = std::decay_t<ImplT>>
     requires (!std::same_as<T, bool>) && std::is_integral_v<T>
-    constexpr SettingType getSettingType() {
-        return SettingType::Int;
+    constexpr int getSettingType() {
+        return static_cast<int>(SettingType::Int);
     }
     template<typename ImplT, typename T = std::decay_t<ImplT>>
     requires std::is_floating_point_v<T>
-    constexpr SettingType getSettingType() {
-        return SettingType::Float;
+    constexpr int getSettingType() {
+        return static_cast<int>(SettingType::Float);
     }
     template<typename ImplT, typename T = std::decay_t<ImplT>>
     requires std::same_as<T, cocos2d::ccColor3B>
-    constexpr SettingType getSettingType() {
-        return SettingType::RGB;
+    constexpr int getSettingType() {
+        return static_cast<int>(SettingType::RGB);
     }
     template<typename ImplT, typename T = std::decay_t<ImplT>>
     requires std::same_as<T, cocos2d::ccColor4B>
-    constexpr SettingType getSettingType() {
-        return SettingType::RGBA;
+    constexpr int getSettingType() {
+        return static_cast<int>(SettingType::RGBA);
     }
     template<typename ImplT, typename T = std::decay_t<ImplT>>
     requires std::same_as<T, std::filesystem::path>
-    constexpr SettingType getSettingType() {
-        return SettingType::File;
+    constexpr int getSettingType() {
+        return static_cast<int>(SettingType::File);
     }
     template<typename ImplT, typename T = std::decay_t<ImplT>>
     requires std::same_as<T, std::string>
-    constexpr SettingType getSettingType() {
-        return SettingType::String;
+    constexpr int getSettingType() {
+        return static_cast<int>(SettingType::String);
     }
 
     class Category;
@@ -116,9 +116,6 @@ namespace nwo5::settings {
         virtual void load() = 0;
         /// set setting/saved value
         virtual void save() = 0;
-
-        /// gets type enum for templated type
-        virtual SettingType type() const = 0;
     };
 
     template<typename Data>
@@ -222,8 +219,9 @@ namespace nwo5::settings {
         }
 
         /// gets type enum for templated type
-        virtual SettingType type() const override {
-            return getSettingType<T>();
+        template<typename Enum = SettingType>
+        Enum type() const {
+            return static_cast<Enum>(getSettingType<T>());
         }
     };
 
