@@ -410,7 +410,13 @@ namespace nwo5::editor {
             return (*it).second;
         }
 
-        return static_cast<CCMenuItemSpriteExtra*>(ui()->m_editButtonBar->getChildByIDRecursive(pKey));
+        for (auto obj : CCArrayExt<CCMenuItemSpriteExtra*>(ui()->m_editButtonBar->m_buttonArray)) {
+            if (obj->getID() == pKey) {
+                return obj;
+            }
+        }
+
+        return nullptr;
     }
     void toggleEditTabButton(const std::string& pKey, bool pOn) {
         auto button = getEditTabButton(pKey);

@@ -199,7 +199,7 @@ namespace nwo5::settings {
         /// sets loaded to true if everything went well :3
         virtual void load() override {
 
-            if (m_loaded || !(m_setting = geode::cast::typeinfo_pointer_cast<GeodeSettingType>(geode::Mod::get()->getSetting(m_key)))) {
+            if (m_loaded || !(m_setting = geode::cast::typeinfo_cast<GeodeSettingType*>(geode::Mod::get()->getSetting(m_key)))) {
                 return;
             }
 
