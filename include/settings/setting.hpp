@@ -15,6 +15,7 @@ namespace nwo5::settings {
         String = 7
     };
 
+    // ill come up with smth better later cuz this is very flawed but works fine for now !
     template<typename ImplT, typename T = std::decay_t<ImplT>>
     constexpr int getSettingType() {
         return static_cast<int>(SettingType::Custom);
@@ -116,6 +117,9 @@ namespace nwo5::settings {
         virtual void load() = 0;
         /// set setting/saved value
         virtual void save() = 0;
+
+         /// gets type enum for templated type
+        virtual SettingType type() const = 0;
     };
 
     template<typename Data>
@@ -219,9 +223,8 @@ namespace nwo5::settings {
         }
 
         /// gets type enum for templated type
-        template<typename Enum = SettingType>
-        Enum type() const {
-            return static_cast<Enum>(getSettingType<T>());
+        virtual SettingType type() const override {
+            return static_cast<SettingType>(getSettingType<T>());
         }
     };
 

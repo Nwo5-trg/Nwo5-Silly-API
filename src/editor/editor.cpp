@@ -47,7 +47,7 @@ namespace nwo5::editor {
 
             return button;
         }
-        static void tryRegisterEditTabButton(CCObject* pButton) {
+        static void tryRegisterEditTabButton(CCObject* pButton, CCArray* pArray) {
             if (!pButton) {
                 return;
             }
@@ -59,7 +59,7 @@ namespace nwo5::editor {
             static_cast<CCNode*>(pButton)->setVisible(!shouldBeRemoved);
 
             if (!shouldBeRemoved) {
-                ui()->m_editButtonBar->m_buttonArray->addObject(pButton);
+                pArray->addObject(pButton);
             }
         }
 
@@ -141,11 +141,11 @@ namespace nwo5::editor {
                         auto button = createEditTabButton(data);
                         button->setID(data.key);
 
-                        tryRegisterEditTabButton(button);
+                        tryRegisterEditTabButton(button, buttonArray);
                         editTabButtonMap[data.key] = button;
                     }
 
-                    tryRegisterEditTabButton(robtop);
+                    tryRegisterEditTabButton(robtop, buttonArray);
                 }
 
                 m_editButtonBar->reloadItems(
