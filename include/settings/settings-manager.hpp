@@ -3,8 +3,12 @@
 #include "category.hpp"
 
 namespace nwo5::settings {
+    class SettingsManager;
+
     class SILLY_API_DLL SettingsManager final {
     private:
+        geode::Mod* m_mod = nullptr;
+
         std::vector<GenericSetting*> m_queuedSettings;
         std::vector<GenericSetting*> m_allSettings;
 
@@ -12,19 +16,30 @@ namespace nwo5::settings {
         std::deque<Category> m_categories;
         std::vector<Category*> m_sortedCategories;
         Category m_uncategorized {"Uncategorized", "", std::numeric_limits<int>::min()};
-
-        SettingsManager() = default;
-        ~SettingsManager() = default;
         
     public:
-        SettingsManager(const SettingsManager&) = delete;
-        SettingsManager& operator=(const SettingsManager&) = delete;
-        SettingsManager(SettingsManager&&) = delete;
-        SettingsManager& operator=(SettingsManager&&) = delete;
+        SettingsManager(geode::Mod* pMod)
+            : m_mod(pMod) {}
 
-        static auto* get() {
-            static SettingsManager inst;
-            return &inst;
+        static SettingsManager* get(geode::Mod* pMod = geode::Mod::get()) {
+            if (!pMod) {
+                return nullptr;
+            }
+            
+            // should b safe mayb uwu
+            static std::deque<std::pair<std::string, SettingsManager>> managers;
+            
+            const auto id = pMod->getID();
+
+            auto it = std::ranges::find_if(managers, [&] (const auto& pPair) {
+                return pPair.first == id;
+            });
+
+            if (it == managers.end()) {
+                return &(managers.emplace_back(id, pMod).second);
+            }
+
+            return &(it->second);
         };
 
         /// adds setting to queued settings
@@ -146,9 +161,9 @@ namespace nwo5::settings {
         }
     };
 
-    inline GenericSetting::GenericSetting(std::string_view pKey, bool pIsGeodeSetting)
-        : m_key(pKey), m_isGeodeSetting(pIsGeodeSetting) 
+    inline GenericSetting::GenericSetting(std::string_view pKey, bool pIsGeodeSetting, geode::Mod* pMod)
+        : m_key(pKey), m_isGeodeSetting(pIsGeodeSetting), m_mod(pMod)
     {
-        SettingsManager::get()->registerSetting(this);
+        SettingsManager::get(pMod)->registerSetting(this);
     }
 }

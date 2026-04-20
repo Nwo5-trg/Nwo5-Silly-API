@@ -7,25 +7,20 @@ namespace nwo5::editor::selection {
     requires std::derived_from<T, GameObject>
     std::vector<T*> get() {
         if (auto obj = ui()->m_selectedObject) {
-            return {obj};
+            return std::vector<T*>{obj};
         }
         else {
-            return geode::cocos::CCArrayExt<T>(ui()->m_selectedObjects).toVector();
+            return geode::cocos::CCArrayExt<T>(ui()->getSelectedObjects()).toVector();
         }
     }
     template<typename ImplT = cocos2d::CCArray, typename T = std::remove_pointer_t<ImplT>>
     requires std::same_as<T, cocos2d::CCArray>
-    T* get(bool pCopy = false) {
-        if (auto obj = ui()->m_selectedObject) {
-            return cocos2d::CCArray::createWithObject(obj);
-        }
-        else {
-            return pCopy ? cocos2d::CCArray::createWithArray(ui()->m_selectedObjects) : ui()->m_selectedObjects;
-        }
+    T* get() {
+        return ui()->getSelectedObjects();
     }
-    template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
-    auto getExt(bool pCopy = false) {
-        return geode::cocos::CCArrayExt<T*>(get(pCopy));
+    template<typename T = GameObject*>
+    auto getExt() {
+        return geode::cocos::CCArrayExt<T>(get());
     } 
     template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
     requires std::derived_from<T, GameObject>
@@ -33,7 +28,7 @@ namespace nwo5::editor::selection {
         if (auto obj = ui()->m_selectedObject) {
             return static_cast<T*>(obj);
         }
-        else if (auto objs = ui()->m_selectedObjects; objs->count()) {
+        else if (auto objs = ui()->m_selectedObjects; objs && objs->count()) {
             return static_cast<T*>(objs->firstObject());
         }
         else {
@@ -48,14 +43,20 @@ namespace nwo5::editor::selection {
             return get<T>();
         }
             
-        if (auto obj = ui()->m_selectedObject; obj && geode::cast::typeinfo_cast<T*>(obj)) {
-            return {static_cast<T*>(obj)};
+        if (auto obj = ui()->m_selectedObject) {
+            if (geode::cast::typeinfo_cast<T*>(obj)) {
+                return {static_cast<T*>(obj)};
+            }
+            else {
+                return {};
+            }
         }
         else {
             std::vector<T*> out;
-            out.reserve(ui()->m_selectedObjects->count());
+            auto objs = get();
+            out.reserve(objs->count());
 
-            for (auto obj : geode::cocos::CCArrayExt<T*>(ui()->m_selectedObjects)) {
+            for (auto obj : geode::cocos::CCArrayExt<T*>(objs)) {
                 if constexpr (std::derived_from<T, EffectGameObject>) {
                     if (obj->m_classType != GameObjectClassType::Effect) {
                         continue;

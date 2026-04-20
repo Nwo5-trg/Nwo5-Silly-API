@@ -152,8 +152,26 @@ namespace nwo5::editor::object {
         return pObjs->containsObject(parent);
     }
 
+    std::optional<int> baseColor(GameObject* pObj) {
+        auto col = pObj->m_baseColor;
+
+        if (!col) {
+            return std::nullopt;
+        }
+
+        return col->m_colorID ? col->m_colorID : col->m_defaultColorID;
+    }
+    std::optional<int> detailColor(GameObject* pObj) {
+        auto col = pObj->m_detailColor;
+
+        if (!col) {
+            return std::nullopt;
+        }
+
+        return col->m_colorID ? col->m_colorID : col->m_defaultColorID;
+    }
     bool hasColor(GameObject* pObj, int pColor, bool pPrimary) {
-        const auto col = pPrimary ? pObj->m_baseColor : pObj->m_detailColor;
+        auto col = pPrimary ? pObj->m_baseColor : pObj->m_detailColor;
 
         return col && pColor == (col->m_colorID ? col->m_colorID : col->m_defaultColorID);
     }

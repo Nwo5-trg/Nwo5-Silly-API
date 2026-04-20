@@ -33,7 +33,8 @@ namespace nwo5::editor::object {
     /// @returns true if objects has groups group parent, false otherwise
     SILLY_API_DLL bool hasParent(cocos2d::CCArray* pObjs, int pGroup);
 
-
+    SILLY_API_DLL std::optional<int> baseColor(GameObject* pObj);
+    SILLY_API_DLL std::optional<int> detailColor(GameObject* pObj);
     SILLY_API_DLL bool hasColor(GameObject* pObj, int pColor, bool pPrimary);
 
     SILLY_API_DLL int id(GameObject* pObj);

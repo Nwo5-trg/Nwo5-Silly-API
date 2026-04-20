@@ -7,8 +7,13 @@ namespace nwo5::utils {
         SILLY_API_DLL cocos2d::ccColor4F getChroma4F(float pSpeed, float pOffset, float pSaturation, float pValue);
     }
 
-    /// fuck u geode for not having a substr overload (as of writing this idk abt v5)
+    /// count how many instances of a substr appear in str
+    /// for str "aaaa" and substr "aa", 3 will be outputed
     SILLY_API_DLL size_t stringCount(std::string_view pString, std::string_view pSubstr);
+    /// count how many *independant* instances of a substr appear in str
+    /// for str "aaaa" and substr "aa", 2 will be outputed
+    SILLY_API_DLL size_t stringCountIndependant(std::string_view pString, std::string_view pSubstr);
+    /// the geode util
     SILLY_API_DLL size_t stringCount(std::string_view pString, char pSubstr);
     /// ccmenuitemtoggler triggers callback before its actually toggled so
     /// technically breaks when calling with togglewithcallback but idk fuck robtop

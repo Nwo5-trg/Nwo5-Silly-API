@@ -21,6 +21,7 @@ editor utils are split into a couple different namespaces
     - object
     - selection
     - constants
+    - triggers
 
 ### Editor
 uncategorized/general utils related to the editor
@@ -51,6 +52,11 @@ class $modify(EditorUI) {
     }
 };
 ```
+
+### Triggers
+i spent almost 10 hours on this im too lazy to write docs
+
+basically an easy way to change trigger groups/duration and query some info abt a trigger (like if it has a center group or smth) read more in editor/trigger.hpp but mayb collpase line 186
 
 ## Settings Cache
 part of this mod is a way to cache/easily access geode settings thru inline variables

@@ -44,8 +44,8 @@ namespace nwo5::settings {
         T m_default;
 
     public:
-        SavedSettingBase(std::string_view pKey, std::optional<std::string> pName, std::optional<std::string> pDescription, T pDefault) 
-            : GenericSetting(pKey, false), m_name(std::move(pName)), m_description(std::move(pDescription)), m_default(std::move(pDefault)) {}
+        SavedSettingBase(std::string_view pKey, std::optional<std::string> pName, std::optional<std::string> pDescription, T pDefault, geode::Mod* pMod = geode::Mod::get()) 
+            : GenericSetting(pKey, false, pMod), m_name(std::move(pName)), m_description(std::move(pDescription)), m_default(std::move(pDefault)) {}
 
         operator const T&() {
             return m_value;
@@ -94,12 +94,12 @@ namespace nwo5::settings {
         /// gets saved value for key and loads the value
         /// sets loaded to true if everything went well :3
         virtual void load() override {
-            if (m_loaded) {
+            if (m_loaded || !m_mod) {
                 return;
             }
 
-            if (geode::Mod::get()->hasSavedValue(m_key)) {
-                m_value = geode::Mod::get()->getSavedValue<T>(m_key);
+            if (m_mod->hasSavedValue(m_key)) {
+                m_value = m_mod->getSavedValue<T>(m_key);
             }
             else {
                 set(m_default);
@@ -109,8 +109,8 @@ namespace nwo5::settings {
         }
         /// sets saved value if loaded
         virtual void save() override {
-            if (m_loaded) {
-                geode::Mod::get()->setSavedValue<T>(m_key, m_value);
+            if (m_loaded && m_mod) {
+                m_mod->setSavedValue<T>(m_key, m_value);
             }
         }
 

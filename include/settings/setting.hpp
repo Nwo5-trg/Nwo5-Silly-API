@@ -64,11 +64,12 @@ namespace nwo5::settings {
         bool m_isGeodeSetting;
 
         std::string m_key;
+        geode::Mod* m_mod;
 
         std::vector<std::string> m_categories;
 
     public:    
-        GenericSetting(std::string_view pKey, bool pIsGeodeSetting);
+        GenericSetting(std::string_view pKey, bool pIsGeodeSetting, geode::Mod* pMod);
 
         virtual ~GenericSetting() = default;
 
@@ -92,8 +93,11 @@ namespace nwo5::settings {
         virtual bool hasDescription() const = 0; 
 
         /// get setting key
-        std::string key() {
+        std::string key() const {
             return m_key;
+        }
+        auto mod() const {
+            return m_mod;
         }
         /// see if setting is loaded, using an unloaded setting will make things go all cattywampus so
         bool loaded() const {
@@ -146,8 +150,8 @@ namespace nwo5::settings {
         T m_value;
 
     public:
-        SettingBase(std::string_view pKey) 
-            : GenericSetting(pKey, true) {}
+        SettingBase(std::string_view pKey, geode::Mod* pMod = geode::Mod::get()) 
+            : GenericSetting(pKey, true, pMod) {}
 
         operator const T&() {
             return m_value;
@@ -203,7 +207,7 @@ namespace nwo5::settings {
         /// sets loaded to true if everything went well :3
         virtual void load() override {
 
-            if (m_loaded || !(m_setting = geode::cast::typeinfo_cast<GeodeSettingType*>(geode::Mod::get()->getSetting(m_key)))) {
+            if (m_loaded || !m_mod || !(m_setting = geode::cast::typeinfo_cast<GeodeSettingType*>(m_mod->getSetting(m_key)))) {
                 return;
             }
 
@@ -211,7 +215,7 @@ namespace nwo5::settings {
 
             geode::listenForSettingChanges<T>(key(), [this] (T pVal) {
                 m_value = pVal;
-            });
+            }, m_mod);
 
             m_loaded = true;
         }

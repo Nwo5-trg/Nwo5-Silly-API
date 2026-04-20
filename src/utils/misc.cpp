@@ -19,6 +19,15 @@ namespace nwo5::utils {
 
     size_t stringCount(std::string_view pString, std::string_view pSubstr) {
         size_t count = 0;
+
+        for (auto i = pString.find(pSubstr); i != std::string::npos; i = pString.find(pSubstr, ++i)) {
+            count++;
+        }
+
+        return count;
+    }
+    size_t stringCountIndependant(std::string_view pString, std::string_view pSubstr) {
+        size_t count = 0;
         const auto size = pSubstr.size();
 
         for (auto i = pString.find(pSubstr); i != std::string::npos; i = pString.find(pSubstr, i + size)) {
@@ -28,7 +37,7 @@ namespace nwo5::utils {
         return count;
     }
     size_t stringCount(std::string_view pString, char pSubstr) {
-        return std::ranges::count(pString, pSubstr);
+        return string::count(pString, pSubstr);
     }
 
     bool isToggled(CCObject* pToggler) {

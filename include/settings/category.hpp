@@ -2,7 +2,7 @@
 
 #include "setting.hpp"
 
-#define SCAPI_INLINE_CATEGORY(...) \
+#define SILLY_API_INLINE_CATEGORY(...) \
 inline auto GEODE_CONCAT(scapi_categoryDecl, GEODE_CONCAT(__LINE__, __COUNTER__)) = SettingsManager::get()->registerCategory({__VA_ARGS__});
 
 namespace nwo5::settings {

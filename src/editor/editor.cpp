@@ -77,6 +77,10 @@ namespace nwo5::editor {
                 }
             }
 
+            static void onModify(auto& pSelf) {
+                (void)pSelf.setHookPriority("EditorUI::createMoveMenu", Priority::LatePost);
+            }
+
             void createMoveMenu() {
                 EditorUI::createMoveMenu();
                 
@@ -85,14 +89,7 @@ namespace nwo5::editor {
                 std::vector<CCObject*> robtopButtons;
 
                 for (auto obj : buttonArray->asExt()) {
-                    if (!obj->getTag()) {
-                        continue;
-                    }
-
-                    const auto str = static_cast<CCNode*>(obj)->getID().view();
-
-                    // i rly dont wanna make more robust checks so if someone adds a non prefixed editor button with a tag thats on them
-                    if (!str.empty() && !str.contains('/') && !str.contains('.') && str.contains("-button")) {
+                    if (obj->getTag()) {
                         robtopButtons.push_back(obj);
                     }
                 }
@@ -120,14 +117,14 @@ namespace nwo5::editor {
                     remainingCustomButtons->addObject(obj);
                 }
 
-                editButtons.emplace_back(0, std::pair<CCArray*, CCObject*>{remainingCustomButtons, nullptr});
+                constexpr size_t BACK_BUTTONS = 0;
+
+                editButtons.emplace_back(BACK_BUTTONS, std::pair<CCArray*, CCObject*>{remainingCustomButtons, nullptr});
+
                 nwo5::utils::removeAllObjects(buttonArray);
 
-                std::ranges::sort(editButtons, [] (const auto& pA, const auto& pB) {
-                    return pA < pB;
-                });
-
                 editTabButtonMap.clear();
+
                 i = 0;
 
                 for (const auto& [prio, buttons] : editButtons) {
@@ -135,7 +132,11 @@ namespace nwo5::editor {
 
                     buttonArray->addObjectsFromArray(array);
 
-                    while(i < impl::editTabButtons.size() && impl::editTabButtons[i].prio <= prio) {
+                    while(
+                        i < impl::editTabButtons.size() 
+                        && (impl::editTabButtons[i].prio <= prio || prio == BACK_BUTTONS) 
+                        && !m_editButtonBar->getChildByIDRecursive(impl::editTabButtons[i].key)
+                    ) {
                         const auto& data = impl::editTabButtons[i++];
 
                         auto button = createEditTabButton(data);
@@ -149,8 +150,8 @@ namespace nwo5::editor {
                 }
 
                 m_editButtonBar->reloadItems(
-                    GameManager::sharedState()->getIntGameVariable("0049"), 
-                    GameManager::sharedState()->getIntGameVariable("0050")
+                    GameManager::sharedState()->getIntGameVariable(GameVar::EditorButtonsPerRow), 
+                    GameManager::sharedState()->getIntGameVariable(GameVar::EditorButtonRows)
                 );
 
                 editButtonsLoaded = true;
@@ -175,8 +176,8 @@ namespace nwo5::editor {
         editor->updateButtons();
         editor->updateObjectInfoLabel();
         editor->updateGridNodeSize();
-        editor->tryUpdateTimeMarkers();
         editor->updateStickyControls();
+        editor->m_editorLayer->m_drawGridLayer->m_updateTimeMarkers = true;
         
         if (pUpdateControls) {
             if (auto control = editor->m_rotationControl; control && control->isVisible()) {

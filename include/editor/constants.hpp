@@ -26,6 +26,8 @@ namespace nwo5::editor::constants {
     constexpr float FASTER_SPEED_BPS = FASTER_SPEED / GRID_SIZE;
     constexpr float FASTEST_SPEED_BPS = FASTEST_SPEED / GRID_SIZE;
 
+    constexpr int OBJECT_IDS = 4539;
+
     constexpr float toSpeed(Speed pSpeed) {
         switch (pSpeed) {
             case Speed::Normal: return NORMAL_SPEED;
