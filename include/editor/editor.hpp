@@ -50,6 +50,9 @@ namespace nwo5::editor {
     SILLY_API_DLL void setLayer(int pLayer);
     SILLY_API_DLL void lockLayer(int pLayer = currentLayer());
 
+    /// saves current level
+    SILLY_API_DLL void save();
+
     /// get next free group
     /// @param pOffset search starts from this gid, clamped from 1-9999
     /// @note only accounts for target gid and center gid rn, ill do like sequence/advrand checks and stuff l8r
@@ -64,7 +67,7 @@ namespace nwo5::editor {
     /// @param pScale sprite scale
     /// @param pPrio priority, priority in the negtives will move past robtop editor buttons,
     /// @param pCallback callback
-    /// @returns if the button was registered for the first time
+    /// @returns if the button was registered
     SILLY_API_DLL bool registerEditTabButton(impl::EditTabButton::SpriteFunc pSprite, std::string pKey, float pScale, int pPrio, impl::EditTabButton::Callback pCallback);
     SILLY_API_DLL bool registerEditTabButton(std::string pSprite, std::string pKey, float pScale, int pPrio, impl::EditTabButton::Callback pCallback);
     SILLY_API_DLL bool registerEditTabButton(std::string pSprite, std::string pKey, int pPrio, impl::EditTabButton::Callback pCallback);
@@ -94,6 +97,28 @@ namespace nwo5::editor {
     /// @param pKey of button to toggle
     /// @note for robtop buttons use their node ids
     SILLY_API_DLL void toggleEditTabButton(const std::string& pKey, bool pOn);
+    /// registers button if condition is true, unregisters if condition is false
+    /// useful for buttons enabled by setting
+    template<typename... Args>
+    SILLY_API_DLL void conditionallyRegister(bool pCondition, std::string pSprite, std::string pKey, Args&&... pArgs) {
+        if (pCondition) {
+            registerEditTabButton(std::move(pSprite), std::move(pKey), std::forward<Args>(pArgs)...);
+        }
+        else {
+            unregisterEditTabButton(pKey);
+        }
+    }
+    /// registers button if condition is true, unregisters if condition is false
+    /// useful for buttons enabled by setting
+    template<typename... Args>
+    SILLY_API_DLL void conditionallyRegisterFrame(bool pCondition, std::string pSprite, std::string pKey, Args&&... pArgs) {
+        if (pCondition) {
+            registerEditTabButtonFrame(std::move(pSprite), std::move(pKey), std::forward<Args>(pArgs)...);
+        }
+        else {
+            unregisterEditTabButton(pKey);
+        }
+    }
 
-    constexpr cocos2d::CCPoint AUTO_CENTER{std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
+    constexpr cocos2d::CCPoint AUTO_CENTER{std::numeric_limits<float>::max() - 1.0f, std::numeric_limits<float>::max() - 1.0f};
 }

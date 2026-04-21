@@ -6,6 +6,8 @@
 - templated easing functions and made them copy cocos easing functions
 - renamed category decl macro
 - some more editor color utils
+- better edit highway robbery
+- conditional editor tab button function
 
 **Fixed** 
 

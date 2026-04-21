@@ -6,12 +6,12 @@ using namespace geode::prelude;
 
 namespace nwo5::editor {
     namespace impl {
-        static bool shouldMoveObject;
+        static bool s_shouldMoveObject;
 
-        static bool editButtonsLoaded;
-        static std::vector<EditTabButton> editTabButtons;
-        static std::unordered_map<std::string, CCMenuItemSpriteExtra*> editTabButtonMap;
-        static std::unordered_set<std::string> removedEditTabButtons;
+        static bool s_editButtonsLoaded;
+        static std::vector<EditTabButton> s_editTabButtons;
+        static std::unordered_map<std::string, CCMenuItemSpriteExtra*> s_editTabButtonMap;
+        static std::unordered_set<std::string> s_removedEditTabButtons;
 
         static int nextFreeGroupFast(int pOffset) {
             pOffset = std::clamp(pOffset, 1, editor::constants::MAX_GROUPS);
@@ -52,7 +52,7 @@ namespace nwo5::editor {
                 return;
             }
 
-            const auto shouldBeRemoved = impl::removedEditTabButtons.contains(
+            const auto shouldBeRemoved = s_removedEditTabButtons.contains(
                 static_cast<CCNode*>(pButton)->getID()
             );
 
@@ -65,14 +65,14 @@ namespace nwo5::editor {
 
         class $modify(UtilsEditorUI, EditorUI) {
             bool init(LevelEditorLayer* editorLayer) {
-                shouldMoveObject = true;
-                editButtonsLoaded = false;
+                s_shouldMoveObject = true;
+                s_editButtonsLoaded = false;
                 
                 return EditorUI::init(editorLayer);
             }
 
             void moveObject(GameObject* obj, CCPoint amount) {
-                if (shouldMoveObject) {
+                if (s_shouldMoveObject) {
                     EditorUI::moveObject(obj, amount);
                 }
             }
@@ -123,7 +123,7 @@ namespace nwo5::editor {
 
                 nwo5::utils::removeAllObjects(buttonArray);
 
-                editTabButtonMap.clear();
+                s_editTabButtonMap.clear();
 
                 i = 0;
 
@@ -133,17 +133,17 @@ namespace nwo5::editor {
                     buttonArray->addObjectsFromArray(array);
 
                     while(
-                        i < impl::editTabButtons.size() 
-                        && (impl::editTabButtons[i].prio <= prio || prio == BACK_BUTTONS) 
-                        && !m_editButtonBar->getChildByIDRecursive(impl::editTabButtons[i].key)
+                        i < s_editTabButtons.size() 
+                        && (s_editTabButtons[i].prio <= prio || prio == BACK_BUTTONS) 
+                        && !m_editButtonBar->getChildByIDRecursive(s_editTabButtons[i].key)
                     ) {
-                        const auto& data = impl::editTabButtons[i++];
+                        const auto& data = s_editTabButtons[i++];
 
                         auto button = createEditTabButton(data);
                         button->setID(data.key);
 
                         tryRegisterEditTabButton(button, buttonArray);
-                        editTabButtonMap[data.key] = button;
+                        s_editTabButtonMap[data.key] = button;
                     }
 
                     tryRegisterEditTabButton(robtop, buttonArray);
@@ -154,7 +154,7 @@ namespace nwo5::editor {
                     GameManager::sharedState()->getIntGameVariable(GameVar::EditorButtonRows)
                 );
 
-                editButtonsLoaded = true;
+                s_editButtonsLoaded = true;
             }
         };
 
@@ -162,7 +162,24 @@ namespace nwo5::editor {
             ui()->createUndoObject(pCommand, false);
         }
         void toggleMoveObject(bool pMove) {
-            shouldMoveObject = pMove;
+            s_shouldMoveObject = pMove;
+        }
+
+        // hjfod
+        struct FakePauseLayer final {
+            char alloc[sizeof(EditorPauseLayer)]; 
+
+            auto get() {
+                return reinterpret_cast<EditorPauseLayer*>(&alloc);
+            }
+        };
+
+        static EditorPauseLayer* getFakePauseLayer() {
+            static auto pauseLayer = FakePauseLayer{};
+
+            pauseLayer.get()->m_editorLayer = layer();
+
+            return pauseLayer.get();
         }
     }
 
@@ -338,23 +355,27 @@ namespace nwo5::editor {
         return pOffset > constants::MAX_GROUPS ? 0 : pOffset;
     }
 
+    void save() {
+        impl::getFakePauseLayer()->saveLevel();
+    }
+
     bool registerEditTabButton(impl::EditTabButton::SpriteFunc pSprite, std::string pKey, float pScale, int pPrio, impl::EditTabButton::Callback pCallback) {
         if (
-            std::ranges::find_if(impl::editTabButtons, [&] (const auto& pButton) {
+            std::ranges::find_if(impl::s_editTabButtons, [&] (const auto& pButton) {
                 return pButton.key == pKey;
-            }) != impl::editTabButtons.end()
+            }) != impl::s_editTabButtons.end()
         ) {
             return false;
         }
 
-        impl::editTabButtons.emplace_back(std::move(pKey), pPrio, pScale, std::move(pSprite), std::move(pCallback));
+        impl::s_editTabButtons.emplace_back(std::move(pKey), pPrio, pScale, std::move(pSprite), std::move(pCallback));
 
-        std::ranges::sort(impl::editTabButtons, [] (const auto& pA, const auto& pB) {
+        std::ranges::sort(impl::s_editTabButtons, [] (const auto& pA, const auto& pB) {
             return pA.prio < pB.prio;
         });
 
-        if (const auto it = impl::removedEditTabButtons.find(pKey); it != impl::removedEditTabButtons.end()) {
-            impl::removedEditTabButtons.erase(it);
+        if (const auto it = impl::s_removedEditTabButtons.find(pKey); it != impl::s_removedEditTabButtons.end()) {
+            impl::s_removedEditTabButtons.erase(it);
         }
 
         return true;
@@ -379,23 +400,23 @@ namespace nwo5::editor {
     }
     bool unregisterEditTabButton(const std::string& pKey, bool pRestore) {
         if (
-            const auto it = std::ranges::find_if(impl::editTabButtons, [&] (const auto& pButton) {
+            const auto it = std::ranges::find_if(impl::s_editTabButtons, [&] (const auto& pButton) {
                 return pButton.key == pKey;
-            }); it != impl::editTabButtons.end()
+            }); it != impl::s_editTabButtons.end()
         ) {
-            impl::editTabButtonMap.erase((*it).key);
-            impl::editTabButtons.erase(it);
+            impl::s_editTabButtonMap.erase((*it).key);
+            impl::s_editTabButtons.erase(it);
         }
 
-        const auto it = impl::removedEditTabButtons.find(pKey);
+        const auto it = impl::s_removedEditTabButtons.find(pKey);
 
-        if (it == impl::removedEditTabButtons.end() && !pRestore) {
-            impl::removedEditTabButtons.insert(pKey);
+        if (it == impl::s_removedEditTabButtons.end() && !pRestore) {
+            impl::s_removedEditTabButtons.insert(pKey);
 
             return true;
         }
-        else if (it != impl::removedEditTabButtons.end() && pRestore) {
-            impl::removedEditTabButtons.erase(it);
+        else if (it != impl::s_removedEditTabButtons.end() && pRestore) {
+            impl::s_removedEditTabButtons.erase(it);
 
             return true;
         }
@@ -403,11 +424,11 @@ namespace nwo5::editor {
         return false;
     }
     CCMenuItemSpriteExtra* getEditTabButton(const std::string& pKey) {
-        if (!ui() || !impl::editButtonsLoaded) {
+        if (!ui() || !impl::s_editButtonsLoaded) {
             return nullptr;
         }
 
-        if (const auto it = impl::editTabButtonMap.find(pKey); it != impl::editTabButtonMap.end()) {
+        if (const auto it = impl::s_editTabButtonMap.find(pKey); it != impl::s_editTabButtonMap.end()) {
             return (*it).second;
         }
 
