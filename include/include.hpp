@@ -19,7 +19,7 @@ namespace nwo5 {
         nwo5::utils::SetNodeParent, nwo5::utils::SetNodeID, nwo5::utils::SetNodeTag, nwo5::utils::SetNodeOrder, nwo5::utils::SetNodeVisibility, 
         nwo5::utils::SetNodeInvisible, nwo5::utils::SetNodeColor, nwo5::utils::SetNodeOpacity;
 
-        using nwo5::utils::GetChildQuery;
+        using nwo5::utils::GetChildQuery, nwo5::utils::GetChildQueryID, nwo5::utils::GetChildQueryID, nwo5::utils::GetChildQueryIndex;
 
         using nwo5::utils::TextInputCallback;
 
@@ -33,6 +33,7 @@ namespace nwo5 {
     namespace prelude {
         using namespace nwo5::settings::prelude;
         using namespace nwo5::editor::prelude;
+        // utils collides with geodes namespace </3
         
         using namespace nwo5::syntax;
     }

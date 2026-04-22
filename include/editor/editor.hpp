@@ -4,7 +4,7 @@
 
 namespace nwo5::editor {
     namespace impl {
-        struct EditTabButton {
+        struct SILLY_API_DLL EditTabButton {
             using SpriteFunc = geode::Function<cocos2d::CCSprite*() const>;
             using Callback = geode::CopyableFunction<void(CCMenuItemSpriteExtra*)>;
 

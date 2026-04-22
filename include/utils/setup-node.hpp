@@ -4,9 +4,11 @@
 
 namespace nwo5::utils {
     // murdering compile times to save typing like 5 characters per action :fire:
+    namespace impl{
+        struct SILLY_API_DLL NodeConfigBase {};
+    }
 
-    struct SILLY_API_DLL NodeConfigBase {};
-    struct SILLY_API_DLL SetNodePosition : NodeConfigBase {
+    struct SILLY_API_DLL SetNodePosition : impl::NodeConfigBase {
         const cocos2d::CCPoint pos;
 
         SetNodePosition(cocos2d::CCPoint pPos)
@@ -20,7 +22,7 @@ namespace nwo5::utils {
             pNode->setPosition(pos);
         }
     };
-    struct SILLY_API_DLL SetNodePositionX : NodeConfigBase {
+    struct SILLY_API_DLL SetNodePositionX : impl::NodeConfigBase {
         const float x;
 
         SetNodePositionX(float pX)
@@ -32,7 +34,7 @@ namespace nwo5::utils {
             pNode->setPositionX(x);
         }
     };
-    struct SILLY_API_DLL SetNodePositionY : NodeConfigBase {
+    struct SILLY_API_DLL SetNodePositionY : impl::NodeConfigBase {
         const float y;
 
         SetNodePositionY(float pY)
@@ -44,7 +46,7 @@ namespace nwo5::utils {
             pNode->setPositionY(y);
         }
     };
-    struct SILLY_API_DLL ChangeNodePosition : NodeConfigBase {
+    struct SILLY_API_DLL ChangeNodePosition : impl::NodeConfigBase {
         const cocos2d::CCPoint off;
 
         ChangeNodePosition(cocos2d::CCPoint pOff)
@@ -58,7 +60,7 @@ namespace nwo5::utils {
             pNode->setPosition(pNode->getPosition() + off);
         }
     };
-    struct SILLY_API_DLL ChangeNodePositionX : NodeConfigBase {
+    struct SILLY_API_DLL ChangeNodePositionX : impl::NodeConfigBase {
         const float off;
 
         ChangeNodePositionX(float pOff)
@@ -70,7 +72,7 @@ namespace nwo5::utils {
             pNode->setPositionX(pNode->getPositionX() + off);
         }
     };
-    struct SILLY_API_DLL ChangeNodePositionY : NodeConfigBase {
+    struct SILLY_API_DLL ChangeNodePositionY : impl::NodeConfigBase {
         const float off;
 
         ChangeNodePositionY(float pOff)
@@ -82,7 +84,7 @@ namespace nwo5::utils {
             pNode->setPositionY(pNode->getPositionY() + off);
         }
     };
-    struct SILLY_API_DLL SetNodeRotation : NodeConfigBase {
+    struct SILLY_API_DLL SetNodeRotation : impl::NodeConfigBase {
         const float rotation;
 
         SetNodeRotation(float pRotation)
@@ -94,7 +96,7 @@ namespace nwo5::utils {
             pNode->setRotation(rotation);
         }
     };
-    struct SILLY_API_DLL ChangeNodeRotation : NodeConfigBase {
+    struct SILLY_API_DLL ChangeNodeRotation : impl::NodeConfigBase {
         const float off;
 
         ChangeNodeRotation(float pOff)
@@ -106,7 +108,7 @@ namespace nwo5::utils {
             pNode->setRotation(pNode->getRotation() + off);
         }
     };
-    struct SILLY_API_DLL SetNodeScale : NodeConfigBase {
+    struct SILLY_API_DLL SetNodeScale : impl::NodeConfigBase {
         const bool xy;
         const cocos2d::CCSize scale;
 
@@ -134,7 +136,7 @@ namespace nwo5::utils {
             } 
         }
     };
-    struct SILLY_API_DLL SetNodeScaleX : NodeConfigBase {
+    struct SILLY_API_DLL SetNodeScaleX : impl::NodeConfigBase {
         const float scale;
 
         SetNodeScaleX(float pScale)
@@ -151,7 +153,7 @@ namespace nwo5::utils {
             } 
         }
     };
-    struct SILLY_API_DLL SetNodeScaleY : NodeConfigBase {
+    struct SILLY_API_DLL SetNodeScaleY : impl::NodeConfigBase {
         const float scale;
 
         SetNodeScaleY(float pScale)
@@ -168,7 +170,7 @@ namespace nwo5::utils {
             } 
         }
     };
-    struct SILLY_API_DLL ChangeNodeScale : NodeConfigBase {
+    struct SILLY_API_DLL ChangeNodeScale : impl::NodeConfigBase {
         const bool xy;
         const cocos2d::CCSize off;
 
@@ -196,7 +198,7 @@ namespace nwo5::utils {
             } 
         }
     };
-    struct SILLY_API_DLL ChangeNodeScaleX : NodeConfigBase {
+    struct SILLY_API_DLL ChangeNodeScaleX : impl::NodeConfigBase {
         const float off;
 
         ChangeNodeScaleX(float pOff)
@@ -213,7 +215,7 @@ namespace nwo5::utils {
             } 
         }
     };
-    struct SILLY_API_DLL ChangeNodeScaleY : NodeConfigBase {
+    struct SILLY_API_DLL ChangeNodeScaleY : impl::NodeConfigBase {
         const float off;
 
         ChangeNodeScaleY(float pOff)
@@ -230,7 +232,7 @@ namespace nwo5::utils {
             } 
         }
     };
-    struct SILLY_API_DLL SetNodeScaleWithSize : NodeConfigBase {
+    struct SILLY_API_DLL SetNodeScaleWithSize : impl::NodeConfigBase {
         const float size;
         const bool min;
 
@@ -250,7 +252,7 @@ namespace nwo5::utils {
             } 
         }
     };
-    struct SILLY_API_DLL SetNodeScaleWithWidth : NodeConfigBase {
+    struct SILLY_API_DLL SetNodeScaleWithWidth : impl::NodeConfigBase {
         const float width;
 
         SetNodeScaleWithWidth(float pSize)
@@ -267,7 +269,7 @@ namespace nwo5::utils {
             } 
         }
     };
-    struct SILLY_API_DLL SetNodeScaleWithHeight : NodeConfigBase {
+    struct SILLY_API_DLL SetNodeScaleWithHeight : impl::NodeConfigBase {
         const float height;
 
         SetNodeScaleWithHeight(float pSize)
@@ -283,7 +285,7 @@ namespace nwo5::utils {
             } 
         }
     };
-    struct SILLY_API_DLL LimitNodeScaleWithSize : NodeConfigBase {
+    struct SILLY_API_DLL LimitNodeScaleWithSize : impl::NodeConfigBase {
         const float size;
         const bool min;
 
@@ -308,7 +310,7 @@ namespace nwo5::utils {
             } 
         }
     };
-    struct SILLY_API_DLL LimitNodeScaleWithWidth : NodeConfigBase {
+    struct SILLY_API_DLL LimitNodeScaleWithWidth : impl::NodeConfigBase {
         const float width;
 
         LimitNodeScaleWithWidth(float pWidth)
@@ -328,7 +330,7 @@ namespace nwo5::utils {
             } 
         }
     };
-    struct SILLY_API_DLL LimitNodeScaleWithHeight : NodeConfigBase {
+    struct SILLY_API_DLL LimitNodeScaleWithHeight : impl::NodeConfigBase {
         const float height;
 
         LimitNodeScaleWithHeight(float pHeight)
@@ -348,7 +350,7 @@ namespace nwo5::utils {
             } 
         }
     };
-    struct SILLY_API_DLL SetNodeSize : NodeConfigBase { 
+    struct SILLY_API_DLL SetNodeSize : impl::NodeConfigBase { 
         const cocos2d::CCSize size;
 
         SetNodeSize(cocos2d::CCSize pSize)
@@ -362,7 +364,7 @@ namespace nwo5::utils {
             pNode->setContentSize(size);
         }
     };  
-    struct SILLY_API_DLL SetNodeWidth : NodeConfigBase {
+    struct SILLY_API_DLL SetNodeWidth : impl::NodeConfigBase {
         const float width;
 
         SetNodeWidth(float pWidth)
@@ -374,7 +376,7 @@ namespace nwo5::utils {
             pNode->setContentWidth(width);
         }
     };  
-    struct SILLY_API_DLL SetNodeHeight : NodeConfigBase {
+    struct SILLY_API_DLL SetNodeHeight : impl::NodeConfigBase {
         const float height;
 
         SetNodeHeight(float pHeight)
@@ -386,7 +388,7 @@ namespace nwo5::utils {
             pNode->setContentHeight(height);
         }
     }; 
-    struct SILLY_API_DLL ChangeNodeSize : NodeConfigBase {
+    struct SILLY_API_DLL ChangeNodeSize : impl::NodeConfigBase {
         const cocos2d::CCSize off;
 
         ChangeNodeSize(cocos2d::CCSize pOff)
@@ -400,7 +402,7 @@ namespace nwo5::utils {
             pNode->setContentSize(pNode->getContentSize() + off);
         }
     };
-    struct SILLY_API_DLL ChangeNodeWidth : NodeConfigBase {
+    struct SILLY_API_DLL ChangeNodeWidth : impl::NodeConfigBase {
         const float off;
 
         ChangeNodeWidth(float pOff)
@@ -412,7 +414,7 @@ namespace nwo5::utils {
             pNode->setContentWidth(pNode->getContentWidth() + off);
         }
     };  
-    struct SILLY_API_DLL ChangeNodeHeight : NodeConfigBase {
+    struct SILLY_API_DLL ChangeNodeHeight : impl::NodeConfigBase {
         const float off;
 
         ChangeNodeHeight(float pOff)
@@ -424,7 +426,7 @@ namespace nwo5::utils {
             pNode->setContentHeight(pNode->getContentHeight() + off);
         }
     }; 
-    struct SILLY_API_DLL SetNodeAnchor : NodeConfigBase {
+    struct SILLY_API_DLL SetNodeAnchor : impl::NodeConfigBase {
         const cocos2d::CCPoint anchor;
 
         SetNodeAnchor(cocos2d::CCPoint pAnchor)
@@ -438,7 +440,7 @@ namespace nwo5::utils {
             pNode->setAnchorPoint(anchor);
         }
     };
-    struct SILLY_API_DLL SetNodeChildren : NodeConfigBase {
+    struct SILLY_API_DLL SetNodeChildren : impl::NodeConfigBase {
         using ChildrenList = std::initializer_list<cocos2d::CCNode*>;
 
         const ChildrenList children;
@@ -455,7 +457,7 @@ namespace nwo5::utils {
             }
         }
     };
-    struct SILLY_API_DLL SetNodeParent : NodeConfigBase {
+    struct SILLY_API_DLL SetNodeParent : impl::NodeConfigBase {
         cocos2d::CCNode* const parent;
 
         SetNodeParent(cocos2d::CCNode* pParent)
@@ -465,7 +467,7 @@ namespace nwo5::utils {
             parent->addChild(pNode);
         }
     };
-    struct SILLY_API_DLL SetNodeID : NodeConfigBase {
+    struct SILLY_API_DLL SetNodeID : impl::NodeConfigBase {
         const std::string id;
 
         SetNodeID(std::string_view pID)
@@ -478,7 +480,7 @@ namespace nwo5::utils {
             pNode->setID(id);
         }
     };
-    struct SILLY_API_DLL SetNodeTag : NodeConfigBase {
+    struct SILLY_API_DLL SetNodeTag : impl::NodeConfigBase {
         const int tag;
 
         SetNodeTag(int pTag)
@@ -488,7 +490,7 @@ namespace nwo5::utils {
             pNode->setTag(tag);
         }
     };
-    struct SILLY_API_DLL SetNodeOrder : NodeConfigBase {
+    struct SILLY_API_DLL SetNodeOrder : impl::NodeConfigBase {
         const int order;
 
         SetNodeOrder(int pOrder)
@@ -498,7 +500,7 @@ namespace nwo5::utils {
             pNode->setZOrder(order);
         }
     };
-    struct SILLY_API_DLL SetNodeVisibility: NodeConfigBase {
+    struct SILLY_API_DLL SetNodeVisibility: impl::NodeConfigBase {
         const bool visible;
 
         SetNodeVisibility(bool pVisible)
@@ -508,12 +510,12 @@ namespace nwo5::utils {
             pNode->setVisible(visible);
         }
     };
-    struct SILLY_API_DLL SetNodeInvisible : NodeConfigBase {
+    struct SILLY_API_DLL SetNodeInvisible : impl::NodeConfigBase {
         void apply(cocos2d::CCNode* pNode) const {
             pNode->setVisible(false);
         }
     };
-    struct SILLY_API_DLL SetNodeColor: NodeConfigBase {
+    struct SILLY_API_DLL SetNodeColor: impl::NodeConfigBase {
         const cocos2d::ccColor3B color;
 
         SetNodeColor(cocos2d::ccColor3B pColor)
@@ -526,7 +528,7 @@ namespace nwo5::utils {
             pNode->setColor(color);
         }
     };
-    struct SILLY_API_DLL SetNodeOpacity: NodeConfigBase {
+    struct SILLY_API_DLL SetNodeOpacity: impl::NodeConfigBase {
         const unsigned char opacity;
 
         SetNodeOpacity(unsigned char pOpacity)
@@ -541,7 +543,7 @@ namespace nwo5::utils {
     };
 
     template<typename T, typename Base = std::remove_pointer_t<T>, typename... Args>
-    requires std::is_pointer_v<T> && std::derived_from<Base, cocos2d::CCNode> && (std::derived_from<Args, NodeConfigBase> && ...)
+    requires std::is_pointer_v<T> && std::derived_from<Base, cocos2d::CCNode> && (std::derived_from<Args, impl::NodeConfigBase> && ...)
     T setupNode(T pNode, Args... pArgs) {
         if (!pNode) {
             return nullptr;
