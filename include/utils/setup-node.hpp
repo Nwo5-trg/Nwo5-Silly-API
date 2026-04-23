@@ -3,7 +3,7 @@
 #include "../export.hpp"
 
 namespace nwo5::utils {
-    // murdering compile times to save typing like 5 characters per action :fire:
+    // ui builder but worse ! (but im too used to it so)
     namespace impl{
         struct SILLY_API_DLL NodeConfigBase {};
     }

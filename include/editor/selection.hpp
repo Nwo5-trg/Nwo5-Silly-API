@@ -6,6 +6,10 @@ namespace nwo5::editor::selection {
     template<typename ImplT, typename T = std::remove_pointer_t<ImplT>>
     requires std::derived_from<T, GameObject>
     std::vector<T*> get() {
+        if (notLoaded()) {
+            return std::vector<T*>{};
+        }
+        
         if (auto obj = ui()->m_selectedObject) {
             return std::vector<T*>{obj};
         }
@@ -16,7 +20,7 @@ namespace nwo5::editor::selection {
     template<typename ImplT = cocos2d::CCArray, typename T = std::remove_pointer_t<ImplT>>
     requires std::same_as<T, cocos2d::CCArray>
     T* get() {
-        return ui()->getSelectedObjects();
+        return loaded() ? ui()->getSelectedObjects() : cocos2d::CCArray::create();
     }
     template<typename T = GameObject*>
     auto getExt() {
@@ -25,7 +29,10 @@ namespace nwo5::editor::selection {
     template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
     requires std::derived_from<T, GameObject>
     T* getFirst() {
-        if (auto obj = ui()->m_selectedObject) {
+        if (notLoaded()) {
+            return nullptr;
+        }
+        else if (auto obj = ui()->m_selectedObject) {
             return static_cast<T*>(obj);
         }
         else if (auto objs = ui()->m_selectedObjects; objs && objs->count()) {
@@ -43,12 +50,15 @@ namespace nwo5::editor::selection {
             return get<T>();
         }
             
-        if (auto obj = ui()->m_selectedObject) {
+        if (notLoaded()) {
+            return std::vector<T*>{};
+        }
+        else if (auto obj = ui()->m_selectedObject) {
             if (geode::cast::typeinfo_cast<T*>(obj)) {
                 return {static_cast<T*>(obj)};
             }
             else {
-                return {};
+                return std::vector<T*>{};
             }
         }
         else {

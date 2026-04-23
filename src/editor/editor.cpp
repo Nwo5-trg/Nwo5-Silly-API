@@ -184,10 +184,17 @@ namespace nwo5::editor {
     }
 
     bool loaded() {
-        return layer();
+        return layer() && !layer()->m_initializing;
+    }
+    bool notLoaded() {
+        return !loaded();
     }
 
     void update(bool pUpdateControls, bool pOtherwiseDeactivateControls) {
+        if (notLoaded()) {
+            return;
+        }
+        
         auto editor = ui();
 
         editor->updateButtons();
@@ -215,9 +222,14 @@ namespace nwo5::editor {
     }
 
     float zoom() {
-        return layer()->m_objectLayer->getScale();
+
+        return loaded() ? layer()->m_objectLayer->getScale() : 0.0f;
     }
     CCPoint center() {
+        if (notLoaded()) {
+            return CCPointZero;
+        }
+        
         return CCPoint{
             (CCDirector::get()->getWinSize() / 2) - CCPoint{
                 layer()->m_objectLayer->getPositionX(), 
@@ -227,6 +239,10 @@ namespace nwo5::editor {
     }
 
     void activateRotationControl(bool pRefresh) {
+        if (notLoaded()) {
+            return;
+        }
+        
         if (!ui()->m_rotationControl) {
             return;
         }
@@ -241,6 +257,10 @@ namespace nwo5::editor {
         ui()->activateRotationControl(nullptr);
     }
     void activateScaleControl(bool pXY, bool pRefresh) {
+        if (notLoaded()) {
+            return;
+        }
+        
         if (!ui()->m_scaleControl) {
             return;
         }
@@ -258,6 +278,10 @@ namespace nwo5::editor {
         ui()->activateScaleControl(obj);
     }
     void activateTransformControl(bool pRefresh) {
+        if (notLoaded()) {
+            return;
+        }
+        
         if (!ui()->m_transformControl) {
             return;
         }
@@ -273,10 +297,14 @@ namespace nwo5::editor {
     }
 
     int currentLayer() {
+        if (notLoaded()) {
+            return editor::constants::ALL_LAYERS;
+        }
+        
         return layer()->m_currentLayer;
     }
     bool layerSelectable(int pLayer, bool pIgnoreLocked) {
-        if (pLayer > editor::constants::MAX_LAYERS || (!pIgnoreLocked && layerLocked(pLayer))) {
+        if (notLoaded() || pLayer > editor::constants::MAX_LAYERS || (!pIgnoreLocked && layerLocked(pLayer))) {
             return false;
         }
 
@@ -285,10 +313,10 @@ namespace nwo5::editor {
         return layer == editor::constants::ALL_LAYERS || layer == pLayer;
     }
     bool layerLocked(int pLayer) {
-        return layer()->isLayerLocked(pLayer);
+        return loaded() && layer()->isLayerLocked(pLayer);
     }
     void setLayer(int pLayer) {
-        if (pLayer > editor::constants::MAX_LAYERS || pLayer < editor::constants::ALL_LAYERS) {
+        if (notLoaded() || pLayer > editor::constants::MAX_LAYERS || pLayer < editor::constants::ALL_LAYERS) {
             return;
         }
 
@@ -296,20 +324,30 @@ namespace nwo5::editor {
         // its fucking crazy to me that robtop calls layers "groups" internally :sob:
         ui()->updateGroupIDLabel();
     }
-    void lockLayer(int pLayer) {
-        if (pLayer > editor::constants::MAX_LAYERS || pLayer < editor::constants::ALL_LAYERS) {
+    void lockLayer(int pLayer, bool pLock) {
+        if (notLoaded() || pLayer > editor::constants::MAX_LAYERS || pLayer < editor::constants::ALL_LAYERS || layerLocked(pLayer) == pLock) {
             return;
         }
 
-        const auto ret = currentLayer();
+        const auto editorLayer = currentLayer();
+        const auto lockingEnabled = layer()->m_layerLockingEnabled;
 
         layer()->m_currentLayer = pLayer;
-        ui()->onLockLayer(nullptr);
+        layer()->m_layerLockingEnabled = true;
+        
+        // i dont wanna re this function it looks like a bunch of math and im scared
+        layer()->toggleLockActiveLayer();
+        ui()->updateGroupIDLabel();
 
-        layer()->m_currentLayer = ret;
+        layer()->m_currentLayer = editorLayer;
+        layer()->m_layerLockingEnabled = lockingEnabled;
     }
 
     int nextFreeGroup(int pOffset, bool pCheckTargetGroups) {
+        if (notLoaded()) {
+            return 0;
+        }
+        
         if (!pCheckTargetGroups) {
             return impl::nextFreeGroupFast(pOffset);
         }
@@ -356,6 +394,10 @@ namespace nwo5::editor {
     }
 
     void save() {
+        if (notLoaded()) {
+            return;
+        }
+        
         impl::getFakePauseLayer()->saveLevel();
     }
 
@@ -424,7 +466,7 @@ namespace nwo5::editor {
         return false;
     }
     CCMenuItemSpriteExtra* getEditTabButton(const std::string& pKey) {
-        if (!ui() || !impl::s_editButtonsLoaded) {
+        if (notLoaded() || !impl::s_editButtonsLoaded) {
             return nullptr;
         }
 

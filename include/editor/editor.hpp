@@ -34,6 +34,7 @@ namespace nwo5::editor {
     }
     
     SILLY_API_DLL bool loaded();
+    SILLY_API_DLL bool notLoaded();
 
     SILLY_API_DLL void update(bool pUpdateControls = true, bool pOtherwiseDeactivateControls = false);
 
@@ -46,9 +47,9 @@ namespace nwo5::editor {
 
     SILLY_API_DLL int currentLayer();
     SILLY_API_DLL bool layerSelectable(int pLayer, bool pIgnoreLocked = false);
-    SILLY_API_DLL bool layerLocked(int pLayer);
+    SILLY_API_DLL bool layerLocked(int pLayer = currentLayer());
     SILLY_API_DLL void setLayer(int pLayer);
-    SILLY_API_DLL void lockLayer(int pLayer = currentLayer());
+    SILLY_API_DLL void lockLayer(int pLayer, bool pLock);
 
     /// saves current level
     SILLY_API_DLL void save();

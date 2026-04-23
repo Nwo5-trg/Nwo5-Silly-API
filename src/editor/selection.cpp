@@ -4,7 +4,7 @@ using namespace geode::prelude;
 
 namespace nwo5::editor::selection {
     void add(GameObject* pObj, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
-        if (pUseFilter && pAlsoCheckLayers && !editor::object::canSelectLayer(pObj)) {
+        if (notLoaded() || (pUseFilter && pAlsoCheckLayers && !editor::object::canSelectLayer(pObj))) {
             return;
         }
 
@@ -29,6 +29,10 @@ namespace nwo5::editor::selection {
         add(CCArrayExt(pObjs).inner(), pUndo, pUseFilter, pAlsoCheckLayers);
     }
     void add(cocos2d::CCArray* pObjs, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
+        if (notLoaded()) {
+            return;
+        }
+        
         const auto checkLayers = pUseFilter && pAlsoCheckLayers;
 
         auto objs = checkLayers ? CCArray::create() : pObjs;
@@ -58,7 +62,7 @@ namespace nwo5::editor::selection {
         }
     }
     void set(GameObject* pObj, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
-        if (pUseFilter && pAlsoCheckLayers && !editor::object::canSelectLayer(pObj)) {
+        if (notLoaded() || (pUseFilter && pAlsoCheckLayers && !editor::object::canSelectLayer(pObj))) {
             return;
         }
 
@@ -84,6 +88,10 @@ namespace nwo5::editor::selection {
         set(CCArrayExt(pObjs).inner(), pUndo, pUseFilter, pAlsoCheckLayers);
     }
     void set(cocos2d::CCArray* pObjs, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
+        if (notLoaded()) {
+            return;
+        }
+        
         const auto checkLayers = pUseFilter && pAlsoCheckLayers;
 
         auto objs = checkLayers ? CCArray::create() : pObjs;
@@ -119,7 +127,10 @@ namespace nwo5::editor::selection {
         return !count();
     }
     size_t count() {
-        if (ui()->m_selectedObject) {
+        if (notLoaded()) {
+            return 0;
+        }     
+        else if (ui()->m_selectedObject) {
             return 1;
         }
         else {
@@ -138,6 +149,10 @@ namespace nwo5::editor::selection {
         remove(get(), pUndo);
     }
     void remove(GameObject* pObj, bool pUndo) {
+        if (notLoaded()) {
+            return;
+        }
+        
         if (pUndo) {
             ui()->createUndoSelectObject(false);
         }
@@ -151,6 +166,10 @@ namespace nwo5::editor::selection {
         ui()->m_selectedObjects->removeObject(pObj, false);
     }
     void remove(std::span<GameObject*> pObjs, bool pUndo) {
+        if (notLoaded()) {
+            return;
+        }
+        
         if (pUndo) {
             ui()->createUndoSelectObject(false);
         }
@@ -160,6 +179,10 @@ namespace nwo5::editor::selection {
         }
     }
     void remove(cocos2d::CCArray* pObjs, bool pUndo) {
+        if (notLoaded()) {
+            return;
+        }
+        
         if (pUndo) {
             ui()->createUndoSelectObject(false);
         }
