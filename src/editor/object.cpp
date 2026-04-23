@@ -214,8 +214,8 @@ namespace nwo5::editor::object {
         return out;
     }
 
-    bool canSelectLayer(GameObject* pObj) {
-        return editor::layerSelectable(pObj->m_editorLayer) || editor::layerSelectable(pObj->m_editorLayer2);
+    bool canSelectLayer(GameObject* pObj, bool pIgnoreLocked) {
+        return editor::layerSelectable(pObj->m_editorLayer, pIgnoreLocked) || editor::layerSelectable(pObj->m_editorLayer2, pIgnoreLocked);
     }
 
     CCRect bounds(std::span<GameObject*> pObjs, bool pAddSize) {

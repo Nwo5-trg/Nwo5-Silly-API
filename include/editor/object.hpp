@@ -41,7 +41,7 @@ namespace nwo5::editor::object {
     SILLY_API_DLL std::vector<int> ids(std::span<GameObject*> pObjs, bool pSort = false);
     SILLY_API_DLL std::vector<int> ids(cocos2d::CCArray* pObjs, bool pSort = false);
 
-    SILLY_API_DLL bool canSelectLayer(GameObject* pObj);
+    SILLY_API_DLL bool canSelectLayer(GameObject* pObj, bool pIgnoreLocked = false);
 
     /// get bounds of objects
     /// @param pAddSize adds scaled content size of the objects to the position checked
