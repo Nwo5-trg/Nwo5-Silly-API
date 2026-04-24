@@ -28,6 +28,8 @@ namespace nwo5 {
         using nwo5::utils::TOP_RIGHT_ANCHOR, nwo5::utils::TOP_CENTER_ANCHOR, nwo5::utils::TOP_LEFT_ANCHOR,
         nwo5::utils::LEFT_CENTER_ANCHOR, nwo5::utils::BOTTOM_LEFT_ANCHOR, nwo5::utils::BOTTOM_CENTER_ANCHOR,
         nwo5::utils::BOTTOM_RIGHT_ANCHOR, nwo5::utils::RIGHT_CENTER_ANCHOR, nwo5::utils::CENTER_ANCHOR;
+
+        using nwo5::utils::array::ArrayIndex;
     }
     
     namespace prelude {

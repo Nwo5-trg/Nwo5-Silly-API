@@ -1395,7 +1395,9 @@ namespace nwo5::editor::trigger {
     SILLY_API_DLL Category category(int pID);
     SILLY_API_DLL Category category(GameObject* pObj);
 
+    /// this took a while
     SILLY_API_DLL cocos2d::ccColor3B color(int pID);
+    /// returns target color for color trigger/pulse so that might be useful :3
     SILLY_API_DLL cocos2d::ccColor3B color(GameObject* pObj);
 
     /// check if activate group enabled, e.g. toggle 

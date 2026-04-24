@@ -603,7 +603,14 @@ namespace nwo5::editor::trigger {
         return get(pID).color();
     }
     ccColor3B color(GameObject* pObj) {
-        return get(pObj).color();
+        const auto id = pObj->m_objectID;
+
+        if (id == COLOR_TRIGGER || id == PULSE_TRIGGER) {
+            return static_cast<EffectGameObject*>(pObj)->m_triggerTargetColor;
+        }
+        else {
+            return color(id);
+        }
     }
 
     bool activateGroup(GameObject* pObj) {

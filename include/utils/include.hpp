@@ -4,3 +4,4 @@
 #include "nodes.hpp"
 #include "misc.hpp"
 #include "easings.hpp"
+#include "array.hpp"

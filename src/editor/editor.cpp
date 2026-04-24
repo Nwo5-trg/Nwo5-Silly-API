@@ -68,21 +68,9 @@ namespace nwo5::editor {
                 s_shouldMoveObject = true;
                 s_editButtonsLoaded = false;
                 
-                return EditorUI::init(editorLayer);
-            }
-
-            void moveObject(GameObject* obj, CCPoint amount) {
-                if (s_shouldMoveObject) {
-                    EditorUI::moveObject(obj, amount);
+                if (!EditorUI::init(editorLayer)) {
+                    return false;
                 }
-            }
-
-            static void onModify(auto& pSelf) {
-                (void)pSelf.setHookPriority("EditorUI::createMoveMenu", Priority::LatePost);
-            }
-
-            void createMoveMenu() {
-                EditorUI::createMoveMenu();
                 
                 auto& buttonArray = m_editButtonBar->m_buttonArray;
 
@@ -101,14 +89,13 @@ namespace nwo5::editor {
                 for (auto obj : robtopButtons) {
                     editButtons.emplace_back(
                         -(i--), std::pair<CCArray*, CCObject*>{
-                            nwo5::utils::objectsBefore(buttonArray, obj, false), obj
+                            nwo5::utils::array::before(buttonArray, obj, false), obj
                         }
                     );
-                    nwo5::utils::removeObjectsFromArray(
+                    nwo5::utils::array::remove(
                         buttonArray, 
-                        nwo5::utils::objectsBefore(buttonArray, obj, true)
+                        nwo5::utils::array::before(buttonArray, obj, true)
                     );
-                    
                 }
 
                 CCArray* remainingCustomButtons = CCArray::create();
@@ -121,7 +108,7 @@ namespace nwo5::editor {
 
                 editButtons.emplace_back(BACK_BUTTONS, std::pair<CCArray*, CCObject*>{remainingCustomButtons, nullptr});
 
-                nwo5::utils::removeAllObjects(buttonArray);
+                nwo5::utils::array::clear(buttonArray);
 
                 s_editTabButtonMap.clear();
 
@@ -130,12 +117,13 @@ namespace nwo5::editor {
                 for (const auto& [prio, buttons] : editButtons) {
                     const auto& [array, robtop] = buttons;
 
-                    buttonArray->addObjectsFromArray(array);
+                    for (auto button : CCArrayExt<CCNode>(array)) {
+                        tryRegisterEditTabButton(button, buttonArray);
+                    }
 
                     while(
                         i < s_editTabButtons.size() 
-                        && (s_editTabButtons[i].prio <= prio || prio == BACK_BUTTONS) 
-                        && !m_editButtonBar->getChildByIDRecursive(s_editTabButtons[i].key)
+                        && (s_editTabButtons[i].prio <= prio || prio == BACK_BUTTONS)
                     ) {
                         const auto& data = s_editTabButtons[i++];
 
@@ -155,6 +143,18 @@ namespace nwo5::editor {
                 );
 
                 s_editButtonsLoaded = true;
+
+                return true;
+            }
+
+            void moveObject(GameObject* obj, CCPoint amount) {
+                if (s_shouldMoveObject) {
+                    EditorUI::moveObject(obj, amount);
+                }
+            }
+
+            static void onModify(auto& pSelf) {
+                (void)pSelf.setHookPriority("EditorUI::init", Priority::VeryLatePost);
             }
         };
 
@@ -235,7 +235,11 @@ namespace nwo5::editor {
                 layer()->m_objectLayer->getPositionX(), 
                 layer()->m_objectLayer->getPositionY() - ui()->m_toolbarHeight / 2
             }
-         } / zoom();
+        } / zoom();
+    }
+
+    bool isPlaytesting() {
+        return loaded() ? layer()->m_playbackMode == PlaybackMode::Playing : false;
     }
 
     void activateRotationControl(bool pRefresh) {

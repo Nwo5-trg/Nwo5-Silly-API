@@ -41,6 +41,8 @@ namespace nwo5::editor {
     SILLY_API_DLL float zoom();
     SILLY_API_DLL cocos2d::CCPoint center();
 
+    SILLY_API_DLL bool isPlaytesting();
+
     SILLY_API_DLL void activateRotationControl(bool pRefresh = true);
     SILLY_API_DLL void activateScaleControl(bool pXY, bool pRefresh = true);
     SILLY_API_DLL void activateTransformControl(bool pRefresh = true);
@@ -82,7 +84,8 @@ namespace nwo5::editor {
     /// otherwise if its a robtop button or button added by another mod will just be made invisible and omitted from buttonarray
     /// @param pKey will remove edit tab button with this key
     /// @param pRestore only matters for other modded buttons/robtop buttons, remove button from remove list
-    /// @note for robtop buttons use their node ids
+    /// @note for other buttons use node ids
+    /// @note will prolly get rewritten later i js cant b fucked rn
     /// @returns if the button was unregistered/restored
     SILLY_API_DLL bool unregisterEditTabButton(const std::string& pKey, bool pRestore = false);
     /// get if a button is registered

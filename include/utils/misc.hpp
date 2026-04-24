@@ -19,13 +19,6 @@ namespace nwo5::utils {
     /// technically breaks when calling with togglewithcallback but idk fuck robtop
     SILLY_API_DLL bool isToggled(cocos2d::CCObject* pToggler);
 
-    SILLY_API_DLL void removeAllObjects(cocos2d::CCArray* pArray, bool pRelease = false);
-    SILLY_API_DLL void removeObjectsFromArray(cocos2d::CCArray* pArray, cocos2d::CCArray* pOther, bool pRelease = false);
-    SILLY_API_DLL cocos2d::CCArray* sharedObjects(cocos2d::CCArray* pArray, cocos2d::CCArray* pOther);
-    SILLY_API_DLL std::optional<unsigned int> findObject(cocos2d::CCArray* pArray, cocos2d::CCObject* pObj);
-    SILLY_API_DLL cocos2d::CCArray* objectsBefore(cocos2d::CCArray* pArray, cocos2d::CCObject* pObj, bool pInclusive = true);
-    SILLY_API_DLL cocos2d::CCArray* objectsAfter(cocos2d::CCArray* pArray, cocos2d::CCObject* pObj, bool pInclusive = true);
-
     template<typename T>
     T random(T pMin, T pMax) {
         return geode::utils::random::generate(pMin, pMax);
