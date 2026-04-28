@@ -25,7 +25,7 @@ namespace nwo5::editor::selection {
             ui()->m_stickyControlsEnabled = ret;
         }
     }
-    void add(std::span<GameObject*> pObjs, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
+    void add(std::span<GameObject* const> pObjs, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
         add(CCArrayExt(pObjs).inner(), pUndo, pUseFilter, pAlsoCheckLayers);
     }
     void add(cocos2d::CCArray* pObjs, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
@@ -84,7 +84,7 @@ namespace nwo5::editor::selection {
             ui()->m_stickyControlsEnabled = ret;
         }
     }
-    void set(std::span<GameObject*> pObjs, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
+    void set(std::span<GameObject* const> pObjs, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
         set(CCArrayExt(pObjs).inner(), pUndo, pUseFilter, pAlsoCheckLayers);
     }
     void set(cocos2d::CCArray* pObjs, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
@@ -165,7 +165,7 @@ namespace nwo5::editor::selection {
         
         ui()->m_selectedObjects->removeObject(pObj, false);
     }
-    void remove(std::span<GameObject*> pObjs, bool pUndo) {
+    void remove(std::span<GameObject* const> pObjs, bool pUndo) {
         if (notLoaded()) {
             return;
         }
@@ -192,7 +192,7 @@ namespace nwo5::editor::selection {
         }
     }
 
-    void repairColors(std::span<GameObject*> pObjs) {
+    void repairColors(std::span<GameObject* const> pObjs) {
         for (auto obj : pObjs) {
             if (!obj->m_isSelected) {
                 continue;

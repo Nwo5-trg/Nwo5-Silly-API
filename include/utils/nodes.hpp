@@ -61,29 +61,4 @@ namespace nwo5::utils {
             return geode::cast::typeinfo_cast<T*>(node);
         }
     }
-
-    constexpr float DEFAULT_TEXT_INPUT_HEIGHT = 30.0f;
-    using TextInputCallback = geode::Function<void(const std::string&)>;
-
-    SILLY_API_DLL geode::TextInput* createTextInput(float pWidth, float pHeight, const std::string& pPlaceholder, const std::string& pFont, TextInputCallback pCallback = [] (const std::string&) {});
-    SILLY_API_DLL geode::TextInput* createTextInput(float pWidth, float pHeight, const std::string& pPlaceholder = "", TextInputCallback pCallback = [] (const std::string&) {});
-    SILLY_API_DLL geode::TextInput* createTextInput(float pWidth, const std::string& pPlaceholder, const std::string& pFont, TextInputCallback pCallback = [] (const std::string&) {});
-    SILLY_API_DLL geode::TextInput* createTextInput(float pWidth, const std::string& pPlaceholder = "", TextInputCallback pCallback = [] (const std::string&) {});
-
-    SILLY_API_DLL CCMenuItemSpriteExtra* createCircleButton(const std::string& pTexture, geode::CircleBaseColor pColor, geode::CircleBaseSize pSize, cocos2d::CCObject* pTarget, cocos2d::SEL_MenuHandler pCallback, float pScale = 1.0f);
-    SILLY_API_DLL CCMenuItemSpriteExtra* createCircleButton(const std::string& pTexture, geode::CircleBaseColor pColor, cocos2d::CCObject* pTarget, cocos2d::SEL_MenuHandler pCallback, float pScale = 1.0f);
-    SILLY_API_DLL CCMenuItemSpriteExtra* createCircleButtonFrame(const std::string& pTexture, geode::CircleBaseColor pColor, geode::CircleBaseSize pSize, cocos2d::CCObject* pTarget, cocos2d::SEL_MenuHandler pCallback, float pScale = 1.0f);
-    SILLY_API_DLL CCMenuItemSpriteExtra* createCircleButtonFrame(const std::string& pTexture, geode::CircleBaseColor pColor, cocos2d::CCObject* pTarget, cocos2d::SEL_MenuHandler pCallback, float pScale = 1.0f);
-    SILLY_API_DLL CCMenuItemSpriteExtra* createButton(const std::string& pTexture, cocos2d::CCObject* pTarget, cocos2d::SEL_MenuHandler pCallback, float pScale = 1.0f);
-    SILLY_API_DLL CCMenuItemSpriteExtra* createButtonFrame(const std::string& pTexture, cocos2d::CCObject* pTarget, cocos2d::SEL_MenuHandler pCallback, float pScale = 1.0f);
-    
-    constexpr cocos2d::CCPoint TOP_RIGHT_ANCHOR = {1.0f, 1.0f};
-    constexpr cocos2d::CCPoint TOP_CENTER_ANCHOR = {0.5f, 1.0f};
-    constexpr cocos2d::CCPoint TOP_LEFT_ANCHOR = {0.0f, 1.0f};
-    constexpr cocos2d::CCPoint LEFT_CENTER_ANCHOR = {0.0f, 0.5f};
-    constexpr cocos2d::CCPoint BOTTOM_LEFT_ANCHOR = {0.0f, 0.0f};
-    constexpr cocos2d::CCPoint BOTTOM_CENTER_ANCHOR = {0.5f, 0.0f};
-    constexpr cocos2d::CCPoint BOTTOM_RIGHT_ANCHOR = {1.0f, 0.0f};
-    constexpr cocos2d::CCPoint RIGHT_CENTER_ANCHOR = {1.0f, 0.5f};
-    constexpr cocos2d::CCPoint CENTER_ANCHOR = {0.5f, 0.5f};
 }

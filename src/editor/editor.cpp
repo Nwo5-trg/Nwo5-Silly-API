@@ -222,8 +222,7 @@ namespace nwo5::editor {
     }
 
     float zoom() {
-
-        return loaded() ? layer()->m_objectLayer->getScale() : 0.0f;
+        return layer() ? layer()->m_objectLayer->getScale() : 0.0f;
     }
     CCPoint center() {
         if (notLoaded()) {
@@ -239,7 +238,7 @@ namespace nwo5::editor {
     }
 
     bool isPlaytesting() {
-        return loaded() ? layer()->m_playbackMode == PlaybackMode::Playing : false;
+        return layer() ? layer()->m_playbackMode == PlaybackMode::Playing : false;
     }
 
     void activateRotationControl(bool pRefresh) {
@@ -301,26 +300,26 @@ namespace nwo5::editor {
     }
 
     int currentLayer() {
-        if (notLoaded()) {
+        if (!layer()) {
             return editor::constants::ALL_LAYERS;
         }
         
         return layer()->m_currentLayer;
     }
     bool layerSelectable(int pLayer, bool pIgnoreLocked) {
-        if (notLoaded() || pLayer > editor::constants::MAX_LAYERS || (!pIgnoreLocked && layerLocked(pLayer))) {
+        if (!layer() || pLayer > editor::constants::MAX_LAYERS || (!pIgnoreLocked && layerLocked(pLayer))) {
             return false;
         }
-
+        
         const auto layer = currentLayer();
 
         return layer == editor::constants::ALL_LAYERS || layer == pLayer;
     }
     bool layerLocked(int pLayer) {
-        return loaded() && layer()->isLayerLocked(pLayer);
+        return layer() && layer()->isLayerLocked(pLayer);
     }
     void setLayer(int pLayer) {
-        if (notLoaded() || pLayer > editor::constants::MAX_LAYERS || pLayer < editor::constants::ALL_LAYERS) {
+        if (!ui() || pLayer > editor::constants::MAX_LAYERS || pLayer < editor::constants::ALL_LAYERS) {
             return;
         }
 
@@ -329,7 +328,7 @@ namespace nwo5::editor {
         ui()->updateGroupIDLabel();
     }
     void lockLayer(int pLayer, bool pLock) {
-        if (notLoaded() || pLayer > editor::constants::MAX_LAYERS || pLayer < editor::constants::ALL_LAYERS || layerLocked(pLayer) == pLock) {
+        if (!ui() || pLayer > editor::constants::MAX_LAYERS || pLayer < editor::constants::ALL_LAYERS || layerLocked(pLayer) == pLock) {
             return;
         }
 

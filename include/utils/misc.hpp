@@ -37,6 +37,10 @@ namespace nwo5::utils {
     template<typename T>
     requires std::is_floating_point_v<T>
     auto numToString(T pNum, size_t pPrecision = 4) {
+        if (!pPrecision) {
+            return geode::utils::numToString(static_cast<int>(std::round(pNum)));
+        }
+        
         auto str = geode::utils::numToString(pNum, pPrecision);
         
         if (str.find('.') != std::string::npos) {
@@ -58,16 +62,53 @@ namespace nwo5::utils {
         pNode->addEventListener(geode::KeybindSettingPressedEventV3(geode::Mod::get(), std::move(pKeybind)), std::forward<Callback>(pCallback));
     }
 
-    /// casts a numer to another number (but also works with enums)
-    /// another day some more bullshit i learn abt templates this is literally just for chroma to work
-    template<typename T, typename U>
-    requires std::is_arithmetic_v<T> && (std::is_arithmetic_v<U> || std::is_scoped_enum_v<U>)
-    T enumNumCast(U pEnum) {
-        if constexpr (std::is_scoped_enum_v<U>) {
-            return static_cast<T>(std::to_underlying(pEnum));
+    /// convert between numbers and enums
+    /// @note i dont guarantee safty i js guarantee the compiler stfu
+    template<typename After, typename Before>
+    requires (std::is_arithmetic_v<Before> || std::is_scoped_enum_v<Before>) && (std::is_arithmetic_v<Before> || std::is_scoped_enum_v<Before>)
+    After enum_cast(Before pVal) {
+        if (std::same_as<After, Before>) {
+            return pVal;
+        }
+        if constexpr (std::is_scoped_enum_v<Before>) {
+            return static_cast<After>(std::to_underlying(pVal));
         }
         else {
-            return static_cast<T>(pEnum);
+            return static_cast<After>(pVal);
+        }
+    }
+
+    template<typename After, typename Before>
+    After color_cast(Before pVal) {
+        if constexpr (std::same_as<Before, After>) {
+            return pVal;
+        }
+        else if constexpr (std::same_as<Before, cocos2d::ccColor3B>) {
+            if constexpr (std::same_as<After, cocos2d::ccColor4B>) {
+                return geode::cocos::to4B(pVal);
+            }
+            else if constexpr (std::same_as<After, cocos2d::ccColor4F>) {
+                return cocos2d::ccc4FFromccc3B(pVal);
+            }
+        }
+        else if constexpr (std::same_as<Before, cocos2d::ccColor4B>) {
+            if constexpr (std::same_as<After, cocos2d::ccColor3B>) {
+                return geode::cocos::to3B(pVal);
+            }
+            else if constexpr (std::same_as<After, cocos2d::ccColor4F>) {
+                return geode::cocos::to4F(pVal);
+            }
+        }
+        else if constexpr (std::same_as<Before, cocos2d::ccColor4F>) {
+            if constexpr (std::same_as<After, cocos2d::ccColor3B>) {
+                return {static_cast<GLubyte>(pVal.r * 255), static_cast<GLubyte>(pVal.g * 255), static_cast<GLubyte>(pVal.b * 255)};
+            }
+            else if constexpr (std::same_as<After, cocos2d::ccColor4B>) {
+                return cocos2d::ccc4BFromccc4F(pVal);
+            }
+        }
+        else {
+            static_assert(false, "not a color type");
         }
     }
 
@@ -78,19 +119,6 @@ namespace nwo5::utils {
     /// @param pValue value of outputted color
     template<typename ImplT = cocos2d::ccColor4F, typename Offset = float, typename T = std::decay_t<ImplT>>
     T getChroma(float pSpeed, Offset pOffset = Offset{}, float pSaturation = 1.0f, float pValue = 1.0f) {
-        const auto cc4f = nwo5::utils::impl::getChroma4F(pSpeed, enumNumCast<float>(pOffset), pSaturation, pValue);
-
-        if constexpr (std::same_as<T, cocos2d::ccColor3B>) {
-            return {static_cast<GLubyte>(cc4f.r * 255), static_cast<GLubyte>(cc4f.g * 255), static_cast<GLubyte>(cc4f.b * 255)};
-        }
-        else if constexpr (std::same_as<T, cocos2d::ccColor4B>) {
-            return cocos2d::ccc4BFromccc4F(cc4f);
-        }
-        else if constexpr (std::same_as<T, cocos2d::ccColor4F>) {
-            return cc4f;
-        }
-        else {
-            static_assert(false, "u cant b that type of gay ;3");
-        }
+        return color_cast<T>(nwo5::utils::impl::getChroma4F(pSpeed, enum_cast<float>(pOffset), pSaturation, pValue));
     }
 }

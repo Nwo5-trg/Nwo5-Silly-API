@@ -6,8 +6,8 @@
 #include "constants.hpp"
 #include "trigger.hpp"
 
-namespace nwo5::editor {
-    namespace prelude {
-        namespace editor = nwo5::editor;
-    }
+namespace nwo5::editor::prelude {
+    namespace editor = nwo5::editor;
+
+    using editor::AUTO_CENTER;
 }

@@ -106,7 +106,7 @@ namespace nwo5::editor::selection {
     /// @param pUseFilter whether to check select filter
     /// @param pAlsoCheckLayers whether to also check if objects layers are selectable (editor::object::canSelectLayer)
     /// @param pApplyLinkControls if true and object selected belongs to a link group, the rest of the linked group will be selected (however robtop handles that no promises)
-    SILLY_API_DLL void add(std::span<GameObject*> pObjs, bool pUndo = false, bool pUseFilter = false, bool pAlsoCheckLayers = true, bool pApplyLinkControls = false);
+    SILLY_API_DLL void add(std::span<GameObject* const> pObjs, bool pUndo = false, bool pUseFilter = false, bool pAlsoCheckLayers = true, bool pApplyLinkControls = false);
     /// add objects to selection
     /// @param pObjs obj to select
     /// @param pUndo make the selection undoable
@@ -127,7 +127,7 @@ namespace nwo5::editor::selection {
     /// @param pUseFilter whether to check select filter
     /// @param pAlsoCheckLayers whether to also check if objects layers are selectable (editor::object::canSelectLayer)
     /// @param pApplyLinkControls if true and object selected belongs to a link group, the rest of the linked group will be selected (however robtop handles that no promises)
-    SILLY_API_DLL void set(std::span<GameObject*> pObjs, bool pUndo = false, bool pUseFilter = false, bool pAlsoCheckLayers = true, bool pApplyLinkControls = false);
+    SILLY_API_DLL void set(std::span<GameObject* const> pObjs, bool pUndo = false, bool pUseFilter = false, bool pAlsoCheckLayers = true, bool pApplyLinkControls = false);
     /// set selection to only objects
     /// @param pObjs obj to select
     /// @param pUndo make the selection undoable
@@ -138,11 +138,11 @@ namespace nwo5::editor::selection {
 
     SILLY_API_DLL void clear(bool pUndo = false);
     SILLY_API_DLL void remove(GameObject* pObj, bool pUndo = false);
-    SILLY_API_DLL void remove(std::span<GameObject*> pObjs, bool pUndo = false);
+    SILLY_API_DLL void remove(std::span<GameObject* const> pObjs, bool pUndo = false);
     SILLY_API_DLL void remove(cocos2d::CCArray* pObjs, bool pUndo = false);
 
     /// updates objects selection color again
-    SILLY_API_DLL void repairColors(std::span<GameObject*> pObjs);
+    SILLY_API_DLL void repairColors(std::span<GameObject* const> pObjs);
     /// updates objects selection color again
     SILLY_API_DLL void repairColors(cocos2d::CCArray* pObjs = get());
 }

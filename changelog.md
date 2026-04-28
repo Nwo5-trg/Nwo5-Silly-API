@@ -1,3 +1,16 @@
+## v1.2.0
+**Added**
+
+- ui namespace
+- reorganized namespaces
+- color/enum_cast
+
+**Fixed**
+
+- numtostring rounding
+- some editor functions not being available in editorui::init
+- made span ptrs const
+
 ## v1.1.0
 **Added** 
 

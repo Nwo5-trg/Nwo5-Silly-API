@@ -41,7 +41,7 @@ namespace nwo5::editor::object {
 
         return out;
     }
-    std::vector<int> groups(std::span<GameObject*> pObjs, bool pSort) {
+    std::vector<int> groups(std::span<GameObject* const> pObjs, bool pSort) {
         std::unordered_set<int> groups;
 
         for (auto obj : pObjs) {
@@ -108,7 +108,7 @@ namespace nwo5::editor::object {
             return pObj->m_groups && std::ranges::contains(*pObj->m_groups, pGroup);
         }
     }
-    bool sharesGroup(std::span<GameObject*> pObjs, int pGroup) {
+    bool sharesGroup(std::span<GameObject* const> pObjs, int pGroup) {
         if (pObjs.empty()) {
             return false;
         }
@@ -137,7 +137,7 @@ namespace nwo5::editor::object {
     bool hasParent(int pGroup) {
         return getParent(pGroup);
     }
-    bool hasParent(std::span<GameObject*> pObjs, int pGroup) {
+    bool hasParent(std::span<GameObject* const> pObjs, int pGroup) {
         auto parent = getParent(pGroup);
 
         if (!parent) {
@@ -183,7 +183,7 @@ namespace nwo5::editor::object {
     int id(GameObject* pObj) {
         return pObj->m_objectID;
     }
-    std::vector<int> ids(std::span<GameObject*> pObjs, bool pSort) {
+    std::vector<int> ids(std::span<GameObject* const> pObjs, bool pSort) {
         std::unordered_set<int> ids;
 
         for (auto obj : pObjs) {
@@ -218,7 +218,7 @@ namespace nwo5::editor::object {
         return editor::layerSelectable(pObj->m_editorLayer, pIgnoreLocked) || editor::layerSelectable(pObj->m_editorLayer2, pIgnoreLocked);
     }
 
-    CCRect bounds(std::span<GameObject*> pObjs, bool pAddSize) {
+    CCRect bounds(std::span<GameObject* const> pObjs, bool pAddSize) {
         if (pObjs.empty()) {
             return CCRectZero;
         }
@@ -258,7 +258,7 @@ namespace nwo5::editor::object {
 
         return {min, max - min};
     }
-    CCPoint center(std::span<GameObject*> pObjs, bool pIgnoreParent) {
+    CCPoint center(std::span<GameObject* const> pObjs, bool pIgnoreParent) {
         if (pObjs.empty()) {
             return CCPointZero;
         }
@@ -345,7 +345,7 @@ namespace nwo5::editor::object {
             layer()->addToGroup(pObj, pGroup, false);
         }
     }
-    void addGroup(std::span<GameObject*> pObjs, int pGroup) {
+    void addGroup(std::span<GameObject* const> pObjs, int pGroup) {
         if (loaded()) {
             for (auto obj : pObjs) {
                 layer()->addToGroup(obj, pGroup, false);
@@ -364,7 +364,7 @@ namespace nwo5::editor::object {
             layer()->removeFromGroup(pObj, pGroup);
         }
     }
-    void removeGroup(std::span<GameObject*> pObjs, int pGroup) {
+    void removeGroup(std::span<GameObject* const> pObjs, int pGroup) {
         if (loaded()) {
             for (auto obj : pObjs) {
                 layer()->removeFromGroup(obj, pGroup);
@@ -392,7 +392,7 @@ namespace nwo5::editor::object {
 
         layer()->removeObject(pObj, !pUndo);
     }
-    void remove(std::span<GameObject*> pObjs, bool pUndo) {
+    void remove(std::span<GameObject* const> pObjs, bool pUndo) {
         if (notLoaded()) {
             return;
         }
@@ -426,7 +426,7 @@ namespace nwo5::editor::object {
     void move(GameObject* pObj, CCPoint pTo, bool pUndo) {
         moveBy(pObj, pTo - pObj->getRealPosition());
     }
-    void move(std::span<GameObject*> pObjs, CCPoint pTo, bool pUndo, CCPoint pCenter) {
+    void move(std::span<GameObject* const> pObjs, CCPoint pTo, bool pUndo, CCPoint pCenter) {
         moveBy(pObjs, pTo - (pCenter == editor::AUTO_CENTER ? center(pObjs) : pCenter));
     }
     void move(CCArray* pObjs, CCPoint pTo, bool pUndo, CCPoint pCenter) {
@@ -443,7 +443,7 @@ namespace nwo5::editor::object {
 
         ui()->moveObject(pObj, pOff);
     }
-    void moveBy(std::span<GameObject*> pObjs, CCPoint pOff, bool pUndo) {
+    void moveBy(std::span<GameObject* const> pObjs, CCPoint pOff, bool pUndo) {
         if (notLoaded() || pObjs.empty()) {
             return;
         }
@@ -473,7 +473,7 @@ namespace nwo5::editor::object {
     void rotate(GameObject* pObj, float pTo, GameObject* pBase, bool pUndo, CCPoint pCenter, bool pMove) {
         rotateBy(pObj, pTo - pBase->getObjectRotation(), pUndo, pCenter, pMove);
     }
-    void rotate(std::span<GameObject*> pObjs, float pTo, GameObject* pBase, bool pUndo, CCPoint pCenter, bool pMove) {
+    void rotate(std::span<GameObject* const> pObjs, float pTo, GameObject* pBase, bool pUndo, CCPoint pCenter, bool pMove) {
         rotateBy(pObjs, pTo - pBase->getObjectRotation(), pUndo, pCenter, pMove);
     }
     void rotate(CCArray* pObjs, float pTo, GameObject* pBase, bool pUndo, CCPoint pCenter, bool pMove) {
@@ -482,7 +482,7 @@ namespace nwo5::editor::object {
     void rotateBy(GameObject* pObj, float pTo, bool pUndo, CCPoint pCenter, bool pMove) {
         rotateBy(CCArray::createWithObject(pObj), pTo, pUndo, pCenter, pMove);
     }
-    void rotateBy(std::span<GameObject*> pObjs, float pTo, bool pUndo, CCPoint pCenter, bool pMove) {
+    void rotateBy(std::span<GameObject* const> pObjs, float pTo, bool pUndo, CCPoint pCenter, bool pMove) {
         rotateBy(CCArrayExt(pObjs).inner(), pTo, pUndo, pCenter, pMove);
     }
     void rotateBy(CCArray* pObjs, float pTo, bool pUndo, CCPoint pCenter, bool pMove) {
@@ -538,7 +538,7 @@ namespace nwo5::editor::object {
 
         scaleYBy(pObj, pTo / maxScale, pUndo);
     }
-    void scale(std::span<GameObject*> pObjs, float pX, float pY, bool pUndo, CCPoint pCenter, bool pMove) {
+    void scale(std::span<GameObject* const> pObjs, float pX, float pY, bool pUndo, CCPoint pCenter, bool pMove) {
         CCPoint maxScale = {std::numeric_limits<float>::lowest(), std::numeric_limits<float>::lowest()};
 
         for (auto obj : pObjs) {
@@ -548,7 +548,7 @@ namespace nwo5::editor::object {
 
         scaleBy(pObjs, pX / (maxScale.x ? maxScale.x : 1.0f), pY / (maxScale.y ? maxScale.y : 1.0f), pUndo, pCenter, pMove);
     }
-    void scale(std::span<GameObject*> pObjs, float pTo, bool pUndo, CCPoint pCenter, bool pMove) {
+    void scale(std::span<GameObject* const> pObjs, float pTo, bool pUndo, CCPoint pCenter, bool pMove) {
         float maxScale = std::numeric_limits<float>::lowest();
 
         for (auto obj : pObjs) {
@@ -563,7 +563,7 @@ namespace nwo5::editor::object {
 
         scaleBy(pObjs, mod, mod, pUndo, pCenter, pMove);
     }
-    void scaleX(std::span<GameObject*> pObjs, float pTo, bool pUndo, CCPoint pCenter, bool pMove) {
+    void scaleX(std::span<GameObject* const> pObjs, float pTo, bool pUndo, CCPoint pCenter, bool pMove) {
         float maxScale = std::numeric_limits<float>::lowest();
 
         for (auto obj : pObjs) {
@@ -576,7 +576,7 @@ namespace nwo5::editor::object {
 
         scaleXBy(pObjs, pTo / maxScale, pUndo, pCenter, pMove);
     }
-    void scaleY(std::span<GameObject*> pObjs, float pTo, bool pUndo, CCPoint pCenter, bool pMove) {
+    void scaleY(std::span<GameObject* const> pObjs, float pTo, bool pUndo, CCPoint pCenter, bool pMove) {
         float maxScale = std::numeric_limits<float>::lowest();
 
         for (auto obj : pObjs) {
@@ -681,7 +681,7 @@ namespace nwo5::editor::object {
 
         pObj->updateCustomScaleY(pObj->m_scaleY * pMod);
     }
-    void scaleBy(std::span<GameObject*> pObjs, float pX, float pY, bool pUndo, CCPoint pCenter, bool pMove) {
+    void scaleBy(std::span<GameObject* const> pObjs, float pX, float pY, bool pUndo, CCPoint pCenter, bool pMove) {
         if (notLoaded() || pObjs.empty()) {
             return;
         }
@@ -707,10 +707,10 @@ namespace nwo5::editor::object {
             }
         }
     }
-    void scaleBy(std::span<GameObject*> pObjs, float pMod, bool pUndo, CCPoint pCenter, bool pMove) {
+    void scaleBy(std::span<GameObject* const> pObjs, float pMod, bool pUndo, CCPoint pCenter, bool pMove) {
         scaleBy(pObjs, pMod, pMod, pUndo, pCenter, pMove);
     }
-    void scaleXBy(std::span<GameObject*> pObjs, float pMod, bool pUndo, CCPoint pCenter, bool pMove) {
+    void scaleXBy(std::span<GameObject* const> pObjs, float pMod, bool pUndo, CCPoint pCenter, bool pMove) {
         if (notLoaded() || pObjs.empty() || !pMod || pMod == 1.0f) {
             return;
         }
@@ -731,7 +731,7 @@ namespace nwo5::editor::object {
             obj->updateCustomScaleX(obj->m_scaleX * pMod);
         }
     }
-    void scaleYBy(std::span<GameObject*> pObjs, float pMod, bool pUndo, CCPoint pCenter, bool pMove) {
+    void scaleYBy(std::span<GameObject* const> pObjs, float pMod, bool pUndo, CCPoint pCenter, bool pMove) {
         if (notLoaded() || pObjs.empty() || !pMod || pMod == 1.0f) {
             return;
         }
