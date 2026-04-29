@@ -1,7 +1,7 @@
 ## v1.2.0
 **Added**
 
-- ui namespace
+- ui namespace (u can still in clude old bad setup node stuff in nwo5::utils::setup)
 - reorganized namespaces
 - color/enum_cast
 

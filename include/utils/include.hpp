@@ -17,10 +17,6 @@ namespace nwo5::utils::prelude {
 
     using nwo5::utils::GetChildQuery, nwo5::utils::GetChildQueryID, nwo5::utils::GetChildQueryIndex,
     nwo5::utils::GetChildQueryType;
-
-    using nwo5::utils::TOP_RIGHT_ANCHOR, nwo5::utils::TOP_CENTER_ANCHOR, nwo5::utils::TOP_LEFT_ANCHOR,
-    nwo5::utils::LEFT_CENTER_ANCHOR, nwo5::utils::BOTTOM_LEFT_ANCHOR, nwo5::utils::BOTTOM_CENTER_ANCHOR,
-    nwo5::utils::BOTTOM_RIGHT_ANCHOR, nwo5::utils::RIGHT_CENTER_ANCHOR, nwo5::utils::CENTER_ANCHOR;
 }
 namespace nwo5::utils::setup {
     using nwo5::utils::SetNodePosition, nwo5::utils::SetNodePositionX, nwo5::utils::SetNodePositionY, 

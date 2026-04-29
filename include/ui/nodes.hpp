@@ -34,9 +34,11 @@ namespace nwo5::ui {
 
     SILLY_API_DLL cocos2d::CCLabelBMFont* label(geode::ZStringView pText = "", geode::ZStringView pFont = Font::Default);
 
-    SILLY_API_DLL geode::TextInput* input(cocos2d::CCSize pSize, std::optional<std::string> pStartingString, std::optional<std::string> pPlaceholder, TextInputCallback pCallback = {});
-    SILLY_API_DLL geode::TextInput* input(float pWidth, float pHeight, std::optional<std::string> pStartingString, std::optional<std::string> pPlaceholder, TextInputCallback pCallback = {});
-    SILLY_API_DLL geode::TextInput* input(float pWidth, std::optional<std::string> pStartingString, std::optional<std::string> pPlaceholder, TextInputCallback pCallback = {});
+    SILLY_API_DLL geode::TextInput* input(cocos2d::CCSize pSize, std::optional<std::string> pPlaceholder, TextInputCallback pCallback = {});
+    SILLY_API_DLL geode::TextInput* input(float pWidth, float pHeight, std::optional<std::string> pPlaceholder, TextInputCallback pCallback = {});
+    SILLY_API_DLL geode::TextInput* input(float pWidth, std::optional<std::string> pPlaceholder, TextInputCallback pCallback = {});
+
+    SILLY_API_DLL cocos2d::CCMenu* menu(geode::AxisLayout* pLayout = nullptr);
 
     /// no auto scale, grows axis, no cross axis
     SILLY_API_DLL geode::AxisLayout* horizontalDistrbLayout(float pGap, geode::AxisAlignment pAlignment = geode::AxisAlignment::Start);

@@ -80,7 +80,7 @@ namespace nwo5::ui {
         pTarget->setPosition(targetPos + pTarget->getAnchorPoint() * targetRect.size);
     }
 
-    cocos2d::CCRect nodesBounds(cocos2d::CCArray* pNodes) {
+    CCRect nodesBounds(CCArray* pNodes) {
         if (!pNodes || !pNodes->count()) {
             return CCRectZero;
         }
@@ -99,7 +99,7 @@ namespace nwo5::ui {
 
         return {min, {max.x - min.x, max.y - min.y}};
     }
-    cocos2d::CCRect nodesBounds(std::span<cocos2d::CCNode* const> pNodes) {
+    CCRect nodesBounds(std::span<CCNode* const> pNodes) {
         if (pNodes.empty()) {
             return CCRectZero;
         }
@@ -118,10 +118,10 @@ namespace nwo5::ui {
 
         return {min, {max.x - min.x, max.y - min.y}};
     }
-    cocos2d::CCSize nodesSize(cocos2d::CCArray* pNodes) {
+    CCSize nodesSize(CCArray* pNodes) {
         return nodesBounds(pNodes).size;
     }
-    cocos2d::CCSize nodesSize(std::span<cocos2d::CCNode* const> pNodes) {
+    CCSize nodesSize(std::span<CCNode* const> pNodes) {
         return nodesBounds(pNodes).size;
     }
 }
