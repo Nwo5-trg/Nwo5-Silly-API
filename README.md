@@ -177,5 +177,10 @@ namespace Settings {
 }
 ```
 
+## UI
+ui builder but worse and tailored js for me :3c
+
 ## Utils
 the rest of the utils in this mod are prolly useless to u but i use them in my mods usually :3
+
+utils has setupnode function which is bad and dumb and stupid, dont use it, use the ui stuffs at the very least (or js actually use the real ui builder) its js there so i dont have to update the entire sillyedit codebase for the time being, it will be removed soon™

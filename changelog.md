@@ -1,3 +1,12 @@
+## v1.2.1
+**Added**
+
+- readme ui thing
+
+**Fixed**
+
+- fuck windows (im js stupid)
+
 ## v1.2.0
 **Added**
 

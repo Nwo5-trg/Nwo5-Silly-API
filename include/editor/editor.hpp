@@ -104,7 +104,7 @@ namespace nwo5::editor {
     /// registers button if condition is true, unregisters if condition is false
     /// useful for buttons enabled by setting
     template<typename... Args>
-    SILLY_API_DLL void conditionallyRegister(bool pCondition, std::string pSprite, std::string pKey, Args&&... pArgs) {
+    void conditionallyRegister(bool pCondition, std::string pSprite, std::string pKey, Args&&... pArgs) {
         if (pCondition) {
             registerEditTabButton(std::move(pSprite), std::move(pKey), std::forward<Args>(pArgs)...);
         }
@@ -115,7 +115,7 @@ namespace nwo5::editor {
     /// registers button if condition is true, unregisters if condition is false
     /// useful for buttons enabled by setting
     template<typename... Args>
-    SILLY_API_DLL void conditionallyRegisterFrame(bool pCondition, std::string pSprite, std::string pKey, Args&&... pArgs) {
+    void conditionallyRegisterFrame(bool pCondition, std::string pSprite, std::string pKey, Args&&... pArgs) {
         if (pCondition) {
             registerEditTabButtonFrame(std::move(pSprite), std::move(pKey), std::forward<Args>(pArgs)...);
         }
