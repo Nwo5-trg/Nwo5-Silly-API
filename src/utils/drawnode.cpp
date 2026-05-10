@@ -109,8 +109,8 @@ namespace nwo5::utils {
 
         glDrawArrays(GL_TRIANGLES, 0, m_nBufferCount);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-        
-        CC_INCREMENT_GL_DRAWS(1);
+
+        // doesnt seem to do anything but wtv
         CHECK_GL_ERROR_DEBUG();
     }
 
