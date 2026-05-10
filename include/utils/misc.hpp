@@ -3,10 +3,6 @@
 #include "../export.hpp"
 
 namespace nwo5::utils {
-    namespace impl {
-        SILLY_API_DLL cocos2d::ccColor4F getChroma4F(float pSpeed, float pOffset, float pSaturation, float pValue);
-    }
-
     /// count how many instances of a substr appear in str
     /// for str "aaaa" and substr "aa", 3 will be outputed
     SILLY_API_DLL size_t stringCount(std::string_view pString, std::string_view pSubstr);
@@ -15,9 +11,17 @@ namespace nwo5::utils {
     SILLY_API_DLL size_t stringCountIndependant(std::string_view pString, std::string_view pSubstr);
     /// the geode util
     SILLY_API_DLL size_t stringCount(std::string_view pString, char pSubstr);
+
     /// ccmenuitemtoggler triggers callback before its actually toggled so
-    /// technically breaks when calling with togglewithcallback but idk fuck robtop
     SILLY_API_DLL bool isToggled(cocos2d::CCObject* pToggler);
+    /// geodes toggle with callback sets m_toggled incorrectly whcih causes issues with some callbacks, this fixes that
+    SILLY_API_DLL void toggleWithCallback(cocos2d::CCObject* pToggler, bool pOn);
+
+    /// ccobject dummy, useful for calling callbacks that require their sender to have a tag
+    class SILLY_API_DLL CCTag final : public cocos2d::CCObject {
+    public:
+        static CCTag* create(int pTag = cocos2d::kCCNodeTagInvalid);
+    };
 
     template<typename T>
     T random(T pMin, T pMax) {
@@ -38,7 +42,7 @@ namespace nwo5::utils {
     requires std::is_floating_point_v<T>
     auto numToString(T pNum, size_t pPrecision = 4) {
         if (!pPrecision) {
-            return geode::utils::numToString(static_cast<int>(std::round(pNum)));
+            return std::to_string(static_cast<int>(std::round(pNum)));
         }
         
         auto str = geode::utils::numToString(pNum, pPrecision);
@@ -109,6 +113,10 @@ namespace nwo5::utils {
         }
     }
 
+    namespace impl {
+        SILLY_API_DLL cocos2d::ccColor4F getChroma4F(float pSpeed, float pOffset, float pSaturation, float pValue);
+    }
+
     /// get a chroma color based on the current time
     /// @param pSpeed how long it should take for color to do a full 360 hue rotation (seconds)
     /// @param pOffset added to hue (hint, u can use enums)
@@ -117,5 +125,83 @@ namespace nwo5::utils {
     template<typename ImplT = cocos2d::ccColor4F, typename Offset = float, typename T = std::decay_t<ImplT>>
     T getChroma(float pSpeed, Offset pOffset = Offset{}, float pSaturation = 1.0f, float pValue = 1.0f) {
         return color_cast<T>(nwo5::utils::impl::getChroma4F(pSpeed, enum_cast<float>(pOffset), pSaturation, pValue));
+    }
+
+    // very unnecessary template shenanigans but fun :33333
+
+    template<typename T>
+    concept IsCCVec2 = requires (T pVec2) { // ccvertex/ccpoint exist
+        requires std::same_as<decltype(pVec2.x), decltype(pVec2.y)>;
+    };
+    
+    template<IsCCVec2 T>
+    constexpr auto ccMax(const T& pVec2) noexcept {
+        return (pVec2.x > pVec2.y) ? pVec2.x : pVec2.y;
+    }
+    constexpr auto ccMax(const cocos2d::CCSize& pSize) noexcept {
+        return (pSize.width > pSize.height) ? pSize.width : pSize.height;
+    }
+    template<IsCCVec2 T>
+    constexpr auto ccMin(const T& pVec2) noexcept {
+        return (pVec2.x < pVec2.y) ? pVec2.x : pVec2.y;
+    }
+    constexpr auto ccMin(const cocos2d::CCSize& pSize) noexcept {
+        return (pSize.width < pSize.height) ? pSize.width : pSize.height;
+    }
+    template<IsCCVec2 T>
+    constexpr auto ccAdd(const T& pA, const T& pB) noexcept {
+        return T{pA.x + pB.x, pA.y + pB.y};
+    }
+    constexpr auto ccAdd(const cocos2d::CCSize& pA, const cocos2d::CCSize& pB) noexcept {
+        return cocos2d::CCSize{pA.width + pB.width, pA.height + pB.height};
+    }
+    template<IsCCVec2 T>
+    constexpr auto ccAdd(const T& pA, const decltype(T::x)& pS) noexcept {
+        return T{pA.x + pS, pA.y + pS};
+    }
+    constexpr auto ccAdd(const cocos2d::CCSize& pA, const decltype(cocos2d::CCSize::width)& pS) noexcept {
+        return cocos2d::CCSize{pA.width + pS, pA.height + pS};
+    }
+    template<IsCCVec2 T>
+    constexpr auto ccSub(const T& pA, const T& pB) noexcept {
+        return T{pA.x - pB.x, pA.y - pB.y};
+    }
+    constexpr auto ccSub(const cocos2d::CCSize& pA, const cocos2d::CCSize& pB) noexcept {
+        return cocos2d::CCSize{pA.width - pB.width, pA.height - pB.height};
+    }
+    template<IsCCVec2 T>
+    constexpr auto ccSub(const T& pA, const decltype(T::x)& pS) noexcept {
+        return T{pA.x - pS, pA.y - pS};
+    }
+    constexpr auto ccSub(const cocos2d::CCSize& pA, const decltype(cocos2d::CCSize::width)& pS) noexcept {
+        return cocos2d::CCSize{pA.width - pS, pA.height - pS};
+    }
+    template<IsCCVec2 T>
+    constexpr auto ccMul(const T& pA, const T& pB) noexcept {
+        return T{pA.x * pB.x, pA.y * pB.y};
+    }
+    constexpr auto ccMul(const cocos2d::CCSize& pA, const cocos2d::CCSize& pB) noexcept {
+        return cocos2d::CCSize{pA.width * pB.width, pA.height * pB.height};
+    }
+    template<IsCCVec2 T>
+    constexpr auto ccMul(const T& pA, const decltype(T::x)& pS) noexcept {
+        return T{pA.x * pS, pA.y * pS};
+    }
+    constexpr auto ccMul(const cocos2d::CCSize& pA, const decltype(cocos2d::CCSize::width)& pS) noexcept {
+        return cocos2d::CCSize{pA.width * pS, pA.height * pS};
+    }
+    template<IsCCVec2 T>
+    constexpr auto ccDiv(const T& pA, const T& pB) noexcept {
+        return T{pA.x / pB.x, pA.y / pB.y};
+    }
+    constexpr auto ccDiv(const cocos2d::CCSize& pA, const cocos2d::CCSize& pB) noexcept {
+        return cocos2d::CCSize{pA.width / pB.width, pA.height / pB.height};
+    }
+    template<IsCCVec2 T>
+    constexpr auto ccDiv(const T& pA, const decltype(T::x)& pS) noexcept {
+        return T{pA.x / pS, pA.y / pS};
+    }
+    constexpr auto ccDiv(const cocos2d::CCSize& pA, const decltype(cocos2d::CCSize::width)& pS) noexcept {
+        return cocos2d::CCSize{pA.width / pS, pA.height / pS};
     }
 }

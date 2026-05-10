@@ -542,6 +542,7 @@ namespace nwo5::utils {
         }
     };
 
+    /// @deprecated use setup/node in nwo5::ui
     template<typename T, typename Base = std::remove_pointer_t<T>, typename... Args>
     requires std::is_pointer_v<T> && std::derived_from<Base, cocos2d::CCNode> && (std::derived_from<Args, impl::NodeConfigBase> && ...)
     T setupNode(T pNode, Args... pArgs) {

@@ -5,19 +5,29 @@
 #include "misc.hpp"
 #include "easings.hpp"
 #include "array.hpp"
+#include "drawnode.hpp"
 
 namespace nwo5::utils::prelude {
+    namespace nutils = nwo5::utils;
     namespace array = nwo5::utils::array;
 
     using array::ArrayIndex;
 
-    using nwo5::utils::enum_cast, nwo5::utils::color_cast;
+    using nutils::enum_cast, nutils::color_cast;
 
-    using nwo5::utils::EasingFunction;
+    using nutils::ccMax, nutils::ccMin, nutils::ccAdd, 
+    nutils::ccSub, nutils::ccMul, nutils::ccDiv;
 
-    using nwo5::utils::GetChildQuery, nwo5::utils::GetChildQueryID, nwo5::utils::GetChildQueryIndex,
-    nwo5::utils::GetChildQueryType;
+    using nutils::EasingFunction;
+
+    using nutils::SillyDrawNode;
+
+    using nutils::CLEAR_COLOR;
+
+    using nutils::GetChildQuery, nutils::GetChildQueryID, nutils::GetChildQueryIndex,
+    nutils::GetChildQueryType;
 }
+
 namespace nwo5::utils::setup {
     using nwo5::utils::SetNodePosition, nwo5::utils::SetNodePositionX, nwo5::utils::SetNodePositionY, 
     nwo5::utils::ChangeNodePosition, nwo5::utils::ChangeNodePositionX, nwo5::utils::ChangeNodePositionY, 

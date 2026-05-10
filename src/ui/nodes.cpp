@@ -122,12 +122,21 @@ namespace nwo5::ui {
         return textInput;
     }
 
-    CCMenu* menu(AxisLayout* pLayout) {
+    CCMenu* menu(bool pIgnoreAnchor) {
+        auto node = CCMenu::create();
+        
+        node->ignoreAnchorPointForPosition(pIgnoreAnchor);
+
+        return node;
+    }
+    CCMenu* menu(AxisLayout* pLayout, bool pIgnoreAnchor) {
         auto node = CCMenu::create();
 
         if (pLayout) {
             node->setLayout(pLayout, false);
         }
+
+        node->ignoreAnchorPointForPosition(pIgnoreAnchor);
 
         return node;
     }

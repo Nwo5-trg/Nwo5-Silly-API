@@ -1,3 +1,22 @@
+## v1.3.0
+**Added**
+
+- a few more functions to setup
+- disable ignore anchor for position for ccmenus/cclayers when setting anchor point with setup
+- fixed togglewithcallback for togglers
+- some more editor viewport utils
+- silly draw node
+- more editor initialized function
+- editor tab button reload
+
+**Fixed**
+
+- numtostring rounding again
+
+**Removed**
+
+- deprecated setupnode and some misc utils functions (still usable but will be removed when sillyedit is fully updated)
+
 ## v1.2.1
 **Added**
 

@@ -4,27 +4,15 @@
 
 namespace nwo5::editor {
     namespace impl {
-        struct SILLY_API_DLL EditTabButton {
-            using SpriteFunc = geode::Function<cocos2d::CCSprite*() const>;
-            using Callback = geode::CopyableFunction<void(CCMenuItemSpriteExtra*)>;
-
-            std::string key;
-            int prio;
-
-            float scale;
-            SpriteFunc spriteFunc;
-            Callback callback;
-        };
-
         SILLY_API_DLL void createUndoObject(UndoCommand pCommand);
         SILLY_API_DLL void toggleMoveObject(bool pMove);
+        SILLY_API_DLL EditorUI* getEditorUI();
     }
 
     /// get editorui and optionally reinterpret_cast it
     template<typename ImplT = EditorUI, typename T = std::remove_pointer_t<ImplT>>
     auto ui() {
-        static const auto manager = GameManager::get();
-        return reinterpret_cast<T*>(manager->m_levelEditorLayer->m_editorUI);
+        return reinterpret_cast<T*>(impl::getEditorUI());
     };
     /// get leveleditorlayer and optionally reinterpret_cast it
     template<typename ImplT = LevelEditorLayer, typename T = std::remove_pointer_t<ImplT>>
@@ -32,14 +20,30 @@ namespace nwo5::editor {
         static const auto manager = GameManager::get();
         return reinterpret_cast<T*>(manager->m_levelEditorLayer);
     }
+
+    enum class LoadedType {
+        /// editorlayer initialized
+        Editor,
+        /// editorlayer (valid right before init starts)
+        EditorValid,
+        /// editorui initialized
+        UI,
+        /// editorui (right before init starts)
+        UIValid
+    };
     
-    SILLY_API_DLL bool loaded();
-    SILLY_API_DLL bool notLoaded();
+    SILLY_API_DLL bool loaded(LoadedType pType = LoadedType::Editor);
+    SILLY_API_DLL bool notLoaded(LoadedType pType = LoadedType::Editor);
 
     SILLY_API_DLL void update(bool pUpdateControls = true, bool pOtherwiseDeactivateControls = false);
 
     SILLY_API_DLL float zoom();
-    SILLY_API_DLL cocos2d::CCPoint center();
+    /// center of editor in objectlayer position
+    /// @param pToolbar whether to account for toolbarheight
+    SILLY_API_DLL cocos2d::CCPoint center(bool pToolbar = true);
+    /// size of visible objectlayer
+    /// @param pToolbar whether to account for toolbarheight
+    SILLY_API_DLL cocos2d::CCSize size(bool pToolbar = true);
 
     SILLY_API_DLL bool isPlaytesting();
 
@@ -61,6 +65,20 @@ namespace nwo5::editor {
     /// @note only accounts for target gid and center gid rn, ill do like sequence/advrand checks and stuff l8r
     /// @returns next free gid or 0 if all 9999 groups are used
     SILLY_API_DLL int nextFreeGroup(int pOffset = 1, bool pCheckTargetGroups = false);
+
+    namespace impl {
+        struct SILLY_API_DLL EditTabButton {
+            using SpriteFunc = geode::Function<cocos2d::CCSprite*() const>;
+            using Callback = geode::CopyableFunction<void(CCMenuItemSpriteExtra*)>;
+
+            std::string key;
+            int prio;
+
+            float scale;
+            SpriteFunc spriteFunc;
+            Callback callback;
+        };
+    }
 
     /// register an edit tab button 
     /// use literally wherever that runs before editorui init (or atleast before setupmovemenu)
@@ -123,6 +141,7 @@ namespace nwo5::editor {
             unregisterEditTabButton(pKey);
         }
     }
+    SILLY_API_DLL void updateEditorTabButtons();
 
     constexpr cocos2d::CCPoint AUTO_CENTER{std::numeric_limits<float>::max() - 1.0f, std::numeric_limits<float>::max() - 1.0f};
 }

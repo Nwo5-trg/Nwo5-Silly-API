@@ -13,6 +13,8 @@ namespace nwo5::editor {
         static std::unordered_map<std::string, CCMenuItemSpriteExtra*> s_editTabButtonMap;
         static std::unordered_set<std::string> s_removedEditTabButtons;
 
+        static EditorUI* s_editorUIEarlyPtr;
+
         static int nextFreeGroupFast(int pOffset) {
             pOffset = std::clamp(pOffset, 1, editor::constants::MAX_GROUPS);
 
@@ -67,9 +69,14 @@ namespace nwo5::editor {
             bool init(LevelEditorLayer* editorLayer) {
                 s_shouldMoveObject = true;
                 s_editButtonsLoaded = false;
-                
-                if (!EditorUI::init(editorLayer)) {
-                    return false;
+                s_editorUIEarlyPtr = this;
+
+                return EditorUI::init(editorLayer);
+            }
+            
+            void updateEditorTabButtons() {
+                if (notLoaded(LoadedType::UI)) {
+                    return;
                 }
                 
                 auto& buttonArray = m_editButtonBar->m_buttonArray;
@@ -126,9 +133,18 @@ namespace nwo5::editor {
                         && (s_editTabButtons[i].prio <= prio || prio == BACK_BUTTONS)
                     ) {
                         const auto& data = s_editTabButtons[i++];
+                        const auto& key = data.key;
+
+                        if (
+                            nwo5::utils::array::find(buttonArray, [key] (auto pPtr) {
+                                return static_cast<CCNode*>(pPtr)->getID() == key;
+                            }).has_value()
+                        ) {
+                            continue;
+                        }
 
                         auto button = createEditTabButton(data);
-                        button->setID(data.key);
+                        button->setID(key);
 
                         tryRegisterEditTabButton(button, buttonArray);
                         s_editTabButtonMap[data.key] = button;
@@ -143,8 +159,6 @@ namespace nwo5::editor {
                 );
 
                 s_editButtonsLoaded = true;
-
-                return true;
             }
 
             void moveObject(GameObject* obj, CCPoint amount) {
@@ -154,7 +168,7 @@ namespace nwo5::editor {
             }
 
             static void onModify(auto& pSelf) {
-                (void)pSelf.setHookPriority("EditorUI::init", Priority::VeryLatePost);
+                (void)pSelf.setHookPriority("EditorUI::init", Priority::First);
             }
         };
 
@@ -181,17 +195,25 @@ namespace nwo5::editor {
 
             return pauseLayer.get();
         }
+
+        EditorUI* getEditorUI() {
+            if (!loaded(LoadedType::EditorValid)) {
+                return nullptr;
+            }
+
+            return s_editorUIEarlyPtr;
+        }
     }
 
-    bool loaded() {
+    bool loaded(LoadedType pType) {
         return layer() && !layer()->m_initializing;
     }
-    bool notLoaded() {
-        return !loaded();
+    bool notLoaded(LoadedType pType) {
+        return !loaded(pType);
     }
 
     void update(bool pUpdateControls, bool pOtherwiseDeactivateControls) {
-        if (notLoaded()) {
+        if (notLoaded(LoadedType::UI)) {
             return;
         }
         
@@ -224,16 +246,26 @@ namespace nwo5::editor {
     float zoom() {
         return layer() ? layer()->m_objectLayer->getScale() : 0.0f;
     }
-    CCPoint center() {
-        if (notLoaded()) {
+    CCPoint center(bool pToolbar) {
+        if (notLoaded(LoadedType::UIValid)) {
             return CCPointZero;
         }
         
         return CCPoint{
             (CCDirector::get()->getWinSize() / 2) - CCPoint{
                 layer()->m_objectLayer->getPositionX(), 
-                layer()->m_objectLayer->getPositionY() - ui()->m_toolbarHeight / 2
+                layer()->m_objectLayer->getPositionY() - (pToolbar ? (ui()->m_toolbarHeight / 2) : 0.0f)
             }
+        } / zoom();
+    }
+    CCSize size(bool pToolbar) {
+        if (notLoaded(LoadedType::UIValid)) {
+            return CCSizeZero;
+        }
+        
+        return CCSize{
+            CCDirector::get()->getWinSize().width,
+            CCDirector::get()->getWinSize().height - (pToolbar ? ui()->m_toolbarHeight : 0.0f)
         } / zoom();
     }
 
@@ -242,7 +274,7 @@ namespace nwo5::editor {
     }
 
     void activateRotationControl(bool pRefresh) {
-        if (notLoaded()) {
+        if (notLoaded(LoadedType::UI)) {
             return;
         }
         
@@ -260,7 +292,7 @@ namespace nwo5::editor {
         ui()->activateRotationControl(nullptr);
     }
     void activateScaleControl(bool pXY, bool pRefresh) {
-        if (notLoaded()) {
+        if (notLoaded(LoadedType::UI)) {
             return;
         }
         
@@ -275,13 +307,10 @@ namespace nwo5::editor {
             return;
         }
 
-        auto obj = CCNode::create();
-        obj->setTag(pXY ? 30 : 29);
-
-        ui()->activateScaleControl(obj);
+        ui()->activateScaleControl(nwo5::utils::CCTag::create(pXY ? 30 : 29));
     }
     void activateTransformControl(bool pRefresh) {
-        if (notLoaded()) {
+        if (notLoaded(LoadedType::UI)) {
             return;
         }
         
@@ -300,14 +329,14 @@ namespace nwo5::editor {
     }
 
     int currentLayer() {
-        if (!layer()) {
+        if (notLoaded(LoadedType::EditorValid)) {
             return editor::constants::ALL_LAYERS;
         }
         
         return layer()->m_currentLayer;
     }
     bool layerSelectable(int pLayer, bool pIgnoreLocked) {
-        if (!layer() || pLayer > editor::constants::MAX_LAYERS || (!pIgnoreLocked && layerLocked(pLayer))) {
+        if (notLoaded(LoadedType::EditorValid) || pLayer > editor::constants::MAX_LAYERS || (!pIgnoreLocked && layerLocked(pLayer))) {
             return false;
         }
         
@@ -316,10 +345,10 @@ namespace nwo5::editor {
         return layer == editor::constants::ALL_LAYERS || layer == pLayer;
     }
     bool layerLocked(int pLayer) {
-        return layer() && layer()->isLayerLocked(pLayer);
+        return loaded(LoadedType::EditorValid) && layer()->isLayerLocked(pLayer);
     }
     void setLayer(int pLayer) {
-        if (!ui() || pLayer > editor::constants::MAX_LAYERS || pLayer < editor::constants::ALL_LAYERS) {
+        if (notLoaded(LoadedType::UI) || pLayer > editor::constants::MAX_LAYERS || pLayer < editor::constants::ALL_LAYERS) {
             return;
         }
 
@@ -328,7 +357,7 @@ namespace nwo5::editor {
         ui()->updateGroupIDLabel();
     }
     void lockLayer(int pLayer, bool pLock) {
-        if (!ui() || pLayer > editor::constants::MAX_LAYERS || pLayer < editor::constants::ALL_LAYERS || layerLocked(pLayer) == pLock) {
+        if (notLoaded(LoadedType::UI) || pLayer > editor::constants::MAX_LAYERS || pLayer < editor::constants::ALL_LAYERS || layerLocked(pLayer) == pLock) {
             return;
         }
 
@@ -347,7 +376,7 @@ namespace nwo5::editor {
     }
 
     int nextFreeGroup(int pOffset, bool pCheckTargetGroups) {
-        if (notLoaded()) {
+        if (notLoaded(LoadedType::Editor)) {
             return 0;
         }
         
@@ -397,7 +426,7 @@ namespace nwo5::editor {
     }
 
     void save() {
-        if (notLoaded()) {
+        if (notLoaded(LoadedType::Editor)) {
             return;
         }
         
@@ -469,7 +498,7 @@ namespace nwo5::editor {
         return false;
     }
     CCMenuItemSpriteExtra* getEditTabButton(const std::string& pKey) {
-        if (notLoaded() || !impl::s_editButtonsLoaded) {
+        if (notLoaded(LoadedType::UI) || !impl::s_editButtonsLoaded) {
             return nullptr;
         }
 
@@ -501,6 +530,11 @@ namespace nwo5::editor {
         }
         else {
             return false;
+        }
+    }
+    void updateEditorTabButtons() {
+        if (auto ptr = ui<impl::UtilsEditorUI>()) {
+            ptr->updateEditorTabButtons();
         }
     }
 }

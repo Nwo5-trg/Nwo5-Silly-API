@@ -29,6 +29,11 @@ namespace nwo5::ui {
 
         Setup parent(cocos2d::CCNode* pNode) requires std::derived_from<Node, cocos2d::CCNode> {
             pNode->addChild(m_node);
+
+            if (auto menu = geode::cast::typeinfo_cast<cocos2d::CCMenu*>(pNode); menu && menu->getLayout()) {
+                menu->updateLayout();
+            }
+
             return {m_node};
         }
         template<typename... Args>
@@ -108,13 +113,22 @@ namespace nwo5::ui {
 
         Setup anchor(cocos2d::CCPoint pAnchor) requires std::derived_from<Node, cocos2d::CCNode> {
             m_node->setAnchorPoint(pAnchor);
+
+            if constexpr (std::derived_from<Node, cocos2d::CCLayer> || std::derived_from<Node, cocos2d::CCMenu>) {
+                m_node->ignoreAnchorPointForPosition(false);
+            }
+
             return {m_node};
         }
         Setup anchor(float pX, float pY) requires std::derived_from<Node, cocos2d::CCNode> {
             return anchor({pX, pY});
         }
-         Setup anchor(cocos2d::CCNode* pCopy) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup anchor(cocos2d::CCNode* pCopy) requires std::derived_from<Node, cocos2d::CCNode> {
             return anchor(pCopy->getAnchorPoint());
+        }
+
+        Setup ignoreAnchorForPos(bool pIgnore) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->ignoreAnchorPointForPosition(pIgnore);
         }
 
         Setup rotation(float pRotation) requires std::derived_from<Node, cocos2d::CCNode> {
@@ -398,6 +412,12 @@ namespace nwo5::ui {
         Setup toggle(bool pOn) requires std::derived_from<Node, CCMenuItemToggler> {
             m_node->toggle(pOn);
             return {m_node};
+        }
+
+
+
+        Setup addTo(cocos2d::CCArray* pArray) {
+            pArray->addObject(m_node);
         }
     };
 
