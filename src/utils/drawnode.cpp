@@ -453,4 +453,18 @@ namespace nwo5::utils {
 
         return reinterpret_cast<Vertex*>(ptr);
     }
+
+    SillyDrawNode* SillyDrawNode::create() {
+        auto ret = new SillyDrawNode;
+
+        if (!ret->init()) {
+            delete ret;
+
+            return nullptr;
+        }
+
+        ret->autorelease();
+
+        return ret;
+    }
 }

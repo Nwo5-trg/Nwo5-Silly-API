@@ -98,5 +98,7 @@ namespace nwo5::utils {
         /// reserves space for vertices and updates buffercount/dirty accordingly
         /// @returns a ptr at the end of the buffer u can write ur vertices to
         SILLY_API_DLL Vertex* writeVertices(unsigned int pCount);
+
+        SILLY_API_DLL static SillyDrawNode* create();
     };
 }

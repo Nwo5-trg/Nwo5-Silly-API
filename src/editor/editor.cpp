@@ -1,5 +1,6 @@
 #include <editor/include.hpp>
 #include <Geode/modify/EditorUI.hpp>
+#include <Geode/modify/LevelEditorLayer.hpp>
 #include <utils/include.hpp>
 
 using namespace geode::prelude;
@@ -66,14 +67,6 @@ namespace nwo5::editor {
         }
 
         class $modify(UtilsEditorUI, EditorUI) {
-            bool init(LevelEditorLayer* editorLayer) {
-                s_shouldMoveObject = true;
-                s_editButtonsLoaded = false;
-                s_editorUIEarlyPtr = this;
-
-                return EditorUI::init(editorLayer);
-            }
-            
             void updateEditorTabButtons() {
                 if (notLoaded(LoadedType::UI)) {
                     return;
@@ -137,7 +130,9 @@ namespace nwo5::editor {
 
                         if (
                             nwo5::utils::array::find(buttonArray, [key] (auto pPtr) {
-                                return static_cast<CCNode*>(pPtr)->getID() == key;
+                                if (pPtr) {
+                                    return static_cast<CCNode*>(pPtr)->getID() == key;
+                                }
                             }).has_value()
                         ) {
                             continue;
@@ -169,6 +164,28 @@ namespace nwo5::editor {
 
             static void onModify(auto& pSelf) {
                 (void)pSelf.setHookPriority("EditorUI::init", Priority::First);
+            }
+
+            bool init(LevelEditorLayer* editorLayer) {
+                s_editorUIEarlyPtr = this;
+
+                return EditorUI::init(editorLayer);
+            }
+        };
+
+        class $modify(LevelEditorLayer) {
+            bool init(GJGameLevel* level, bool noUI) {
+                s_shouldMoveObject = true;
+                s_editButtonsLoaded = false;
+                s_editorUIEarlyPtr = nullptr;
+                
+                if (!LevelEditorLayer::init(level, noUI)) {
+                    return false;
+                }
+
+                updateEditorTabButtons();
+
+                return true;
             }
         };
 
@@ -206,7 +223,12 @@ namespace nwo5::editor {
     }
 
     bool loaded(LoadedType pType) {
-        return layer() && !layer()->m_initializing;
+        switch (pType) {
+            case LoadedType::Editor: return layer() && !layer()->m_initializing;
+            case LoadedType::EditorValid: return layer();
+            case LoadedType::UI: return ui();
+            case LoadedType::UIValid: return ui();
+        }
     }
     bool notLoaded(LoadedType pType) {
         return !loaded(pType);
