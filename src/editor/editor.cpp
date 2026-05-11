@@ -130,9 +130,7 @@ namespace nwo5::editor {
 
                         if (
                             nwo5::utils::array::find(buttonArray, [key] (auto pPtr) {
-                                if (pPtr) {
-                                    return static_cast<CCNode*>(pPtr)->getID() == key;
-                                }
+                                return pPtr && static_cast<CCNode*>(pPtr)->getID() == key;
                             }).has_value()
                         ) {
                             continue;
