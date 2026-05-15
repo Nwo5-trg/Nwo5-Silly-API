@@ -50,6 +50,9 @@ namespace nwo5::settings {
         operator const T&() {
             return m_value;
         }
+        bool operator==(const T& pVal) {
+            return m_value == pVal;
+        }
 
         /// get setting name
         /// @returns setting name, or setting key if setting doesnt have a name
@@ -153,7 +156,7 @@ namespace nwo5::settings {
         }
 
         SavedSetting& operator=(const T& pVal) {
-            set(pVal);
+            this->set(pVal);
 
             return *this;
         }

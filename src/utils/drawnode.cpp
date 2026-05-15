@@ -12,7 +12,7 @@ namespace nwo5::utils {
             return program;
         }
 
-        program = new cocos2d::CCGLProgram;
+        program = new CCGLProgram;
         program->initWithVertexShaderByteArray( // stolen from cocos but createing tint
             "														\n\
             attribute vec4 a_position;								\n\
@@ -114,9 +114,9 @@ namespace nwo5::utils {
         CHECK_GL_ERROR_DEBUG();
     }
 
-    void SillyDrawNode::createSegment(CCPoint pStart, CCPoint pEnd, float pThickness, const ccColor4F& pColor) {
+    bool SillyDrawNode::drawSegment(const CCPoint& pStart, const CCPoint& pEnd, float pThickness, const ccColor4F& pColor) {
         if (pStart == pEnd || !pColor.a || !pThickness) {
-            return;
+            return false;
         }
         
         auto ptr = writeTriangles(2 * 3);
@@ -155,10 +155,12 @@ namespace nwo5::utils {
         ptr[5] = {
             {v6, col, {}}, {v7, col, {}}, {v5, col, {}}
         };
+
+        return true;
     }
-    void SillyDrawNode::createLine(CCPoint pStart, CCPoint pEnd, float pThickness, const ccColor4F& pColor) {
+    bool SillyDrawNode::drawLine(const CCPoint& pStart, const CCPoint& pEnd, float pThickness, const ccColor4F& pColor) {
         if (pStart == pEnd || !pColor.a || !pThickness) {
-            return;
+            return false;
         }
         
         auto ptr = writeTriangles(2);
@@ -179,10 +181,12 @@ namespace nwo5::utils {
         ptr[1] = {
             {v3, col, {}}, {v1, col, {}}, {v2, col, {}}
         };
+
+        return true;
     }
-    void SillyDrawNode::createDashedLine(CCPoint pStart, CCPoint pEnd, float pThickness, const ccColor4F& pColor, float pSegmentLength, float pSegmentDotSize) {
+    bool SillyDrawNode::drawDashedLine(const CCPoint& pStart, const CCPoint& pEnd, float pThickness, const ccColor4F& pColor, float pSegmentLength, float pSegmentDotSize) {
         if (pStart == pEnd || !pColor.a || !pThickness || !pSegmentLength) {
-            return;
+            return false;
         }
 
         const auto length = pStart.getDistance(pEnd);
@@ -216,33 +220,37 @@ namespace nwo5::utils {
                 {v3, col, {}}, {v1, col, {}}, {v2, col, {}}
             };
         }
+
+        return true;
     }
-    void SillyDrawNode::createSegments(const CCPoint* pPoints, unsigned int pSize, float pThickness, const ccColor4F& pColor) {
+    bool SillyDrawNode::drawSegments(const CCPoint* pPoints, unsigned int pSize, float pThickness, const ccColor4F& pColor) {
         if (pSize < 2 || !pColor.a || !pThickness) {
-            return;
+            return false;
         }
 
         for (size_t i = 0; i < pSize - 1; i++) {
-            createSegment(pPoints[i], pPoints[i + 1], pThickness, pColor);
+            drawSegment(pPoints[i], pPoints[i + 1], pThickness, pColor);
         }
+        
+        return true;
     }
-    void SillyDrawNode::createSegments(std::span<const CCPoint> pPoints, float pThickness, const ccColor4F& pColor) {
-        createSegments(pPoints.data(), pPoints.size(), pThickness, pColor);
+    bool SillyDrawNode::drawSegments(std::span<const CCPoint> pPoints, float pThickness, const ccColor4F& pColor) {
+        return drawSegments(pPoints.data(), pPoints.size(), pThickness, pColor);
     }
 
-    void SillyDrawNode::createCircle(CCPoint pCenter, float pRadius, const ccColor4F& pColor, unsigned int pSegments, float pOutlineThickness, const ccColor4F& pOutlineColor) {
-        createEllipse(pCenter, {pRadius, pRadius}, pColor, pSegments, pOutlineThickness, pOutlineColor);
+    bool SillyDrawNode::drawCircle(const CCPoint& pCenter, float pRadius, const ccColor4F& pColor, unsigned int pSegments, float pOutlineThickness, const ccColor4F& pOutlineColor) {
+        return drawEllipse(pCenter, {pRadius, pRadius}, pColor, pSegments, pOutlineThickness, pOutlineColor);
     }
-    void SillyDrawNode::createEllipse(CCPoint pCenter, CCSize pRadius, const ccColor4F& pColor, unsigned int pSegments, float pOutlineThickness, const ccColor4F& pOutlineColor) {
+    bool SillyDrawNode::drawEllipse(const CCPoint& pCenter, CCSize pRadius, const ccColor4F& pColor, unsigned int pSegments, float pOutlineThickness, const ccColor4F& pOutlineColor) {
         if (pSegments < 3 || pRadius == CCSizeZero) {
-            return;
+            return false;
         }
         
         const auto fillTriangles = !pColor.a ? 0 : pSegments;
         const auto outlineTriangles = (!pOutlineThickness || !pOutlineColor.a) ? 0 : pSegments * 2;
 
         if (!fillTriangles && !outlineTriangles) {
-            return;
+            return false;
         }
 
         auto ptr = writeTriangles(fillTriangles + outlineTriangles);
@@ -303,18 +311,20 @@ namespace nwo5::utils {
 
             angle += delta;
         }
+
+        return true;
     }
 
-    void SillyDrawNode::createPolygon(const CCPoint* pPoints, unsigned int pSize, const ccColor4F& pColor, float pOutlineThickness, const ccColor4F& pOutlineColor) {
-        drawPolygon(const_cast<CCPoint*>(pPoints), pSize, pColor, pOutlineThickness, pOutlineColor);
+    bool SillyDrawNode::drawPolygon(const CCPoint* pPoints, unsigned int pSize, const ccColor4F& pColor, float pOutlineThickness, const ccColor4F& pOutlineColor, cocos2d::BorderAlignment) {
+        return drawPolygon(const_cast<CCPoint*>(pPoints), pSize, pColor, pOutlineThickness, pOutlineColor);
     }
-    void SillyDrawNode::createPolygon(std::span<const CCPoint> pPoints, const ccColor4F& pColor, float pOutlineThickness, const ccColor4F& pOutlineColor) {
-        createPolygon(pPoints.data(), pPoints.size(), pColor, pOutlineThickness, pOutlineColor);
+    bool SillyDrawNode::drawPolygon(std::span<const CCPoint> pPoints, const ccColor4F& pColor, float pOutlineThickness, const ccColor4F& pOutlineColor, cocos2d::BorderAlignment) {
+        return drawPolygon(pPoints.data(), pPoints.size(), pColor, pOutlineThickness, pOutlineColor);
     }
 
-    void SillyDrawNode::createDot(cocos2d::CCPoint pCenter, float pRadius, const cocos2d::ccColor4F& pColor) {
+    bool SillyDrawNode::drawDot(const CCPoint& pCenter, float pRadius, const ccColor4F& pColor) {
         if (!pRadius) {
-            return;
+            return false;
         }
 
         auto ptr = writeTriangles(2);
@@ -334,11 +344,13 @@ namespace nwo5::utils {
         ptr[1] = {
             {v1, col, {}}, {v3, col, {}}, {v2, col, {}}
         };
+
+        return true;
     }
 
-    void SillyDrawNode::createRect(CCRect pRect, const ccColor4F& pColor, float pOutlineThickness, const ccColor4F& pOutlineColor) {
+    bool SillyDrawNode::drawRect(const CCRect& pRect, const ccColor4F& pColor, float pOutlineThickness, const ccColor4F& pOutlineColor, cocos2d::BorderAlignment) {
         if (pRect.size == CCSizeZero) {
-            return;
+            return false;
         }
 
         const auto fillTriangles = !pColor.a ? 0 : 3;
@@ -394,12 +406,14 @@ namespace nwo5::utils {
                 {{v1.x - pOutlineThickness, v1.y + pOutlineThickness}, outlineColor, {}}, {{v3.x, v3.y - pOutlineThickness}, outlineColor, {}}, {{v3.x - pOutlineThickness, v3.y - pOutlineThickness}, outlineColor, {}}
             };
         }
+
+        return true;
     }
-    void SillyDrawNode::createRect(CCPoint pStart, CCPoint pEnd, const ccColor4F& pColor, float pOutlineThickness, const ccColor4F& pOutlineColor) {
+    bool SillyDrawNode::drawRect(const CCPoint& pStart, const CCPoint& pEnd, const ccColor4F& pColor, float pOutlineThickness, const ccColor4F& pOutlineColor, cocos2d::BorderAlignment) {
         const CCPoint min{std::min(pStart.x, pEnd.x), std::min(pStart.y, pEnd.y)};
         const CCPoint max{std::max(pStart.x, pEnd.x), std::max(pStart.y, pEnd.y)};
         
-        createRect({min, max - min}, pColor, pOutlineThickness, pOutlineColor);
+        return drawRect({min, max - min}, pColor, pOutlineThickness, pOutlineColor);
     }
 
     void SillyDrawNode::setTint(const ccColor4F& pColor) {

@@ -156,6 +156,9 @@ namespace nwo5::settings {
         operator const T&() {
             return m_value;
         }
+        bool operator==(const T& pVal) {
+            return m_value == pVal;
+        }
         
         /// get setting name
         /// @returns setting name, or setting key if setting doesnt have a name, or empty string if setting not loaded
@@ -206,8 +209,7 @@ namespace nwo5::settings {
         /// loads value and event listener if key is valid
         /// sets loaded to true if everything went well :3
         virtual void load() override {
-
-            if (m_loaded || !m_mod || !(m_setting = geode::cast::typeinfo_cast<GeodeSettingType*>(m_mod->getSetting(m_key)))) {
+            if (m_loaded || !m_mod || !(m_setting = geode::cast::typeinfo_pointer_cast<GeodeSettingType>(m_mod->getSetting(m_key)))) {
                 return;
             }
 
@@ -251,7 +253,7 @@ namespace nwo5::settings {
         }
 
         Setting& operator=(const T& pVal) {
-            set(pVal);
+            this->set(pVal);
 
             return *this;
         }

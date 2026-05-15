@@ -12,6 +12,7 @@
 **Fixed**
 
 - numtostring rounding again
+- setting cache again
 
 **Removed**
 
