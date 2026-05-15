@@ -47,10 +47,10 @@ namespace nwo5::settings {
         SavedSettingBase(std::string_view pKey, std::optional<std::string> pName, std::optional<std::string> pDescription, T pDefault, geode::Mod* pMod = geode::Mod::get()) 
             : GenericSetting(pKey, false, pMod), m_name(std::move(pName)), m_description(std::move(pDescription)), m_default(std::move(pDefault)) {}
 
-        operator const T&() {
+        operator const T&() const {
             return m_value;
         }
-        bool operator==(const T& pVal) {
+        bool operator==(const T& pVal) const {
             return m_value == pVal;
         }
 

@@ -153,10 +153,10 @@ namespace nwo5::settings {
         SettingBase(std::string_view pKey, geode::Mod* pMod = geode::Mod::get()) 
             : GenericSetting(pKey, true, pMod) {}
 
-        operator const T&() {
+        operator const T&() const {
             return m_value;
         }
-        bool operator==(const T& pVal) {
+        bool operator==(const T& pVal) const {
             return m_value == pVal;
         }
         

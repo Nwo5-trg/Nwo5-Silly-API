@@ -14,20 +14,20 @@ namespace nwo5::utils {
 
         program = new CCGLProgram;
         program->initWithVertexShaderByteArray( // stolen from cocos but createing tint
-            "														\n\
-            attribute vec4 a_position;								\n\
-            attribute vec4 a_color;									\n\
-            #ifdef GL_ES											\n\
-            varying lowp vec4 v_fragmentColor;						\n\
-            #else													\n\
-            varying vec4 v_fragmentColor;							\n\
-            #endif													\n\
-                                                                    \n\
-            void main()												\n\
-            {														\n\
-                gl_Position = CC_MVPMatrix * a_position;			\n\
-                v_fragmentColor = a_color;							\n\
-            }														\n\
+            "													\n\
+            attribute vec4 a_position;							\n\
+            attribute vec4 a_color;								\n\
+            #ifdef GL_ES										\n\
+            varying lowp vec4 v_fragmentColor;					\n\
+            #else												\n\
+            varying vec4 v_fragmentColor;						\n\
+            #endif												\n\
+                                                                \n\
+            void main()											\n\
+            {													\n\
+                gl_Position = CC_MVPMatrix * a_position;		\n\
+                v_fragmentColor = a_color;						\n\
+            }													\n\
             "
             , 
             "													\n\
@@ -329,8 +329,6 @@ namespace nwo5::utils {
 
         auto ptr = writeTriangles(2);
 
-        pRadius /= 2;
-
         const auto v0 = toVert(pCenter - pRadius);
         const auto v1 = toVert(pCenter.x + pRadius, pCenter.y - pRadius);
         const auto v2 = toVert(pCenter.x - pRadius, pCenter.y + pRadius);
@@ -353,8 +351,8 @@ namespace nwo5::utils {
             return false;
         }
 
-        const auto fillTriangles = !pColor.a ? 0 : 3;
-        const auto outlineTriangles = (!pOutlineThickness || !pOutlineColor.a) ? 0 : (2 * 3);
+        const auto fillTriangles = !pColor.a ? 0 : 2;
+        const auto outlineTriangles = (!pOutlineThickness || !pOutlineColor.a) ? 0 : (2 * 4);
 
         auto ptr = writeTriangles(fillTriangles + outlineTriangles);
 
