@@ -23,6 +23,8 @@ namespace nwo5::utils::prelude {
 
     using nutils::SillyDrawNode;
 
+    using nutils::SillyHSV;
+
     using nutils::CLEAR_COLOR;
 
     using nutils::GetChildQuery, nutils::GetChildQueryID, nutils::GetChildQueryIndex,
