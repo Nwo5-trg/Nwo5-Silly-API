@@ -3,6 +3,7 @@
 #include "setup-node.hpp"
 #include "nodes.hpp"
 #include "misc.hpp"
+#include "color.hpp"
 #include "easings.hpp"
 #include "array.hpp"
 #include "drawnode.hpp"

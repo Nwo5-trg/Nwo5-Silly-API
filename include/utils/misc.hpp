@@ -79,61 +79,13 @@ namespace nwo5::utils {
         }
     }
 
-    template<typename After, typename Before>
-    After color_cast(Before pVal) {
-        if constexpr (std::same_as<Before, After>) {
-            return pVal;
-        }
-        else if constexpr (std::same_as<Before, cocos2d::ccColor3B>) {
-            if constexpr (std::same_as<After, cocos2d::ccColor4B>) {
-                return geode::cocos::to4B(pVal);
-            }
-            else if constexpr (std::same_as<After, cocos2d::ccColor4F>) {
-                return cocos2d::ccc4FFromccc3B(pVal);
-            }
-        }
-        else if constexpr (std::same_as<Before, cocos2d::ccColor4B>) {
-            if constexpr (std::same_as<After, cocos2d::ccColor3B>) {
-                return geode::cocos::to3B(pVal);
-            }
-            else if constexpr (std::same_as<After, cocos2d::ccColor4F>) {
-                return geode::cocos::to4F(pVal);
-            }
-        }
-        else if constexpr (std::same_as<Before, cocos2d::ccColor4F>) {
-            if constexpr (std::same_as<After, cocos2d::ccColor3B>) {
-                return {static_cast<GLubyte>(pVal.r * 255), static_cast<GLubyte>(pVal.g * 255), static_cast<GLubyte>(pVal.b * 255)};
-            }
-            else if constexpr (std::same_as<After, cocos2d::ccColor4B>) {
-                return cocos2d::ccc4BFromccc4F(pVal);
-            }
-        }
-        else {
-            static_assert(false, "not a color type");
-        }
-    }
-
-    namespace impl {
-        SILLY_API_DLL cocos2d::ccColor4F getChroma4F(float pSpeed, float pOffset, float pSaturation, float pValue);
-    }
-
-    /// get a chroma color based on the current time
-    /// @param pSpeed how long it should take for color to do a full 360 hue rotation (seconds)
-    /// @param pOffset added to hue (hint, u can use enums)
-    /// @param pSaturation saturation of outputted color
-    /// @param pValue value of outputted color
-    template<typename ImplT = cocos2d::ccColor4F, typename Offset = float, typename T = std::decay_t<ImplT>>
-    T getChroma(float pSpeed, Offset pOffset = Offset{}, float pSaturation = 1.0f, float pValue = 1.0f) {
-        return color_cast<T>(nwo5::utils::impl::getChroma4F(pSpeed, enum_cast<float>(pOffset), pSaturation, pValue));
-    }
-
     // very unnecessary template shenanigans but fun :33333
 
     template<typename T>
     concept IsCCVec2 = requires (T pVec2) { // ccvertex/ccpoint exist
         requires std::same_as<decltype(pVec2.x), decltype(pVec2.y)>;
     };
-    
+
     template<IsCCVec2 T>
     constexpr auto ccMax(const T& pVec2) noexcept {
         return (pVec2.x > pVec2.y) ? pVec2.x : pVec2.y;

@@ -39,7 +39,7 @@ namespace nwo5::ui {
     SILLY_API_DLL geode::TextInput* input(float pWidth, std::optional<std::string> pPlaceholder, TextInputCallback pCallback = {});
 
     SILLY_API_DLL cocos2d::CCMenu* menu(bool pIgnoreAnchor);
-    SILLY_API_DLL cocos2d::CCMenu* menu(geode::AxisLayout* pLayout = nullptr, bool pIgnoreAnchor = true);
+    SILLY_API_DLL cocos2d::CCMenu* menu(geode::AxisLayout* pLayout = nullptr, bool pIgnoreAnchor = false);
 
     /// no auto scale, grows axis, no cross axis
     SILLY_API_DLL geode::AxisLayout* horizontalDistrbLayout(float pGap, geode::AxisAlignment pAlignment = geode::AxisAlignment::Start);

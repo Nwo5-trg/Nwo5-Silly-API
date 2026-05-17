@@ -45,18 +45,4 @@ namespace nwo5::utils {
 
         return ret;
     }
-
-    namespace impl {
-        ccColor4F getChroma4F(float pSpeed, float pOffset, float pSaturation, float pValue) {
-            const auto t = asp::time::SystemTime::now().timeSinceEpoch().seconds<double>();
-
-            const auto rgba = extension::CCControlUtils::RGBfromHSV({
-                std::fmod((std::fmod(t, pSpeed) / pSpeed) * 360 + pOffset, 360), pSaturation, pValue
-            });
-
-            return {
-                static_cast<float>(rgba.r), static_cast<float>(rgba.g), static_cast<float>(rgba.b), 1.0f
-            };
-        }
-    }
 }

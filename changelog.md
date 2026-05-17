@@ -1,3 +1,12 @@
+## v1.4.0
+**Added**
+
+- hsv/rgb utils !
+
+**Fixed**
+
+- defaults for ui::menu layout overload for it to make a bit more sense
+
 ## v1.3.0
 **Added**
 
