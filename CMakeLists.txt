@@ -13,6 +13,8 @@ project(Nwo5SillyAPI VERSION 1.0.0)
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
+target_include_directories(${PROJECT_NAME} PUBLIC include)
+
 if (PROJECT_IS_TOP_LEVEL)
     target_compile_definitions(${PROJECT_NAME} PRIVATE NWO5_SILLY_API_EXPORTING)
 endif()
