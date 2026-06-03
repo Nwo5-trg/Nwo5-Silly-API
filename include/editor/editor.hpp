@@ -32,27 +32,43 @@ namespace nwo5::editor {
         UIValid
     };
     
+    /// check LoadedType docs
     SILLY_API_DLL bool loaded(LoadedType pType = LoadedType::Editor);
+    /// same as !loaded()
     SILLY_API_DLL bool notLoaded(LoadedType pType = LoadedType::Editor);
 
+    /// call pretty much every editor update function (e.g. updating ui buttons, obj info label)
     SILLY_API_DLL void update(bool pUpdateControls = true, bool pOtherwiseDeactivateControls = false);
 
+    /// get editor soom
+    /// @returns editor zoom
     SILLY_API_DLL float zoom();
     /// center of editor in objectlayer position
     /// @param pToolbar whether to account for toolbarheight
+    /// @returns center
     SILLY_API_DLL cocos2d::CCPoint center(bool pToolbar = true);
     /// size of visible objectlayer
     /// @param pToolbar whether to account for toolbarheight
+    /// @returns size
     SILLY_API_DLL cocos2d::CCSize size(bool pToolbar = true);
+    
+    /// move editor to position (objectlayer position)
+    SILLY_API_DLL void move(cocos2d::CCPoint pPos);
 
+    /// LevelEditorLayer::m_playbackMode == PlaybackMode::Playing
     SILLY_API_DLL bool isPlaytesting();
+    /// LevelEditorLayer::m_playbackMode
+    SILLY_API_DLL PlaybackMode playbackMode();
 
     SILLY_API_DLL void activateRotationControl(bool pRefresh = true);
     SILLY_API_DLL void activateScaleControl(bool pXY, bool pRefresh = true);
     SILLY_API_DLL void activateTransformControl(bool pRefresh = true);
 
+    /// get current layer
+    /// @returns current layer or editor::constants::ALL_LAYERS if editor not loaded
     SILLY_API_DLL int currentLayer();
-    SILLY_API_DLL bool layerSelectable(int pLayer, bool pIgnoreLocked = false);
+    /// get if layer is selectable
+    SILLY_API_DLL bool layerSelectable(int pLayer = currentLayer(), bool pIgnoreLocked = false);
     SILLY_API_DLL bool layerLocked(int pLayer = currentLayer());
     SILLY_API_DLL void setLayer(int pLayer);
     SILLY_API_DLL void lockLayer(int pLayer, bool pLock);

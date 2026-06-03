@@ -1,6 +1,7 @@
 #pragma 
 
 #include "../export.hpp"
+#include "misc.hpp"
 
 namespace nwo5::utils {
     class SillyHSV;

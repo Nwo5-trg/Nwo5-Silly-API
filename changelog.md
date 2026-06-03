@@ -1,3 +1,14 @@
+## v1.5.0
+**Added**
+
+- a couple editor functions
+- some documentation for editor funcs
+
+**Fixed**
+
+- fix a silly with get chroma when only including color.hpp
+- some changelog typos
+
 ## v1.4.1
 fucked up the version oops
 
@@ -42,7 +53,7 @@ fucked up the version oops
 ## v1.2.0
 **Added**
 
-- ui namespace (u can still in clude old bad setup node stuff in nwo5::utils::setup)
+- ui namespace (u can still in include old bad setup node stuff in nwo5::utils::setup)
 - reorganized namespaces
 - color/enum_cast
 
@@ -74,4 +85,4 @@ fucked up the version oops
 - category macro
 
 ## v1.0.0
-- inital release
+- initial release

@@ -267,7 +267,7 @@ namespace nwo5::editor {
         return layer() ? layer()->m_objectLayer->getScale() : 0.0f;
     }
     CCPoint center(bool pToolbar) {
-        if (notLoaded(LoadedType::UIValid)) {
+        if (notLoaded(LoadedType::UI)) {
             return CCPointZero;
         }
         
@@ -279,7 +279,7 @@ namespace nwo5::editor {
         } / zoom();
     }
     CCSize size(bool pToolbar) {
-        if (notLoaded(LoadedType::UIValid)) {
+        if (notLoaded(LoadedType::UI)) {
             return CCSizeZero;
         }
         
@@ -289,8 +289,24 @@ namespace nwo5::editor {
         } / zoom();
     }
 
+    void move(cocos2d::CCPoint pPos) {
+        if (notLoaded(LoadedType::UIValid)) {
+            return;
+        }
+
+        const float scale = layer()->m_objectLayer->getScale();
+        const auto currentPos = layer()->m_objectLayer->getPosition();
+
+        ui()->moveGamelayer(
+            -pPos * scale + CCDirector::get()->getWinSize() / 2 - currentPos
+        );
+    }
+
     bool isPlaytesting() {
         return layer() ? layer()->m_playbackMode == PlaybackMode::Playing : false;
+    }
+    PlaybackMode playbackMode() {
+        return layer() ? layer()->m_playbackMode : PlaybackMode::Not;
     }
 
     void activateRotationControl(bool pRefresh) {

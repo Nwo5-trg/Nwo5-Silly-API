@@ -8,16 +8,10 @@ else()
 endif()
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
-# i cant get my kits to automatically pass the option i give up
-set(CMAKE_EXPORT_COMPILE_COMMANDS true)
-
 project(Nwo5SillyAPI VERSION 1.0.0)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
-
-# mayb thisll fix my intellisense which is being annoying rn idk
-target_include_directories(${PROJECT_NAME} PUBLIC include)
 
 if (PROJECT_IS_TOP_LEVEL)
     target_compile_definitions(${PROJECT_NAME} PRIVATE NWO5_SILLY_API_EXPORTING)
