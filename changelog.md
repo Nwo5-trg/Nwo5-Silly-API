@@ -1,3 +1,8 @@
+## v1.6.0
+**Internal**
+
+- added a lil python script for setting cache
+
 ## v1.5.0
 **Added**
 
