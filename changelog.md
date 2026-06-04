@@ -1,8 +1,3 @@
-## v1.6.0
-**Internal**
-
-- added a lil python script for setting cache
-
 ## v1.5.0
 **Added**
 
@@ -13,6 +8,10 @@
 
 - fix a silly with get chroma when only including color.hpp
 - some changelog typos
+
+**Internal**
+
+- added a lil python script for setting cache
 
 ## v1.4.1
 fucked up the version oops

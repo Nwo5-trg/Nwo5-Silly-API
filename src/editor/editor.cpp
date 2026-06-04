@@ -301,6 +301,17 @@ namespace nwo5::editor {
             -pPos * scale + CCDirector::get()->getWinSize() / 2 - currentPos
         );
     }
+    void setZoom(float pZoom) {
+        if (notLoaded(LoadedType::UIValid)) {
+            return;
+        }
+
+        if (!pZoom) {
+            return;
+        }
+
+        ui()->updateZoom(pZoom);
+    }
 
     bool isPlaytesting() {
         return layer() ? layer()->m_playbackMode == PlaybackMode::Playing : false;

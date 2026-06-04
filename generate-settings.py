@@ -67,8 +67,9 @@ def main():
         return
 
     try:
+        # json.load js wasnt "compiling" so i did this wtv
         json_obj = json.loads(mod_json.read_text())
-    except (FileNotFoundError, json.JSONDecodeError):
+    except json.JSONDecodeError:
         print("invalid mod.json")
 
         return

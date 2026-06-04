@@ -54,6 +54,8 @@ namespace nwo5::editor {
     
     /// move editor to position (objectlayer position)
     SILLY_API_DLL void move(cocos2d::CCPoint pPos);
+    /// set editor zoom
+    SILLY_API_DLL void setZoom(float pZoom);
 
     /// LevelEditorLayer::m_playbackMode == PlaybackMode::Playing
     SILLY_API_DLL bool isPlaytesting();
