@@ -291,7 +291,7 @@ namespace nwo5::ui {
             return {m_node};
         }
         template <typename T, typename... Args>
-        Setup id(fmt::format_string<T, Args...> pFormat, T&& pArg, Args&&... pArgs) requires std::derived_from<T, cocos2d::CCNode> {
+        Setup id(fmt::format_string<T, Args...> pFormat, T&& pArg, Args&&... pArgs) requires std::derived_from<Node, cocos2d::CCNode> {
             m_node->setID(fmt::format(pFormat, std::forward<T>(pArg), std::forward<Args>(pArgs)...));
             return {m_node};
         }
