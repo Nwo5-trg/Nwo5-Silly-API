@@ -9,6 +9,7 @@
 - fix a silly with get chroma when only including color.hpp
 - some changelog typos
 - setup id formating overload
+- constexpr enum_cast
 
 **Internal**
 

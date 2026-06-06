@@ -70,7 +70,7 @@ namespace nwo5::utils {
     /// @note i dont guarantee safty i js guarantee the compiler stfu
     template<typename After, typename Before>
     requires (std::is_arithmetic_v<After> || std::is_scoped_enum_v<After>) && (std::is_arithmetic_v<Before> || std::is_scoped_enum_v<Before>)
-    After enum_cast(Before pVal) {
+    constexpr After enum_cast(Before pVal) {
         if constexpr (std::is_scoped_enum_v<Before>) {
             return static_cast<After>(std::to_underlying(pVal));
         }
