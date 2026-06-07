@@ -44,15 +44,24 @@ namespace nwo5::editor::object {
     SILLY_API_DLL bool canSelectLayer(GameObject* pObj, bool pIgnoreLocked = false);
 
     /// get bounds of objects
+    /// @param pContentSize use content size of object instead of grid size
+    /// @returns bounds or CCRectZero, origin is the center of the bottom left, size is distance to the top right
+    SILLY_API_DLL cocos2d::CCRect bounds(GameObject* pObj, bool pContentSize = false);
+    /// get bounds of objects
     /// @param pAddSize adds scaled content size of the objects to the position checked
-    /// @returns bounds or CCRectZero, origin is the center of the bottom left most object, size is distance to the top rght most objects center
+    /// @returns bounds or CCRectZero, origin is the center of the bottom left most object, size is distance to the top right most objects center
     SILLY_API_DLL cocos2d::CCRect bounds(std::span<GameObject* const> pObjs, bool pAddSize = false);
     /// get bounds of objects
     /// @param pAddSize adds scaled content size of the objects to the position checked
-    /// @returns bounds or CCRectZero, origin is the center of the bottom left most object, size is distance to the top rght most objects center
+    /// @returns bounds or CCRectZero, origin is the center of the bottom left most object, size is distance to the top right most objects center
     SILLY_API_DLL cocos2d::CCRect bounds(cocos2d::CCArray* pObjs, bool pAddSize = false);
     SILLY_API_DLL cocos2d::CCPoint center(std::span<GameObject* const> pObjs, bool pIgnoreParent = false);
     SILLY_API_DLL cocos2d::CCPoint center(cocos2d::CCArray* pObjs, bool pIgnoreParent = false);
+
+    SILLY_API_DLL void clusterObjects(std::vector<std::vector<GameObject*>>& pOut, std::span<GameObject* const> pObjs, float pClusterSize);
+    SILLY_API_DLL void clusterObjects(std::vector<std::vector<GameObject*>>& pOut, cocos2d::CCArray* pObjs, float pClusterSize);
+    SILLY_API_DLL std::vector<std::vector<GameObject*>> clusterObjects(std::span<GameObject* const> pObjs, float pClusterSize);
+    SILLY_API_DLL std::vector<std::vector<GameObject*>> clusterObjects(cocos2d::CCArray* pObjs, float pClusterSize);
 
     /// get (grid)size of object
     SILLY_API_DLL float size(GameObject* pObj);

@@ -23,6 +23,8 @@ namespace nwo5::utils {
         static CCTag* create(int pTag = cocos2d::kCCNodeTagInvalid);
     };
 
+    
+
     template<typename T>
     T random(T pMin, T pMax) {
         return geode::utils::random::generate(pMin, pMax);

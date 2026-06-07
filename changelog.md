@@ -1,3 +1,8 @@
+## v1.6.0
+**Added**
+
+- more editor functions as always
+
 ## v1.5.1
 **Fixed**
 

@@ -218,6 +218,16 @@ namespace nwo5::editor::object {
         return editor::layerSelectable(pObj->m_editorLayer, pIgnoreLocked) || editor::layerSelectable(pObj->m_editorLayer2, pIgnoreLocked);
     }
 
+    CCRect bounds(GameObject* pObj, bool pContentSize) {
+        if (pContentSize) {
+            const auto size = pObj->getScaledContentSize();
+            return {pObj->getRealPosition() - size / 2, size};
+        }
+        else {
+            const auto grid = size(pObj);
+            return {pObj->getRealPosition() - grid, CCSize{grid, grid}};
+        }
+    }
     CCRect bounds(std::span<GameObject* const> pObjs, bool pAddSize) {
         if (pObjs.empty()) {
             return CCRectZero;
@@ -319,6 +329,97 @@ namespace nwo5::editor::object {
         } 
 
         return (min + max) / 2;
+    }
+
+    void clusterObjects(std::vector<std::vector<GameObject*>>& pOut, std::span<GameObject* const> pObjs, float pClusterSize) {
+        static std::vector<GameObject*> queue;
+        static std::unordered_map<GameObject*, int> map;
+        
+        queue.clear();
+        map.clear();
+
+        for (auto obj : pObjs) {
+            if (map.contains(obj)) continue;
+
+            int currentClusterIndex = pOut.size();
+            pOut.emplace_back();
+            auto& currentCluster = pOut.back();
+
+            queue.clear();
+            queue.push_back(obj);
+            map[obj] = currentClusterIndex;
+
+            while (!queue.empty()) {
+                auto obj = queue.back();
+                auto pos = obj->getRealPosition();
+                queue.pop_back();
+                currentCluster.push_back(obj);
+
+                for (auto neighbour : pObjs) {
+                    if (map.contains(neighbour)) continue;
+
+                    auto neighbourPos = neighbour->getRealPosition();
+
+                    if (std::fabs(pos.x - neighbourPos.x) <= pClusterSize && std::fabs(pos.y - neighbourPos.y) <= pClusterSize) {
+                        map[neighbour] = currentClusterIndex;
+                        queue.push_back(neighbour);
+                    }
+                }
+            }
+        }
+    }
+    void clusterObjects(std::vector<std::vector<GameObject*>>& pOut, cocos2d::CCArray* pObjs, float pClusterSize) {
+        static std::vector<GameObject*> queue;
+        static std::unordered_map<GameObject*, int> map;
+        
+        queue.clear();
+        map.clear();
+
+        auto ext = pObjs->asExt<GameObject*>();
+
+        for (auto obj : ext) {
+            if (map.contains(obj)) continue;
+
+            int currentClusterIndex = pOut.size();
+            pOut.emplace_back();
+            auto& currentCluster = pOut.back();
+
+            queue.clear();
+            queue.push_back(obj);
+            map[obj] = currentClusterIndex;
+
+            while (!queue.empty()) {
+                auto obj = queue.back();
+                auto pos = obj->getRealPosition();
+                queue.pop_back();
+                currentCluster.push_back(obj);
+
+                for (auto neighbour : ext) {
+                    if (map.contains(neighbour)) continue;
+
+                    auto neighbourPos = neighbour->getRealPosition();
+
+                    if (std::fabs(pos.x - neighbourPos.x) <= pClusterSize && std::fabs(pos.y - neighbourPos.y) <= pClusterSize) {
+                        map[neighbour] = currentClusterIndex;
+                        queue.push_back(neighbour);
+                    }
+                }
+            }
+        }
+    }
+    std::vector<std::vector<GameObject*>> clusterObjects(std::span<GameObject* const> pObjs, float pClusterSize) {
+        std::vector<std::vector<GameObject*>> out;
+
+        clusterObjects(out, pObjs, pClusterSize);
+        
+        return out;
+    }
+    std::vector<std::vector<GameObject*>> clusterObjects(cocos2d::CCArray* pObjs, float pClusterSize) {
+        std::vector<std::vector<GameObject*>> out;
+
+        clusterObjects(out, pObjs, pClusterSize);
+        
+        return out;
     }
 
     float size(GameObject* pObj) {
