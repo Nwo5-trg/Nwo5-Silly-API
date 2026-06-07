@@ -392,7 +392,7 @@ namespace nwo5::editor::trigger {
             return targetModeEnabled(pObj) ? InputType::Group : InputType::None;
         }
 
-        return info.secondaryTarget().type();
+        return info.primaryInput().type();
     }
     void setPrimaryInput(GameObject* pObj, int pVal) {
         const auto id = pObj->m_objectID;

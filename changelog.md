@@ -1,3 +1,9 @@
+## v1.5.1
+**Fixed**
+
+- added node ids dependency cuz lowk edit tab buttons depends on it but also kinda works without it
+- editor::trigger issues 
+
 ## v1.5.0
 **Added**
 
