@@ -178,6 +178,10 @@ namespace nwo5::editor {
                 }
                 if (auto mod = Loader::get()->getLoadedMod("hjfod.betteredit")) {
                     s_beUIScale = mod->getSettingValue<float>("scale-factor");
+
+                    if (s_tinkerUIScale.has_value()) {
+                        s_tinkerUIScale = s_beUIScale;
+                    }
                 }
 
                 return EditorUI::init(editorLayer);
@@ -498,7 +502,7 @@ namespace nwo5::editor {
             impl::s_tinkerUIScale = pScale;
         });
 
-        return impl::s_beUIScale.value_or(impl::s_tinkerUIScale.value_or(1.0f));
+        return impl::s_tinkerUIScale.value_or(impl::s_beUIScale.value_or(1.0f));
     }
 
     bool registerEditTabButton(impl::EditTabButton::SpriteFunc pSprite, std::string pKey, float pScale, int pPrio, impl::EditTabButton::Callback pCallback) {
