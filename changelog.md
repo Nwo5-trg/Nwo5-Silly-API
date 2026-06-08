@@ -2,6 +2,7 @@
 **Added**
 
 - more editor functions as always
+- editor scale compat functions
 
 ## v1.5.1
 **Fixed**

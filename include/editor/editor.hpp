@@ -75,14 +75,31 @@ namespace nwo5::editor {
     SILLY_API_DLL void setLayer(int pLayer);
     SILLY_API_DLL void lockLayer(int pLayer, bool pLock);
 
-    /// saves current level
-    SILLY_API_DLL void save();
-
     /// get next free group
     /// @param pOffset search starts from this gid, clamped from 1-9999
     /// @note only accounts for target gid and center gid rn, ill do like sequence/advrand checks and stuff l8r
     /// @returns next free gid or 0 if all 9999 groups are used
     SILLY_API_DLL int nextFreeGroup(int pOffset = 1, bool pCheckTargetGroups = false);
+
+    /// saves current level
+    SILLY_API_DLL void save();
+
+    /// tinker and better edit compat for editor scaling
+    /// @note should work without any hookprio shenanigans
+    /// @returns ui scale or 0 if editorui not loaded
+    SILLY_API_DLL float uiScale(); 
+    /// set hook priority for editorui::init to be after tinker/better edit
+    /// use in onModify and pass self
+    template<typename T>
+    void setUIHookPrio(T& pSelf) {
+        if (geode::Loader::get()->getInstalledMod("alphalaneous.tinker")->isOrWillBeEnabled()) {
+            pSelf.setHookPriorityAfterPost("EditorUI::init", "alphalaneous.tinker");
+        }
+        else {
+            pSelf.setHookPriorityAfterPost("EditorUI::init", "hjfod.betteredit");
+        }
+    }
+
 
     namespace impl {
         struct SILLY_API_DLL EditTabButton {
