@@ -18,6 +18,7 @@ namespace nwo5::editor {
         static std::unordered_map<std::string, CCMenuItemSpriteExtra*> s_editTabButtonMap;
         static std::unordered_set<std::string> s_removedEditTabButtons;
 
+        // its safe trust trust
         static EditorUI* s_editorUIEarlyPtr;
 
         static int nextFreeGroupFast(int pOffset) {
@@ -523,6 +524,8 @@ namespace nwo5::editor {
         if (const auto it = impl::s_removedEditTabButtons.find(pKey); it != impl::s_removedEditTabButtons.end()) {
             impl::s_removedEditTabButtons.erase(it);
         }
+
+        updateEditorTabButtons();
 
         return true;
     }

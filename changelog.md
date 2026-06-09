@@ -3,6 +3,7 @@
 
 - more editor functions as always
 - editor scale compat functions
+- update editor tab buttons in registeredittabbutton so it can b used post hook
 
 ## v1.5.1
 **Fixed**
