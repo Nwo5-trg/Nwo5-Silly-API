@@ -58,10 +58,10 @@ namespace nwo5::editor::object {
     SILLY_API_DLL cocos2d::CCPoint center(std::span<GameObject* const> pObjs, bool pIgnoreParent = false);
     SILLY_API_DLL cocos2d::CCPoint center(cocos2d::CCArray* pObjs, bool pIgnoreParent = false);
 
-    SILLY_API_DLL void clusterObjects(std::vector<std::vector<GameObject*>>& pOut, std::span<GameObject* const> pObjs, float pClusterSize);
-    SILLY_API_DLL void clusterObjects(std::vector<std::vector<GameObject*>>& pOut, cocos2d::CCArray* pObjs, float pClusterSize);
-    SILLY_API_DLL std::vector<std::vector<GameObject*>> clusterObjects(std::span<GameObject* const> pObjs, float pClusterSize);
-    SILLY_API_DLL std::vector<std::vector<GameObject*>> clusterObjects(cocos2d::CCArray* pObjs, float pClusterSize);
+    SILLY_API_DLL void cluster(std::vector<std::vector<GameObject*>>& pOut, std::span<GameObject* const> pObjs, float pClusterSize);
+    SILLY_API_DLL void cluster(std::vector<std::vector<GameObject*>>& pOut, cocos2d::CCArray* pObjs, float pClusterSize);
+    SILLY_API_DLL std::vector<std::vector<GameObject*>> cluster(std::span<GameObject* const> pObjs, float pClusterSize);
+    SILLY_API_DLL std::vector<std::vector<GameObject*>> cluster(cocos2d::CCArray* pObjs, float pClusterSize);
 
     /// get (grid)size of object
     SILLY_API_DLL float size(GameObject* pObj);
