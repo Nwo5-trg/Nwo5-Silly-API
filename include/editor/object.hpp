@@ -73,6 +73,25 @@ namespace nwo5::editor::object {
     /// @returns pos of object snapped to pGridSize
     SILLY_API_DLL cocos2d::CCPoint snappedPos(GameObject* pObj, float pGridSize = 30.0f);
 
+    /// move camera to obj and optionally zoom out
+    /// @param pZoomToFit zoom out to fit obj on screen
+    /// @param pZoomBuffer *divide* zoom by this
+    /// @param pMinimumZoom clamps zoom to this
+    /// @param pMaximumZoom clamps zoom to this
+    SILLY_API_DLL void moveTo(GameObject* pObj, bool pZoomToFit = true, float pZoomBuffer = 1.5f, float pMinimumZoom = 0.0f, float pMaximumZoom = editor::zoom());
+    /// move camera to objs and optionally zoom out
+    /// @param pZoomToFit zoom out to fit objs on screen
+    /// @param pZoomBuffer *divide* zoom by this
+    /// @param pMinimumZoom clamps zoom to this
+    /// @param pMaximumZoom clamps zoom to this
+    SILLY_API_DLL void moveTo(std::span<GameObject* const> pObjs, bool pZoomToFit = true, float pZoomBuffer = 1.5f, float pMinimumZoom = 0.0f, float pMaximumZoom = editor::zoom());
+    /// move camera to objs and optionally zoom out
+    /// @param pZoomToFit zoom out to fit objs on screen
+    /// @param pZoomBuffer *divide* zoom by this
+    /// @param pMinimumZoom clamps zoom to this
+    /// @param pMaximumZoom clamps zoom to this
+    SILLY_API_DLL void moveTo(cocos2d::CCArray* pObjs, bool pZoomToFit = true, float pZoomBuffer = 1.5f, float pMinimumZoom = 0.0f, float pMaximumZoom = editor::zoom());
+
     SILLY_API_DLL void addGroup(GameObject* pObj, int pGroup);
     SILLY_API_DLL void addGroup(std::span<GameObject* const> pObjs, int pGroup);
     SILLY_API_DLL void addGroup(cocos2d::CCArray* pObjs, int pGroup);
