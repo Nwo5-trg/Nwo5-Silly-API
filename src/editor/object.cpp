@@ -451,6 +451,7 @@ namespace nwo5::editor::object {
                 pMinimumZoom, pMaximumZoom
             )
         );
+    }
     void moveTo(std::span<GameObject* const> pObjs, bool pZoomToFit, float pZoomBuffer, float pMinimumZoom, float pMaximumZoom) {
         const auto bounds = editor::object::bounds(pObjs, true);
 
