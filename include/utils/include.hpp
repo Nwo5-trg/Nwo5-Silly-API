@@ -8,6 +8,8 @@
 #include "array.hpp"
 #include "drawnode.hpp"
 
+#include <ranges>
+
 namespace nwo5::utils::prelude {
     namespace nutils = nwo5::utils;
     namespace array = nwo5::utils::array;
