@@ -501,7 +501,7 @@ namespace nwo5::editor {
     float uiScale() {
         static auto _ = tinker::api::ui_scaling::UIScaleUpdated().listen([] (float pScale, bool, bool) {
             impl::s_tinkerUIScale = pScale;
-        });
+        }, Priority::First);
 
         return impl::s_tinkerUIScale.value_or(impl::s_beUIScale.value_or(1.0f));
     }
