@@ -129,6 +129,7 @@ namespace nwo5::ui {
 
         Setup ignoreAnchorForPos(bool pIgnore) requires std::derived_from<Node, cocos2d::CCNode> {
             m_node->ignoreAnchorPointForPosition(pIgnore);
+            return {m_node};
         }
 
         Setup rotation(float pRotation) requires std::derived_from<Node, cocos2d::CCNode> {

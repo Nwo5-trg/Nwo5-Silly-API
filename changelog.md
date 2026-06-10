@@ -6,6 +6,10 @@
 - update editor tab buttons in registeredittabbutton so it can b used post hook
 - include ranges header with utils
 
+**Fixed**
+
+- dumb stupid ui bug
+
 ## v1.5.1
 **Fixed**
 

@@ -331,7 +331,7 @@ namespace nwo5::editor::object {
         return (min + max) / 2;
     }
 
-    void clusterObjects(std::vector<std::vector<GameObject*>>& pOut, std::span<GameObject* const> pObjs, float pClusterSize) {
+    void cluster(std::vector<std::vector<GameObject*>>& pOut, std::span<GameObject* const> pObjs, float pClusterSize) {
         static std::vector<GameObject*> queue;
         static std::unordered_map<GameObject*, int> map;
         
@@ -368,7 +368,7 @@ namespace nwo5::editor::object {
             }
         }
     }
-    void clusterObjects(std::vector<std::vector<GameObject*>>& pOut, cocos2d::CCArray* pObjs, float pClusterSize) {
+    void cluster(std::vector<std::vector<GameObject*>>& pOut, cocos2d::CCArray* pObjs, float pClusterSize) {
         static std::vector<GameObject*> queue;
         static std::unordered_map<GameObject*, int> map;
         
@@ -407,17 +407,17 @@ namespace nwo5::editor::object {
             }
         }
     }
-    std::vector<std::vector<GameObject*>> clusterObjects(std::span<GameObject* const> pObjs, float pClusterSize) {
+    std::vector<std::vector<GameObject*>> cluster(std::span<GameObject* const> pObjs, float pClusterSize) {
         std::vector<std::vector<GameObject*>> out;
 
-        clusterObjects(out, pObjs, pClusterSize);
+        cluster(out, pObjs, pClusterSize);
         
         return out;
     }
-    std::vector<std::vector<GameObject*>> clusterObjects(cocos2d::CCArray* pObjs, float pClusterSize) {
+    std::vector<std::vector<GameObject*>> cluster(cocos2d::CCArray* pObjs, float pClusterSize) {
         std::vector<std::vector<GameObject*>> out;
 
-        clusterObjects(out, pObjs, pClusterSize);
+        cluster(out, pObjs, pClusterSize);
         
         return out;
     }
