@@ -1,3 +1,9 @@
+## v1.6.1
+**Fixed**
+
+- editor ui loaded function
+- register edit tab button
+
 ## v1.6.0
 **Added**
 

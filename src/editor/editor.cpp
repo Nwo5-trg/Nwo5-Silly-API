@@ -77,7 +77,11 @@ namespace nwo5::editor {
                     return;
                 }
                 
-                auto& buttonArray = m_editButtonBar->m_buttonArray;
+                auto buttonArray = m_editButtonBar->m_buttonArray;
+
+                if (!buttonArray) {
+                    return;
+                }
 
                 std::vector<CCObject*> robtopButtons;
 
@@ -242,7 +246,7 @@ namespace nwo5::editor {
         switch (pType) {
             case LoadedType::Editor: return layer() && !layer()->m_initializing;
             case LoadedType::EditorValid: return layer();
-            case LoadedType::UI: return ui();
+            case LoadedType::UI: return layer() && layer()->m_editorUI;
             case LoadedType::UIValid: return ui();
         }
     }
@@ -524,8 +528,6 @@ namespace nwo5::editor {
         if (const auto it = impl::s_removedEditTabButtons.find(pKey); it != impl::s_removedEditTabButtons.end()) {
             impl::s_removedEditTabButtons.erase(it);
         }
-
-        updateEditorTabButtons();
 
         return true;
     }
