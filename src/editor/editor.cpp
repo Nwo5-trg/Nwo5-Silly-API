@@ -198,6 +198,7 @@ namespace nwo5::editor {
                 s_shouldMoveObject = true;
                 s_editButtonsLoaded = false;
                 s_editorUIEarlyPtr = nullptr;
+                GameManager::get()->m_levelEditorLayer = this;
                 
                 if (!LevelEditorLayer::init(level, noUI)) {
                     return false;
@@ -234,7 +235,7 @@ namespace nwo5::editor {
         }
 
         EditorUI* getEditorUI() {
-            if (!loaded(LoadedType::EditorValid)) {
+            if (notLoaded(LoadedType::EditorValid)) {
                 return nullptr;
             }
 

@@ -3,6 +3,7 @@
 
 - mirror gd behaviour it grid snapped pos
 - numtostring impl to use fmt properly
+- make EditorValid true slightly earlier
 
 ## v1.6.1
 **Fixed**
