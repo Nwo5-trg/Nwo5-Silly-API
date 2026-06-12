@@ -1,3 +1,9 @@
+## v1.6.2
+**Fixed**
+
+- mirror gd behaviour it grid snapped pos
+- numtostring impl to use fmt properly
+
 ## v1.6.1
 **Fixed**
 

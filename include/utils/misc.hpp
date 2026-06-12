@@ -40,26 +40,17 @@ namespace nwo5::utils {
     auto numToString(T pNum, size_t pPrecision = 4) {
         return geode::utils::numToString(pNum, pPrecision);
     }
+    /// opinionated numtostring
+    /// trims trailing 0s
+    /// zero precision acts as rounding
     template<typename T>
     requires std::is_floating_point_v<T>
     auto numToString(T pNum, size_t pPrecision = 4) {
         if (!pPrecision) {
-            return std::to_string(static_cast<int>(std::round(pNum)));
-        }
-        
-        auto str = geode::utils::numToString(pNum, pPrecision);
-        
-        if (str.find('.') != std::string::npos) {
-            if (const auto end = str.find_last_not_of('0'); end != std::string::npos) {
-                str.erase(end + 1);
-            }
-
-            if (str.ends_with('.')) {
-                str.pop_back();
-            }
+            return std::to_string(static_cast<long>(std::round(pNum)));
         }
 
-        return str;
+        return fmt::format("{:.{}g}", pNum, pPrecision);
     }
 
     template<typename Callback>

@@ -436,8 +436,8 @@ namespace nwo5::editor::object {
         const auto gridSize = pGridSize * (editor::object::size(pObj) / 30.0f);
 
         return CCPoint{
-            std::round(pos.x / gridSize) * gridSize,
-            std::round(pos.y / gridSize) * gridSize
+            (std::floor(pos.x / gridSize) + 0.5f) * gridSize,
+            (std::floor(pos.y / gridSize) + 0.5f) * gridSize
         } + offset;
     }
 
