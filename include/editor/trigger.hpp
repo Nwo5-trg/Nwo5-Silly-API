@@ -41,6 +41,12 @@ namespace nwo5::editor::trigger {
         None
     };
 
+    enum class ObjectType {
+        Normal,
+        Trigger,
+        Special
+    };
+
     class Input final {
     private:
         bool m_conditional = false;
@@ -72,11 +78,11 @@ namespace nwo5::editor::trigger {
         bool conditional() const {
             return m_conditional;
         }
-     };
+    };
 
     class TriggerInfo final {
     private:
-        bool m_isTrigger = false;
+        ObjectType m_type = ObjectType::Normal;
 
         Input m_primaryTarget{};
         Input m_secondaryTarget{};
@@ -103,16 +109,23 @@ namespace nwo5::editor::trigger {
             bool pEasing,
             LabelType pLabelType,
             cocos2d::ccColor3B pColor,
-            Category pCategory
+            Category pCategory,
+            ObjectType type = ObjectType::Trigger
         )
-            : m_isTrigger(true),
+            : m_type(type),
               m_primaryTarget(pPrimaryTarget), m_secondaryTarget(pSecondaryTarget),
               m_primaryInput(pPrimaryInput), m_secondaryInput(pSecondaryInput),
               m_duration(pDuration), m_easing(pEasing), m_labelType(pLabelType),
               m_color(pColor), m_category(pCategory) {}
 
+              ObjectType type() const {
+            return m_type;
+        }
         bool isTrigger() const {
-            return m_isTrigger;
+            return m_type == ObjectType::Trigger;
+        }
+        bool isNormal() const {
+            return m_type == ObjectType::Normal;
         }
 
         /// e.g. toggle trigger target, move trigger target, color trigger target, sfx trigger gid 1, *edit* sfx trigger unique id, counter label item id, gray scale shader reference color channel
@@ -787,7 +800,8 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::Item, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::Item,
-            {255, 255, 255}, Category::Other
+            {255, 255, 255}, Category::Other,
+            ObjectType::Special
         };
         using TriggerType = EffectGameObject;
     };
@@ -835,7 +849,8 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Group, InputType::None, InputType::None, 
             false, false, LabelType::TargetCenter,
-            {255, 255, 255}, Category::Other
+            {255, 255, 255}, Category::Other,
+            ObjectType::Special
         };
         using TriggerType = EffectGameObject;
     };
@@ -844,7 +859,8 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::Collision, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::Collision,
-            {255, 255, 255}, Category::Other
+            {255, 255, 255}, Category::Other,
+            ObjectType::Special
         };
         using TriggerType = EffectGameObject;
         static constexpr auto note = "block id is itemid";
@@ -854,7 +870,8 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::Other
+            {255, 255, 255}, Category::Other,
+            ObjectType::Special
         };
         using TriggerType = EffectGameObject;
     };
@@ -1330,6 +1347,8 @@ namespace nwo5::editor::trigger {
     /// check if object is trigger
     /// @returns if object is trigger
     SILLY_API_DLL bool is(GameObject* pObj);
+    SILLY_API_DLL ObjectType type(int pID);
+    SILLY_API_DLL ObjectType type(GameObject* pObj);
 
     /// get trigger info for object
     SILLY_API_DLL const TriggerInfo& get(int pID);

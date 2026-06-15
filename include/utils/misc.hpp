@@ -17,6 +17,14 @@ namespace nwo5::utils {
     /// geodes toggle with callback sets m_toggled incorrectly whcih causes issues with some callbacks, this fixes that
     SILLY_API_DLL void toggleWithCallback(cocos2d::CCObject* pToggler, bool pOn);
 
+    /// set your label to this scale or not idk fuck you
+    /// @param pFont 0, is default, 1-59 are editor fonts, 60 is chat font, 61 is gold font
+    /// @todo make this an enum
+    SILLY_API_DLL void getFontScaling(int pFont);
+    /// texture to make ur cclabelbmfonts out of or smth
+    /// @todo smth smth optimize cuz this is slow asf
+    SILLY_API_DLL std::string getFontString(int pFont);
+
     /// ccobject dummy, useful for calling callbacks that require their sender to have a tag
     class SILLY_API_DLL CCTag final : public cocos2d::CCObject {
     public:

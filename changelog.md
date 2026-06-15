@@ -1,4 +1,10 @@
-## v1.6.2
+## v1.7.0
+**Added**
+
+- some trigger changes
+- strenum/number limits to saved settings
+- dumbass font scaling
+
 **Fixed**
 
 - mirror gd behaviour it grid snapped pos

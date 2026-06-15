@@ -140,6 +140,12 @@ namespace nwo5::editor::trigger {
     bool is(GameObject* pObj) {
         return get(pObj).isTrigger();
     }
+    ObjectType type(int pID) {
+        return get(pID).type();
+    }
+    ObjectType type(GameObject* pObj) {
+        return get(pObj).type();
+    }
 
     const TriggerInfo& get(int pID) {
         static auto vec = impl::getTriggerInfoVec();
