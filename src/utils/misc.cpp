@@ -46,7 +46,7 @@ namespace nwo5::utils {
         else if (pFont == 60) {
             return 1.75f;
         }
-        else if (pFont == 61) {
+        else {
             return 1.0f;
         }
     }
@@ -62,6 +62,9 @@ namespace nwo5::utils {
         } 
         else if (pFont == 61) {
             return "goldFont.fnt";
+        }
+        else {
+            return "bigFont.fnt";
         }
     }
 
