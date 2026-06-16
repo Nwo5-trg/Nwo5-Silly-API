@@ -2,7 +2,6 @@
 **Added**
 
 - some trigger changes
-- strenum/number limits to saved settings
 - dumbass font scaling
 
 **Fixed**

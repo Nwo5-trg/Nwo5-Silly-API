@@ -36,31 +36,31 @@ namespace nwo5::utils {
         toggler->toggleWithCallback(pOn);
     }
 
-    void getFontScaling(int pStr) {
-        if (labelFont == 0) {
+    float getFontScaling(int pFont) {
+        if (pFont == 0) {
             return 1.0f;
         }
-        else if (labelFont <= 59) {
+        else if (pFont <= 59) {
             return 0.75f;
         }
-        else if (labelFont == 60) {
+        else if (pFont == 60) {
             return 1.75f;
         }
-        else if (labelFont == 61) {
+        else if (pFont == 61) {
             return 1.0f;
         }
     }
     std::string getFontString(int pFont) {
-        if (labelFont == 0) {
+        if (pFont == 0) {
             return "bigFont.fnt";
         }
-        else if (labelFont <= 59) {
-            return fmt::format("gjFont{}{}.fnt", labelFont < 10 ? "0" : "", labelFont);
+        else if (pFont <= 59) {
+            return fmt::format("gjFont{}{}.fnt", pFont < 10 ? "0" : "", pFont);
         } 
-        else if (labelFont == 60) {
+        else if (pFont == 60) {
             return "chatFont.fnt";
         } 
-        else if (labelFont == 61) {
+        else if (pFont == 61) {
             return "goldFont.fnt";
         }
     }
