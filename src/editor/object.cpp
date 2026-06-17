@@ -1,4 +1,5 @@
 #include <editor/include.hpp>
+#include <ranges>
 
 using namespace geode::prelude;
 
@@ -24,6 +25,96 @@ namespace nwo5::editor::object {
     }
     GameObject* getParent(int pGroup) {
         return loaded(LoadedType::Editor) ? layer()->getGroupParent(pGroup) : nullptr;
+    }
+
+    std::string string(GameObject* pObj) {
+        return loaded(LoadedType::EditorValid) ? std::string(pObj->getSaveString(layer())) : "";
+    }
+    std::string string(std::span<GameObject* const> pObjs) {
+        if (notLoaded(LoadedType::EditorValid) || pObjs.empty()) {
+            return "";
+        }
+
+        return string::join(
+            std::ranges::to<std::vector>( // fuck pipe operator all my homies hate pipe operator
+                std::views::transform(pObjs, [] (GameObject* pObj) {
+                    return std::string(pObj->getSaveString(layer()));
+                })
+            ), ";"
+        );
+    }
+    std::string string(CCArray* pObjs) {
+        if (notLoaded(LoadedType::EditorValid) || !pObjs->count()) {
+            return "";
+        }
+
+        auto ext = CCArrayExt<GameObject*>(pObjs);
+
+        return string::join(
+            std::ranges::to<std::vector>( // fuck pipe operator all my homies hate pipe operator
+                std::views::transform(ext, [] (GameObject* pObj) {
+                    return std::string(pObj->getSaveString(layer()));
+                })
+            ), ";"
+        );
+    }
+    GameObject* createObject(int pID, bool pUndo, bool pSetup) {
+        if (notLoaded(LoadedType::EditorValid)) {
+            return nullptr;
+        }
+        
+        if (pSetup) {
+            return layer()->createObject(pID, CCPointZero, !pUndo);
+        }
+        else {
+            auto arr = layer()->createObjectsFromString(fmt::format("1,{},2,0,3,0", pID), !pUndo, true);
+
+            return arr ? static_cast<GameObject*>(arr->firstObject()) : nullptr;
+        }
+    }
+    GameObject* createObject(int pID, CCPoint pPos, bool pUndo, bool pSetup) {
+        if (notLoaded(LoadedType::EditorValid)) {
+            return nullptr;
+        }
+        
+        if (pSetup) {
+            return layer()->createObject(pID, CCPointZero, !pUndo);
+        }
+        else {
+            auto arr = layer()->createObjectsFromString(fmt::format("1,{},2,{},3,{}", pID, pPos.x, pPos.y), !pUndo, true);
+
+            return arr ? static_cast<GameObject*>(arr->firstObject()) : nullptr;
+        }
+    }
+    GameObject* createObject(int pID, geode::ZStringView pArgs, bool pUndo) {
+        if (notLoaded(LoadedType::EditorValid)) {
+            return nullptr;
+        }
+
+        auto arr = layer()->createObjectsFromString(
+            fmt::format(
+                "1,{},2,0,3,0,{}", pID, pArgs.view().starts_with(',') ? pArgs.view().substr(1) : pArgs.view()
+            ), !pUndo, true
+        );
+
+        return arr ? static_cast<GameObject*>(arr->firstObject()) : nullptr;
+    }
+    GameObject* createObject(int pID, CCPoint pPos, geode::ZStringView pArgs, bool pUndo) {
+        auto arr = layer()->createObjectsFromString(
+            fmt::format(
+                "1,{},2,{},3,{},{}", pID, pPos.x, pPos.y, pArgs.view().starts_with(',') ? pArgs.view().substr(1) : pArgs.view()
+            ), !pUndo, true
+        );
+
+        return arr ? static_cast<GameObject*>(arr->firstObject()) : nullptr;
+    }
+    GameObject* createObject(geode::ZStringView pStr, bool pUndo) {
+        auto arr = layer()->createObjectsFromString(pStr, !pUndo, true);
+
+        return arr ? static_cast<GameObject*>(arr->firstObject()) : nullptr;
+    }
+    CCArray* createObjects(geode::ZStringView pStr, bool pUndo) {
+        return layer()->createObjectsFromString(pStr, !pUndo, true);
     }
 
     std::vector<int> groups(GameObject* pObj) {
@@ -368,7 +459,7 @@ namespace nwo5::editor::object {
             }
         }
     }
-    void cluster(std::vector<std::vector<GameObject*>>& pOut, cocos2d::CCArray* pObjs, float pClusterSize) {
+    void cluster(std::vector<std::vector<GameObject*>>& pOut, CCArray* pObjs, float pClusterSize) {
         static std::vector<GameObject*> queue;
         static std::unordered_map<GameObject*, int> map;
         
@@ -414,7 +505,7 @@ namespace nwo5::editor::object {
         
         return out;
     }
-    std::vector<std::vector<GameObject*>> cluster(cocos2d::CCArray* pObjs, float pClusterSize) {
+    std::vector<std::vector<GameObject*>> cluster(CCArray* pObjs, float pClusterSize) {
         std::vector<std::vector<GameObject*>> out;
 
         cluster(out, pObjs, pClusterSize);
@@ -463,7 +554,7 @@ namespace nwo5::editor::object {
             )
         );
     }
-    void moveTo(cocos2d::CCArray* pObjs, bool pZoomToFit, float pZoomBuffer, float pMinimumZoom, float pMaximumZoom) {
+    void moveTo(CCArray* pObjs, bool pZoomToFit, float pZoomBuffer, float pMinimumZoom, float pMaximumZoom) {
         const auto bounds = editor::object::bounds(pObjs);
 
         editor::move(bounds.origin + bounds.size / 2);

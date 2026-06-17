@@ -12,6 +12,29 @@ namespace nwo5::editor::object {
     /// @returns group parent or returns nullptr if group has no group parent
     SILLY_API_DLL GameObject* getParent(int pGroup);
 
+    /// get obj string
+    SILLY_API_DLL std::string string(GameObject* pObj);
+    /// get obj string seperated with ;
+    SILLY_API_DLL std::string string(std::span<GameObject* const> pObjs);
+    /// get obj string seperated with ;
+    SILLY_API_DLL std::string string(cocos2d::CCArray* pObjs);
+    /// create basic object
+    /// @param pSetup do the basic object setup (e.g. 0.5 duration default for triggers)
+    SILLY_API_DLL GameObject* createObject(int pID, bool pUndo = false, bool pSetup = true);
+    /// create basic object
+    /// @param pSetup do the basic object setup (e.g. 0.5 duration default for triggers)
+    SILLY_API_DLL GameObject* createObject(int pID, cocos2d::CCPoint pPos, bool pUndo = false, bool pSetup = true);
+    /// pretty much fmt::format("1,{},2,0,3,0,{}", pID, pArgs)
+    /// @note pArgs can have a leading comma
+    SILLY_API_DLL GameObject* createObject(int pID, geode::ZStringView pArgs, bool pUndo = false);
+    /// pretty much fmt::format("1,{},2,{},3,{},{}", pID, pPos.x, pPos.y, pArgs)
+    /// @note pArgs can have a leading comma
+    SILLY_API_DLL GameObject* createObject(int pID, cocos2d::CCPoint pPos, geode::ZStringView pArgs, bool pUndo = false);
+    /// create object from string
+    SILLY_API_DLL GameObject* createObject(geode::ZStringView pStr, bool pUndo = false);
+    /// create objects from string
+    SILLY_API_DLL cocos2d::CCArray* createObjects(geode::ZStringView pStr, bool pUndo = false);
+
     SILLY_API_DLL std::vector<int> groups(GameObject* pObj);
     SILLY_API_DLL std::vector<int> groups(std::span<GameObject* const> pObjs, bool pSort = false);
     SILLY_API_DLL std::vector<int> groups(cocos2d::CCArray* pObjs, bool pSort = false);

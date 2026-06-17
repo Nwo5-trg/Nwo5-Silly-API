@@ -123,23 +123,14 @@ namespace nwo5::settings {
         }
     };
 
+    template<typename T>
+    concept IsNumberSavedSettingType = std::is_arithmetic_v<T> && !std::same_as<T, bool>;
+    template<typename T>
+    concept IsStringSavedSettingType = std::same_as<T, std::string>;
+
     template<typename T, typename Data = void>
     class SavedSetting : public SavedSettingBase<T>, public SettingData<Data> {
     public:
-        SavedSetting(std::optional<std::string> pName, T pDefault = T{}, std::optional<std::string> pDescription = std::nullopt)
-            : SavedSettingBase<T>(generateKey(pName.value_or("")), std::move(pName), std::move(pDescription), std::move(pDefault)) {}
-        SavedSetting(std::optional<std::string> pName, std::string_view pCategory, T pDefault = T{}, std::optional<std::string> pDescription = std::nullopt)
-            : SavedSettingBase<T>(generateKey(pCategory, pName.value_or("")), std::move(pName), std::move(pDescription), std::move(pDefault))
-        {
-            this->m_categories.emplace_back(pCategory);
-        }
-        SavedSetting(std::optional<std::string> pName, std::initializer_list<std::string> pCategories, T pDefault = T{}, std::optional<std::string> pDescription = std::nullopt)
-            : SavedSettingBase<T>(generateKey(pName.value_or("")), std::move(pName), std::move(pDescription), std::move(pDefault)) 
-        {
-            for (const auto& category : pCategories) {
-                this->m_categories.push_back(category);
-            }
-        }
         SavedSetting(std::optional<std::string> pName, std::optional<std::string> pCategory, std::string_view pKey, T pDefault = T{}, std::optional<std::string> pDescription = std::nullopt)
             : SavedSettingBase<T>(pKey, std::move(pName), std::move(pDescription), std::move(pDefault)) 
         {
@@ -149,6 +140,100 @@ namespace nwo5::settings {
         }
         SavedSetting(std::optional<std::string> pName, std::initializer_list<std::string> pCategories, std::string_view pKey, T pDefault = T{}, std::optional<std::string> pDescription = std::nullopt)
             : SavedSettingBase<T>(pKey, std::move(pName), std::move(pDescription), std::move(pDefault)) 
+        {
+            for (const auto& category : pCategories) {
+                this->m_categories.push_back(category);
+            }
+        }
+
+        SavedSetting& operator=(const T& pVal) {
+            this->set(pVal);
+
+            return *this;
+        }
+    };
+    template<IsNumberSavedSettingType T, typename Data>
+    class SavedSetting<T, Data> : public SavedSettingBase<T>, public SettingData<Data> {
+    protected:
+        struct Range {
+            std::optional<T> min;
+            std::optional<T> max;
+        } m_range;
+        std::optional<T> m_step;
+        
+    public:
+        /// get minimum for number setting
+        /// @returns minimum or std::numeric_limits<T>::lowest()
+        T min() {
+            return m_range.min.value_or(std::numeric_limits<T>::lowest());
+        }
+        bool hasMin() {
+            return m_range.min.has_value();
+        }
+        /// get max for number setting
+        /// @returns max or std::numeric_limits<T>::max()
+        T max() {
+            return m_range.max.value_or(std::numeric_limits<T>::max());
+        }
+        bool hasMax() {
+            return m_range.max.has_value();
+        }
+        /// get step for number setting
+        /// @returns step or T{1}
+        T step() {
+            return m_step.value_or(T{1});
+        }
+        bool hasStep() {
+            return m_step.has_value();
+        }
+
+        SavedSetting(std::optional<std::string> pName, std::optional<std::string> pCategory, std::string_view pKey, T pDefault = T{}, Range pRange = {}, std::optional<std::string> pDescription = std::nullopt)
+            : SavedSettingBase<T>(pKey, std::move(pName), std::move(pDescription), std::move(pDefault)), m_range(std::move(pRange))
+        {
+            if (pCategory.has_value()) {
+                this->m_categories.push_back(pCategory.value());
+            }
+        }
+        SavedSetting(std::optional<std::string> pName, std::initializer_list<std::string> pCategories, std::string_view pKey, T pDefault = T{}, Range pRange = {}, std::optional<std::string> pDescription = std::nullopt)
+            : SavedSettingBase<T>(pKey, std::move(pName), std::move(pDescription), std::move(pDefault)), m_range(std::move(pRange))
+        {
+            for (const auto& category : pCategories) {
+                this->m_categories.push_back(category);
+            }
+        }
+
+        SavedSetting& operator=(const T& pVal) {
+            this->set(pVal);
+
+            return *this;
+        }
+    };
+    template<IsStringSavedSettingType T, typename Data>
+    class SavedSetting<T, Data> : public SavedSettingBase<T>, public SettingData<Data> {
+    protected:
+        std::vector<std::string> m_enumOptions;
+        
+    public:
+        // get enum options
+        /// @returns options or empty vector
+        const auto& enumOptions() const {
+            return m_enumOptions;
+        }
+        /// return if setting is enum
+        /// @returns if enum options are empty >w<
+        bool isEnum() const {
+            return !m_enumOptions.empty();
+        }
+
+        SavedSetting(std::optional<std::string> pName, std::optional<std::string> pCategory, std::string_view pKey, T pDefault = T{}, std::vector<std::string> pEnumOptions = {}, std::optional<std::string> pDescription = std::nullopt)
+            : SavedSettingBase<T>(pKey, std::move(pName), std::move(pDescription), std::move(pDefault)), m_enumOptions(std::move(pEnumOptions))
+        {
+            if (pCategory.has_value()) {
+                this->m_categories.push_back(pCategory.value());
+            }
+        }
+        SavedSetting(std::optional<std::string> pName, std::initializer_list<std::string> pCategories, std::string_view pKey, T pDefault = T{}, std::vector<std::string> pEnumOptions = {}, std::optional<std::string> pDescription = std::nullopt)
+            : SavedSettingBase<T>(pKey, std::move(pName), std::move(pDescription), std::move(pDefault)), m_enumOptions(std::move(pEnumOptions))
         {
             for (const auto& category : pCategories) {
                 this->m_categories.push_back(category);

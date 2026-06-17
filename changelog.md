@@ -1,3 +1,9 @@
+## v1.8.0
+**Added**
+
+- editor obj str stuffs
+- saved setting tweaks
+
 ## v1.7.0
 **Added**
 
