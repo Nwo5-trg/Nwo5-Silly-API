@@ -1,6 +1,7 @@
 #pragma once
 
 #include "editor.hpp"
+#include "editor/constants.hpp"
 
 namespace nwo5::editor::trigger {
     enum class LabelType {
@@ -1338,7 +1339,133 @@ namespace nwo5::editor::trigger {
 
 namespace nwo5::editor::trigger {
     namespace impl {
-        SILLY_API_DLL std::vector<TriggerInfo> getTriggerInfoVec();
+        constexpr auto createTriggerInfoArray() {
+            std::array<TriggerInfo, nwo5::editor::constants::OBJECT_IDS + 1> arr;
+
+            arr[COLOR_TRIGGER] = Info<COLOR_TRIGGER>; 
+            arr[MOVE_TRIGGER] = Info<MOVE_TRIGGER>; 
+            arr[STOP_TRIGGER] = Info<STOP_TRIGGER>;
+            arr[PULSE_TRIGGER] = Info<PULSE_TRIGGER>; 
+            arr[ALPHA_TRIGGER] = Info<ALPHA_TRIGGER>; 
+            arr[TOGGLE_TRIGGER] = Info<TOGGLE_TRIGGER>;
+            arr[SPAWN_TRIGGER] = Info<SPAWN_TRIGGER>; 
+            arr[ROTATE_TRIGGER] = Info<ROTATE_TRIGGER>; 
+            arr[SCALE_TRIGGER] = Info<SCALE_TRIGGER>;
+            arr[FOLLOW_TRIGGER] = Info<FOLLOW_TRIGGER>; 
+            arr[SHAKE_TRIGGER] = Info<SHAKE_TRIGGER>; 
+            arr[ANIMATION_TRIGGER] = Info<ANIMATION_TRIGGER>;
+            arr[KEYFRAME_TRIGGER] = Info<KEYFRAME_TRIGGER>; 
+            arr[FOLLOW_PLAYER_Y_TRIGGER] = Info<FOLLOW_PLAYER_Y_TRIGGER>; 
+            arr[ADVANCED_FOLLOW_TRIGGER] = Info<ADVANCED_FOLLOW_TRIGGER>;
+            arr[EDIT_ADVANCED_FOLLOW_TRIGGER] = Info<EDIT_ADVANCED_FOLLOW_TRIGGER>; 
+            arr[RETARGET_ADVANCED_FOLLOW_TRIGGER] = Info<RETARGET_ADVANCED_FOLLOW_TRIGGER>; 
+            arr[AREA_MOVE_TRIGGER] = Info<AREA_MOVE_TRIGGER>;
+            arr[AREA_ROTATE_TRIGGER] = Info<AREA_ROTATE_TRIGGER>; 
+            arr[AREA_SCALE_TRIGGER] = Info<AREA_SCALE_TRIGGER>; 
+            arr[AREA_FADE_TRIGGER] = Info<AREA_FADE_TRIGGER>;
+            arr[AREA_TINT_TRIGGER] = Info<AREA_TINT_TRIGGER>; 
+            arr[EDIT_AREA_MOVE_TRIGGER] = Info<EDIT_AREA_MOVE_TRIGGER>; 
+            arr[EDIT_AREA_ROTATE_TRIGGER] = Info<EDIT_AREA_ROTATE_TRIGGER>;
+            arr[EDIT_AREA_SCALE_TRIGGER] = Info<EDIT_AREA_SCALE_TRIGGER>; 
+            arr[EDIT_AREA_FADE_TRIGGER] = Info<EDIT_AREA_FADE_TRIGGER>; 
+            arr[EDIT_AREA_TINT_TRIGGER] = Info<EDIT_AREA_TINT_TRIGGER>;
+            arr[AREA_STOP_TRIGGER] = Info<AREA_STOP_TRIGGER>; 
+            arr[BG_TRIGGER] = Info<BG_TRIGGER>; 
+            arr[GROUND_TRIGGER] = Info<GROUND_TRIGGER>;
+            arr[MG_TRIGGER] = Info<MG_TRIGGER>; 
+            arr[TOUCH_TRIGGER] = Info<TOUCH_TRIGGER>; 
+            arr[COUNT_TRIGGER] = Info<COUNT_TRIGGER>;
+            arr[INSTANT_COUNT_TRIGGER] = Info<INSTANT_COUNT_TRIGGER>; 
+            arr[PICKUP_TRIGGER] = Info<PICKUP_TRIGGER>; 
+            arr[TIME_TRIGGER] = Info<TIME_TRIGGER>;
+            arr[TIME_EVENT_TRIGGER] = Info<TIME_EVENT_TRIGGER>; 
+            arr[TIME_CONTROL_TRIGGER] = Info<TIME_CONTROL_TRIGGER>; 
+            arr[ITEM_EDIT_TRIGGER] = Info<ITEM_EDIT_TRIGGER>;
+            arr[ITEM_COMP_TRIGGER] = Info<ITEM_COMP_TRIGGER>; 
+            arr[ITEM_PERSIST_TRIGGER] = Info<ITEM_PERSIST_TRIGGER>; 
+            arr[RANDOM_TRIGGER] = Info<RANDOM_TRIGGER>;
+            arr[ADVANCED_RANDOM_TRIGGER] = Info<ADVANCED_RANDOM_TRIGGER>; 
+            arr[SEQUENCE_TRIGGER] = Info<SEQUENCE_TRIGGER>; 
+            arr[SPAWN_PARTICLE_TRIGGER] = Info<SPAWN_PARTICLE_TRIGGER>;
+            arr[RESET_TRIGGER] = Info<RESET_TRIGGER>; 
+            arr[ZOOM_TRIGGER] = Info<ZOOM_TRIGGER>; 
+            arr[STATIC_CAMERA_TRIGGER] = Info<STATIC_CAMERA_TRIGGER>;
+            arr[OFFSET_CAMERA_TRIGGER] = Info<OFFSET_CAMERA_TRIGGER>; 
+            arr[GP_OFFSET_TRIGGER] = Info<GP_OFFSET_TRIGGER>; 
+            arr[ROTATE_CAMERA_TRIGGER] = Info<ROTATE_CAMERA_TRIGGER>;
+            arr[CAMERA_EDGE_TRIGGER] = Info<CAMERA_EDGE_TRIGGER>;
+            arr[CAMERA_MODE_TRIGGER] = Info<CAMERA_MODE_TRIGGER>;
+            arr[OLD_REVERSE_TRIGGER] = Info<OLD_REVERSE_TRIGGER>;
+            arr[GAMEPLAY_ROTATE_TRIGGER] = Info<GAMEPLAY_ROTATE_TRIGGER>;
+            arr[SONG_TRIGGER] = Info<SONG_TRIGGER>;
+            arr[EDIT_SONG_TRIGGER] = Info<EDIT_SONG_TRIGGER>;
+            arr[SFX_TRIGGER] = Info<SFX_TRIGGER>;
+            arr[EDIT_SFX_TRIGGER] = Info<EDIT_SFX_TRIGGER>;
+            arr[EVENT_TRIGGER] = Info<EVENT_TRIGGER>;
+            arr[TIMEWARP_TRIGGER] = Info<TIMEWARP_TRIGGER>;
+            arr[EDIT_MG_TRIGGER] = Info<EDIT_MG_TRIGGER>;
+            arr[BG_SPEED_TRIGGER] = Info<BG_SPEED_TRIGGER>;
+            arr[MG_SPEED_TRIGGER] = Info<MG_SPEED_TRIGGER>;
+            arr[COUNTER_LABEL] = Info<COUNTER_LABEL>;
+            arr[UI_TRIGGER] = Info<UI_TRIGGER>;
+            arr[LINK_VISIBLE_TRIGGER] = Info<LINK_VISIBLE_TRIGGER>;
+            arr[COLLISION_TRIGGER] = Info<COLLISION_TRIGGER>;
+            arr[INSTANT_COLLISION_TRIGGER] = Info<INSTANT_COLLISION_TRIGGER>;
+            arr[COLLISION_STATE_BLOCK] = Info<COLLISION_STATE_BLOCK>;
+            arr[COLLISION_BLOCK] = Info<COLLISION_BLOCK>;
+            arr[TOGGLE_BLOCK] = Info<TOGGLE_BLOCK>;
+            arr[ON_DEATH_TRIGGER] = Info<ON_DEATH_TRIGGER>;
+            arr[DISABLE_TRAIL_TRIGGER] = Info<DISABLE_TRAIL_TRIGGER>;
+            arr[ENABLE_TRAIL_TRIGGER] = Info<ENABLE_TRAIL_TRIGGER>;
+            arr[SHOW_PLAYER_TRIGGER] = Info<SHOW_PLAYER_TRIGGER>;
+            arr[HIDE_PLAYER_TRIGGER] = Info<HIDE_PLAYER_TRIGGER>;
+            arr[BG_EFFECT_ON_TRIGGER] = Info<BG_EFFECT_ON_TRIGGER>;
+            arr[BG_EFFECT_OFF_TRIGGER] = Info<BG_EFFECT_OFF_TRIGGER>;
+            arr[END_TRIGGER] = Info<END_TRIGGER>;
+            arr[PLAYER_CONTROL_TRIGGER] = Info<PLAYER_CONTROL_TRIGGER>;
+            arr[OPTIONS_TRIGGER] = Info<OPTIONS_TRIGGER>;
+            arr[GRADIENT_TRIGGER] = Info<GRADIENT_TRIGGER>;
+            arr[GRAVITY_TRIGGER] = Info<GRAVITY_TRIGGER>;
+            arr[TELEPORT_TRIGGER] = Info<TELEPORT_TRIGGER>;
+            arr[SHADER_TRIGGER] = Info<SHADER_TRIGGER>;
+            arr[SHOCK_WAVE_SHADER_TRIGGER] = Info<SHOCK_WAVE_SHADER_TRIGGER>;
+            arr[SHOCK_LINE_SHADER_TRIGGER] = Info<SHOCK_LINE_SHADER_TRIGGER>;
+            arr[GLITCH_SHADER_TRIGGER] = Info<GLITCH_SHADER_TRIGGER>;
+            arr[CHROMATIC_SHADER_TRIGGER] = Info<CHROMATIC_SHADER_TRIGGER>;
+            arr[CHROMATIC_GLITCH_SHADER_TRIGGER] = Info<CHROMATIC_GLITCH_SHADER_TRIGGER>;
+            arr[PIXELATE_SHADER_TRIGGER] = Info<PIXELATE_SHADER_TRIGGER>;
+            arr[LENS_CIRCLE_SHADER_TRIGGER] = Info<LENS_CIRCLE_SHADER_TRIGGER>;
+            arr[RADIAL_BLUR_SHADER_TRIGGER] = Info<RADIAL_BLUR_SHADER_TRIGGER>;
+            arr[MOTION_BLUR_SHADER_TRIGGER] = Info<MOTION_BLUR_SHADER_TRIGGER>;
+            arr[BULGE_SHADER_TRIGGER] = Info<BULGE_SHADER_TRIGGER>;
+            arr[PINCH_SHADER_TRIGGER] = Info<PINCH_SHADER_TRIGGER>;
+            arr[GRAY_SCALE_SHADER_TRIGGER] = Info<GRAY_SCALE_SHADER_TRIGGER>;
+            arr[SEPIA_SHADER_TRIGGER] = Info<SEPIA_SHADER_TRIGGER>;
+            arr[INVERT_COLOR_SHADER_TRIGGER] = Info<INVERT_COLOR_SHADER_TRIGGER>;
+            arr[HUE_SHADER_TRIGGER] = Info<HUE_SHADER_TRIGGER>;
+            arr[EDIT_COLOR_SHADER_TRIGGER] = Info<EDIT_COLOR_SHADER_TRIGGER>;
+            arr[SPLIT_SCREEN_SHADER_TRIGGER] = Info<SPLIT_SCREEN_SHADER_TRIGGER>;
+            arr[OLD_NO_ENTER_EFFECT_TRIGGER] = Info<OLD_NO_ENTER_EFFECT_TRIGGER>;
+            arr[FADE_TOP_ENTER_EFFECT_TRIGGER] = Info<FADE_TOP_ENTER_EFFECT_TRIGGER>;
+            arr[FADE_BOTTOM_ENTER_EFFECT_TRIGGER] = Info<FADE_BOTTOM_ENTER_EFFECT_TRIGGER>;
+            arr[FADE_LEFT_ENTER_EFFECT_TRIGGER] = Info<FADE_LEFT_ENTER_EFFECT_TRIGGER>;
+            arr[FADE_RIGHT_ENTER_EFFECT_TRIGGER] = Info<FADE_RIGHT_ENTER_EFFECT_TRIGGER>;
+            arr[SMALL_TO_BIG_ENTER_EFFECT_TRIGGER] = Info<SMALL_TO_BIG_ENTER_EFFECT_TRIGGER>;
+            arr[BIG_TO_SMALL_ENTER_EFFECT_TRIGGER] = Info<BIG_TO_SMALL_ENTER_EFFECT_TRIGGER>;
+            arr[CHAOTIC_ENTER_EFFECT_TRIGGER] = Info<CHAOTIC_ENTER_EFFECT_TRIGGER>;
+            arr[HALVE_LEFT_ENTER_EFFECT_TRIGGER] = Info<HALVE_LEFT_ENTER_EFFECT_TRIGGER>;
+            arr[HALVE_RIGHT_ENTER_EFFECT_TRIGGER] = Info<HALVE_RIGHT_ENTER_EFFECT_TRIGGER>;
+            arr[HALVE_ENTER_EFFECT_TRIGGER] = Info<HALVE_ENTER_EFFECT_TRIGGER>;
+            arr[INVERSE_HALVE_ENTER_EFFECT_TRIGGER] = Info<INVERSE_HALVE_ENTER_EFFECT_TRIGGER>;
+            arr[NO_ENTER_EFFECT_TRIGGER] = Info<NO_ENTER_EFFECT_TRIGGER>;
+            arr[MOVE_ENTER_TRIGGER] = Info<MOVE_ENTER_TRIGGER>;
+            arr[ROTATE_ENTER_TRIGGER] = Info<ROTATE_ENTER_TRIGGER>;
+            arr[FADE_ENTER_TRIGGER] = Info<FADE_ENTER_TRIGGER>;
+            arr[TINT_ENTER_TRIGGER] = Info<TINT_ENTER_TRIGGER>;
+            arr[ENTER_STOP_TRIGGER] = Info<ENTER_STOP_TRIGGER>;
+
+            return arr;
+        }
     }
 
     /// check if object is trigger

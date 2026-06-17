@@ -3,137 +3,6 @@
 using namespace geode::prelude;
 
 namespace nwo5::editor::trigger {
-    namespace impl {
-        std::vector<TriggerInfo> getTriggerInfoVec() {
-            std::vector<TriggerInfo> vec;
-            vec.resize(nwo5::editor::constants::OBJECT_IDS + 1);
-            
-            vec[COLOR_TRIGGER] = Info<COLOR_TRIGGER>; 
-            vec[MOVE_TRIGGER] = Info<MOVE_TRIGGER>; 
-            vec[STOP_TRIGGER] = Info<STOP_TRIGGER>;
-            vec[PULSE_TRIGGER] = Info<PULSE_TRIGGER>; 
-            vec[ALPHA_TRIGGER] = Info<ALPHA_TRIGGER>; 
-            vec[TOGGLE_TRIGGER] = Info<TOGGLE_TRIGGER>;
-            vec[SPAWN_TRIGGER] = Info<SPAWN_TRIGGER>; 
-            vec[ROTATE_TRIGGER] = Info<ROTATE_TRIGGER>; 
-            vec[SCALE_TRIGGER] = Info<SCALE_TRIGGER>;
-            vec[FOLLOW_TRIGGER] = Info<FOLLOW_TRIGGER>; 
-            vec[SHAKE_TRIGGER] = Info<SHAKE_TRIGGER>; 
-            vec[ANIMATION_TRIGGER] = Info<ANIMATION_TRIGGER>;
-            vec[KEYFRAME_TRIGGER] = Info<KEYFRAME_TRIGGER>; 
-            vec[FOLLOW_PLAYER_Y_TRIGGER] = Info<FOLLOW_PLAYER_Y_TRIGGER>; 
-            vec[ADVANCED_FOLLOW_TRIGGER] = Info<ADVANCED_FOLLOW_TRIGGER>;
-            vec[EDIT_ADVANCED_FOLLOW_TRIGGER] = Info<EDIT_ADVANCED_FOLLOW_TRIGGER>; 
-            vec[RETARGET_ADVANCED_FOLLOW_TRIGGER] = Info<RETARGET_ADVANCED_FOLLOW_TRIGGER>; 
-            vec[AREA_MOVE_TRIGGER] = Info<AREA_MOVE_TRIGGER>;
-            vec[AREA_ROTATE_TRIGGER] = Info<AREA_ROTATE_TRIGGER>; 
-            vec[AREA_SCALE_TRIGGER] = Info<AREA_SCALE_TRIGGER>; 
-            vec[AREA_FADE_TRIGGER] = Info<AREA_FADE_TRIGGER>;
-            vec[AREA_TINT_TRIGGER] = Info<AREA_TINT_TRIGGER>; 
-            vec[EDIT_AREA_MOVE_TRIGGER] = Info<EDIT_AREA_MOVE_TRIGGER>; 
-            vec[EDIT_AREA_ROTATE_TRIGGER] = Info<EDIT_AREA_ROTATE_TRIGGER>;
-            vec[EDIT_AREA_SCALE_TRIGGER] = Info<EDIT_AREA_SCALE_TRIGGER>; 
-            vec[EDIT_AREA_FADE_TRIGGER] = Info<EDIT_AREA_FADE_TRIGGER>; 
-            vec[EDIT_AREA_TINT_TRIGGER] = Info<EDIT_AREA_TINT_TRIGGER>;
-            vec[AREA_STOP_TRIGGER] = Info<AREA_STOP_TRIGGER>; 
-            vec[BG_TRIGGER] = Info<BG_TRIGGER>; 
-            vec[GROUND_TRIGGER] = Info<GROUND_TRIGGER>;
-            vec[MG_TRIGGER] = Info<MG_TRIGGER>; 
-            vec[TOUCH_TRIGGER] = Info<TOUCH_TRIGGER>; 
-            vec[COUNT_TRIGGER] = Info<COUNT_TRIGGER>;
-            vec[INSTANT_COUNT_TRIGGER] = Info<INSTANT_COUNT_TRIGGER>; 
-            vec[PICKUP_TRIGGER] = Info<PICKUP_TRIGGER>; 
-            vec[TIME_TRIGGER] = Info<TIME_TRIGGER>;
-            vec[TIME_EVENT_TRIGGER] = Info<TIME_EVENT_TRIGGER>; 
-            vec[TIME_CONTROL_TRIGGER] = Info<TIME_CONTROL_TRIGGER>; 
-            vec[ITEM_EDIT_TRIGGER] = Info<ITEM_EDIT_TRIGGER>;
-            vec[ITEM_COMP_TRIGGER] = Info<ITEM_COMP_TRIGGER>; 
-            vec[ITEM_PERSIST_TRIGGER] = Info<ITEM_PERSIST_TRIGGER>; 
-            vec[RANDOM_TRIGGER] = Info<RANDOM_TRIGGER>;
-            vec[ADVANCED_RANDOM_TRIGGER] = Info<ADVANCED_RANDOM_TRIGGER>; 
-            vec[SEQUENCE_TRIGGER] = Info<SEQUENCE_TRIGGER>; 
-            vec[SPAWN_PARTICLE_TRIGGER] = Info<SPAWN_PARTICLE_TRIGGER>;
-            vec[RESET_TRIGGER] = Info<RESET_TRIGGER>; 
-            vec[ZOOM_TRIGGER] = Info<ZOOM_TRIGGER>; 
-            vec[STATIC_CAMERA_TRIGGER] = Info<STATIC_CAMERA_TRIGGER>;
-            vec[OFFSET_CAMERA_TRIGGER] = Info<OFFSET_CAMERA_TRIGGER>; 
-            vec[GP_OFFSET_TRIGGER] = Info<GP_OFFSET_TRIGGER>; 
-            vec[ROTATE_CAMERA_TRIGGER] = Info<ROTATE_CAMERA_TRIGGER>;
-            vec[CAMERA_EDGE_TRIGGER] = Info<CAMERA_EDGE_TRIGGER>;
-            vec[CAMERA_MODE_TRIGGER] = Info<CAMERA_MODE_TRIGGER>;
-            vec[OLD_REVERSE_TRIGGER] = Info<OLD_REVERSE_TRIGGER>;
-            vec[GAMEPLAY_ROTATE_TRIGGER] = Info<GAMEPLAY_ROTATE_TRIGGER>;
-            vec[SONG_TRIGGER] = Info<SONG_TRIGGER>;
-            vec[EDIT_SONG_TRIGGER] = Info<EDIT_SONG_TRIGGER>;
-            vec[SFX_TRIGGER] = Info<SFX_TRIGGER>;
-            vec[EDIT_SFX_TRIGGER] = Info<EDIT_SFX_TRIGGER>;
-            vec[EVENT_TRIGGER] = Info<EVENT_TRIGGER>;
-            vec[TIMEWARP_TRIGGER] = Info<TIMEWARP_TRIGGER>;
-            vec[EDIT_MG_TRIGGER] = Info<EDIT_MG_TRIGGER>;
-            vec[BG_SPEED_TRIGGER] = Info<BG_SPEED_TRIGGER>;
-            vec[MG_SPEED_TRIGGER] = Info<MG_SPEED_TRIGGER>;
-            vec[COUNTER_LABEL] = Info<COUNTER_LABEL>;
-            vec[UI_TRIGGER] = Info<UI_TRIGGER>;
-            vec[LINK_VISIBLE_TRIGGER] = Info<LINK_VISIBLE_TRIGGER>;
-            vec[COLLISION_TRIGGER] = Info<COLLISION_TRIGGER>;
-            vec[INSTANT_COLLISION_TRIGGER] = Info<INSTANT_COLLISION_TRIGGER>;
-            vec[COLLISION_STATE_BLOCK] = Info<COLLISION_STATE_BLOCK>;
-            vec[COLLISION_BLOCK] = Info<COLLISION_BLOCK>;
-            vec[TOGGLE_BLOCK] = Info<TOGGLE_BLOCK>;
-            vec[ON_DEATH_TRIGGER] = Info<ON_DEATH_TRIGGER>;
-            vec[DISABLE_TRAIL_TRIGGER] = Info<DISABLE_TRAIL_TRIGGER>;
-            vec[ENABLE_TRAIL_TRIGGER] = Info<ENABLE_TRAIL_TRIGGER>;
-            vec[SHOW_PLAYER_TRIGGER] = Info<SHOW_PLAYER_TRIGGER>;
-            vec[HIDE_PLAYER_TRIGGER] = Info<HIDE_PLAYER_TRIGGER>;
-            vec[BG_EFFECT_ON_TRIGGER] = Info<BG_EFFECT_ON_TRIGGER>;
-            vec[BG_EFFECT_OFF_TRIGGER] = Info<BG_EFFECT_OFF_TRIGGER>;
-            vec[END_TRIGGER] = Info<END_TRIGGER>;
-            vec[PLAYER_CONTROL_TRIGGER] = Info<PLAYER_CONTROL_TRIGGER>;
-            vec[OPTIONS_TRIGGER] = Info<OPTIONS_TRIGGER>;
-            vec[GRADIENT_TRIGGER] = Info<GRADIENT_TRIGGER>;
-            vec[GRAVITY_TRIGGER] = Info<GRAVITY_TRIGGER>;
-            vec[TELEPORT_TRIGGER] = Info<TELEPORT_TRIGGER>;
-            vec[SHADER_TRIGGER] = Info<SHADER_TRIGGER>;
-            vec[SHOCK_WAVE_SHADER_TRIGGER] = Info<SHOCK_WAVE_SHADER_TRIGGER>;
-            vec[SHOCK_LINE_SHADER_TRIGGER] = Info<SHOCK_LINE_SHADER_TRIGGER>;
-            vec[GLITCH_SHADER_TRIGGER] = Info<GLITCH_SHADER_TRIGGER>;
-            vec[CHROMATIC_SHADER_TRIGGER] = Info<CHROMATIC_SHADER_TRIGGER>;
-            vec[CHROMATIC_GLITCH_SHADER_TRIGGER] = Info<CHROMATIC_GLITCH_SHADER_TRIGGER>;
-            vec[PIXELATE_SHADER_TRIGGER] = Info<PIXELATE_SHADER_TRIGGER>;
-            vec[LENS_CIRCLE_SHADER_TRIGGER] = Info<LENS_CIRCLE_SHADER_TRIGGER>;
-            vec[RADIAL_BLUR_SHADER_TRIGGER] = Info<RADIAL_BLUR_SHADER_TRIGGER>;
-            vec[MOTION_BLUR_SHADER_TRIGGER] = Info<MOTION_BLUR_SHADER_TRIGGER>;
-            vec[BULGE_SHADER_TRIGGER] = Info<BULGE_SHADER_TRIGGER>;
-            vec[PINCH_SHADER_TRIGGER] = Info<PINCH_SHADER_TRIGGER>;
-            vec[GRAY_SCALE_SHADER_TRIGGER] = Info<GRAY_SCALE_SHADER_TRIGGER>;
-            vec[SEPIA_SHADER_TRIGGER] = Info<SEPIA_SHADER_TRIGGER>;
-            vec[INVERT_COLOR_SHADER_TRIGGER] = Info<INVERT_COLOR_SHADER_TRIGGER>;
-            vec[HUE_SHADER_TRIGGER] = Info<HUE_SHADER_TRIGGER>;
-            vec[EDIT_COLOR_SHADER_TRIGGER] = Info<EDIT_COLOR_SHADER_TRIGGER>;
-            vec[SPLIT_SCREEN_SHADER_TRIGGER] = Info<SPLIT_SCREEN_SHADER_TRIGGER>;
-            vec[OLD_NO_ENTER_EFFECT_TRIGGER] = Info<OLD_NO_ENTER_EFFECT_TRIGGER>;
-            vec[FADE_TOP_ENTER_EFFECT_TRIGGER] = Info<FADE_TOP_ENTER_EFFECT_TRIGGER>;
-            vec[FADE_BOTTOM_ENTER_EFFECT_TRIGGER] = Info<FADE_BOTTOM_ENTER_EFFECT_TRIGGER>;
-            vec[FADE_LEFT_ENTER_EFFECT_TRIGGER] = Info<FADE_LEFT_ENTER_EFFECT_TRIGGER>;
-            vec[FADE_RIGHT_ENTER_EFFECT_TRIGGER] = Info<FADE_RIGHT_ENTER_EFFECT_TRIGGER>;
-            vec[SMALL_TO_BIG_ENTER_EFFECT_TRIGGER] = Info<SMALL_TO_BIG_ENTER_EFFECT_TRIGGER>;
-            vec[BIG_TO_SMALL_ENTER_EFFECT_TRIGGER] = Info<BIG_TO_SMALL_ENTER_EFFECT_TRIGGER>;
-            vec[CHAOTIC_ENTER_EFFECT_TRIGGER] = Info<CHAOTIC_ENTER_EFFECT_TRIGGER>;
-            vec[HALVE_LEFT_ENTER_EFFECT_TRIGGER] = Info<HALVE_LEFT_ENTER_EFFECT_TRIGGER>;
-            vec[HALVE_RIGHT_ENTER_EFFECT_TRIGGER] = Info<HALVE_RIGHT_ENTER_EFFECT_TRIGGER>;
-            vec[HALVE_ENTER_EFFECT_TRIGGER] = Info<HALVE_ENTER_EFFECT_TRIGGER>;
-            vec[INVERSE_HALVE_ENTER_EFFECT_TRIGGER] = Info<INVERSE_HALVE_ENTER_EFFECT_TRIGGER>;
-            vec[NO_ENTER_EFFECT_TRIGGER] = Info<NO_ENTER_EFFECT_TRIGGER>;
-            vec[MOVE_ENTER_TRIGGER] = Info<MOVE_ENTER_TRIGGER>;
-            vec[ROTATE_ENTER_TRIGGER] = Info<ROTATE_ENTER_TRIGGER>;
-            vec[FADE_ENTER_TRIGGER] = Info<FADE_ENTER_TRIGGER>;
-            vec[TINT_ENTER_TRIGGER] = Info<TINT_ENTER_TRIGGER>;
-            vec[ENTER_STOP_TRIGGER] = Info<ENTER_STOP_TRIGGER>;
-
-            return vec;
-        }
-    }
-
     bool is(int pID) {
         return get(pID).isTrigger();
     }
@@ -148,13 +17,13 @@ namespace nwo5::editor::trigger {
     }
 
     const TriggerInfo& get(int pID) {
-        static auto vec = impl::getTriggerInfoVec();
+        static auto arr = impl::createTriggerInfoArray();
         
         if (pID < COLOR_TRIGGER || pID > constants::OBJECT_IDS) {
-            return vec.front();
+            return arr.front();
         }
 
-        return vec[pID];
+        return arr[pID];
     }
     const TriggerInfo& get(GameObject* pObj) {
         return get(pObj->m_objectID);
