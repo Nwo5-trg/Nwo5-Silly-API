@@ -158,7 +158,8 @@ namespace nwo5::settings {
         struct Range {
             std::optional<T> min;
             std::optional<T> max;
-        } m_range;
+        };
+        Range m_range;
         std::optional<T> m_step;
         
     public:

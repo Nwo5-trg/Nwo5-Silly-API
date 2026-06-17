@@ -1,7 +1,7 @@
 #pragma once
 
 #include "editor.hpp"
-#include "editor/constants.hpp"
+#include "constants.hpp"
 
 namespace nwo5::editor::trigger {
     enum class LabelType {
