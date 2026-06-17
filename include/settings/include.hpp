@@ -13,5 +13,8 @@ namespace nwo5::settings {
         nwo5::settings::SettingType;
 
         using GeodeSetting = geode::Setting;
+
+        using nwo5::settings::IsNumberSavedSettingType;
+        using nwo5::settings::IsStringSavedSettingType;
     }
 }
