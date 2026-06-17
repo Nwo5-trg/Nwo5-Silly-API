@@ -187,15 +187,15 @@ namespace nwo5::settings {
             return m_step.has_value();
         }
 
-        SavedSetting(std::optional<std::string> pName, std::optional<std::string> pCategory, std::string_view pKey, T pDefault = T{}, Range pRange = {}, std::optional<std::string> pDescription = std::nullopt)
-            : SavedSettingBase<T>(pKey, std::move(pName), std::move(pDescription), std::move(pDefault)), m_range(std::move(pRange))
+        SavedSetting(std::optional<std::string> pName, std::optional<std::string> pCategory, std::string_view pKey, T pDefault = T{}, Range pRange = {}, std::optional<T> pStep = std::nullopt, std::optional<std::string> pDescription = std::nullopt)
+            : SavedSettingBase<T>(pKey, std::move(pName), std::move(pDescription), std::move(pDefault)), m_range(std::move(pRange)), m_step(std::move(pStep))
         {
             if (pCategory.has_value()) {
                 this->m_categories.push_back(pCategory.value());
             }
         }
-        SavedSetting(std::optional<std::string> pName, std::initializer_list<std::string> pCategories, std::string_view pKey, T pDefault = T{}, Range pRange = {}, std::optional<std::string> pDescription = std::nullopt)
-            : SavedSettingBase<T>(pKey, std::move(pName), std::move(pDescription), std::move(pDefault)), m_range(std::move(pRange))
+        SavedSetting(std::optional<std::string> pName, std::initializer_list<std::string> pCategories, std::string_view pKey, T pDefault = T{}, Range pRange = {}, std::optional<T> pStep = std::nullopt, std::optional<std::string> pDescription = std::nullopt)
+            : SavedSettingBase<T>(pKey, std::move(pName), std::move(pDescription), std::move(pDefault)), m_range(std::move(pRange)), m_step(std::move(pStep))
         {
             for (const auto& category : pCategories) {
                 this->m_categories.push_back(category);
