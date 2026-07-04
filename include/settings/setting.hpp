@@ -149,7 +149,7 @@ namespace nwo5::settings {
     class SettingBase : public GenericSetting {
     protected:
         using GeodeSettingType = geode::SettingTypeForValueType<T>::SettingType;
-        using SettingType = T;
+        using Type = T;
 
         std::shared_ptr<GeodeSettingType> m_setting = nullptr;
         

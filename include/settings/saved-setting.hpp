@@ -44,7 +44,7 @@ namespace nwo5::settings {
     template<typename T>
     class SavedSettingBase : public GenericSetting {
     protected:
-        using SettingType = T;
+        using Type = T;
 
         std::optional<std::string> m_name;
         std::optional<std::string> m_description;
