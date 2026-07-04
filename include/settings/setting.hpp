@@ -15,6 +15,11 @@ namespace nwo5::settings {
         String = 7
     };
 
+    template<typename T>
+    concept IsNumberSettingType = std::is_arithmetic_v<T> && !std::same_as<T, bool>;
+    template<typename T>
+    concept IsStringSettingType = std::same_as<T, std::string>;
+
     // ill come up with smth better later cuz this is very flawed but works fine for now !
     template<typename ImplT, typename T = std::decay_t<ImplT>>
     constexpr int getSettingType() {
@@ -26,12 +31,12 @@ namespace nwo5::settings {
         return static_cast<int>(SettingType::Bool);
     }
     template<typename ImplT, typename T = std::decay_t<ImplT>>
-    requires (!std::same_as<T, bool>) && std::is_integral_v<T>
+    requires IsNumberSettingType<T> && std::is_integral_v<T>
     constexpr int getSettingType() {
         return static_cast<int>(SettingType::Int);
     }
     template<typename ImplT, typename T = std::decay_t<ImplT>>
-    requires std::is_floating_point_v<T>
+    requires IsNumberSettingType<T> && std::is_floating_point_v<T>
     constexpr int getSettingType() {
         return static_cast<int>(SettingType::Float);
     }
@@ -51,7 +56,7 @@ namespace nwo5::settings {
         return static_cast<int>(SettingType::File);
     }
     template<typename ImplT, typename T = std::decay_t<ImplT>>
-    requires std::same_as<T, std::string>
+    requires IsStringSettingType<T>
     constexpr int getSettingType() {
         return static_cast<int>(SettingType::String);
     }
@@ -144,6 +149,7 @@ namespace nwo5::settings {
     class SettingBase : public GenericSetting {
     protected:
         using GeodeSettingType = geode::SettingTypeForValueType<T>::SettingType;
+        using SettingType = T;
 
         std::shared_ptr<GeodeSettingType> m_setting = nullptr;
         

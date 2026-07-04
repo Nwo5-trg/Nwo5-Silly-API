@@ -44,6 +44,8 @@ namespace nwo5::settings {
     template<typename T>
     class SavedSettingBase : public GenericSetting {
     protected:
+        using SettingType = T;
+
         std::optional<std::string> m_name;
         std::optional<std::string> m_description;
 
@@ -95,10 +97,10 @@ namespace nwo5::settings {
             const auto ret = m_value;
 
             m_value = pVal;
+            save();
             if (m_loaded) {
                 SavedSettingChangedEvent(m_mod, m_key).send(this);
             }
-            save();
 
             return ret;
         }
@@ -133,11 +135,6 @@ namespace nwo5::settings {
         }
     };
 
-    template<typename T>
-    concept IsNumberSavedSettingType = std::is_arithmetic_v<T> && !std::same_as<T, bool>;
-    template<typename T>
-    concept IsStringSavedSettingType = std::same_as<T, std::string>;
-
     template<typename T, typename Data = void>
     class SavedSetting : public SavedSettingBase<T>, public SettingData<Data> {
     public:
@@ -162,7 +159,7 @@ namespace nwo5::settings {
             return *this;
         }
     };
-    template<IsNumberSavedSettingType T, typename Data>
+    template<IsNumberSettingType T, typename Data>
     class SavedSetting<T, Data> : public SavedSettingBase<T>, public SettingData<Data> {
     protected:
         struct Range {
@@ -219,7 +216,7 @@ namespace nwo5::settings {
             return *this;
         }
     };
-    template<IsStringSavedSettingType T, typename Data>
+    template<IsStringSettingType T, typename Data>
     class SavedSetting<T, Data> : public SavedSettingBase<T>, public SettingData<Data> {
     protected:
         std::vector<std::string> m_enumOptions;
@@ -260,7 +257,7 @@ namespace nwo5::settings {
 
     /// usage isnt the same as geode !
     /// you call like
-    /// Settings::listenForSavedSettingChanges<SavedSetting<int>/*or whatever savedsetting inhereted type*/>("setting-uwu", [] (auto/*type is the same as what you passed into template param T*/& pSetting) {
+    /// Settings::listenForSavedSettingChanges<SavedSetting<int>>("setting-uwu", [] (SavedSetting<int>* pSetting) {
     ///     // do something
     /// });
     /// but also it doesnt automatically leak the listener, ur in charge of that
@@ -268,7 +265,31 @@ namespace nwo5::settings {
     auto listenForSavedSettingChanges(std::string pKey, Callback&& pCallback, geode::Mod* pMod = geode::Mod::get()) {
         return SavedSettingChangedEvent(pMod, pKey).listen([callback = std::move(pCallback)] (GenericSetting* pSetting) {
             if (auto ptr = geode::cast::typeinfo_pointer_cast<T>(pSetting)) {
-                return callback(*ptr);
+                if constexpr (std::same_as<geode::utils::function::Return<decltype(callback)>, void>) {
+                    callback(ptr);
+                }
+                else {
+                    return callback(ptr);
+                }
+            }
+            return geode::ListenerResult::Propagate;
+        });
+    }
+    /// usage isnt the same as geode !
+    /// you call like
+    /// Settings::listenForAllSavedSettingChanges([] (std::string_view pKey, GenericSetting* pSetting) {
+    ///     // do something
+    /// });
+    template<typename Callback>
+    auto listenForAllSavedSettingChanges(Callback&& pCallback, std::optional<std::string> pCategory, geode::Mod* pMod = geode::Mod::get()) {
+        return SavedSettingChangedEvent().listen([callback = std::move(pCallback), category = std::move(pCategory), modID = pMod->getID()] (std::string_view pMod, std::string_view pKey, GenericSetting* pSetting) {
+            if (pMod == modID && (!category.has_value() || std::ranges::contains(pSetting->categories(), category.value()))) {
+                if constexpr (std::same_as<geode::utils::function::Return<decltype(callback)>, void>) {
+                    callback(pKey, pSetting); 
+                }
+                else {
+                    return callback(pKey, pSetting);
+                }
             }
             return geode::ListenerResult::Propagate;
         });
