@@ -3,12 +3,11 @@ a bunch of utils for my mods to make my life easier
 
 if ur not a dev this is useless to u
 
-if u wanna use this mod for some reason theres a bunch of documentation in headers, otherwise heres an overview
+if u wanna use this mod for some reason theres a bunch of documentation in headers (mainly js for editor icl), otherwise heres an overview
 
 ## Editor
 make fw the editor hopefully easier :3
 
-### Basics
 u can include with
 
 ```cpp
@@ -30,7 +29,12 @@ one of the most important functions from here is `nwo5::editor::update()`
 most/all editor functions in the api dont actually update stuff like editor buttons or info label
 so you need to do that with this function :3
 
-also theres an overcomplicated system for adding new edit tab buttons so no more *createmovemenu* hooks !
+(assuming you included `nwo5::editor::prelude`) u can use editor::ui() and editor::layer() to get editorlayer/ui ptr (or pass a template argument to reinterpret cast the ptr)
+
+also theres an overcomplicated system (thats kinda shittly implemented) for adding new edit tab buttons so no more *createmovemenu* hooks !
+
+### Selection
+a bunch of utils for working with the editor selection
 
 ### Object
 everything related to getting data from/manipulating objs
@@ -57,6 +61,9 @@ class $modify(EditorUI) {
 i spent almost 10 hours on this im too lazy to write docs
 
 basically an easy way to change trigger groups/duration and query some info abt a trigger (like if it has a center group or smth) read more in editor/trigger.hpp but mayb collapse line 186
+
+## UI
+very opinionated ui builder alternative + some other ui functions
 
 ## Settings Cache
 part of this mod is a way to cache/easily access geode settings thru inline variables
@@ -90,7 +97,7 @@ class $modify(MenuLayer) {
         }
 
         // settings also have a conversion operator which works fine for most cases
-        // but id reccommend just using .get(); its more explicit anyway so :3
+        // but id recommend just using .get(); its more explicit anyway so :3
         if (Settings::sillySetting.get()) {
             log::info("haiiii :3");
         }
@@ -145,7 +152,7 @@ namespace Settings {
 ```
 
 ### Data
-if u wanna add some extra data to ur settings you can either inheret setting to add constructors or use an alias
+if u wanna add some extra data to ur settings you can either inherit setting to add constructors or use an alias
 
 ```cpp
 struct SillyData {
@@ -178,9 +185,6 @@ namespace Settings {
     inline nwo5::settings::SavedSetting<bool> sillySavedSetting{"Silly Saved Setting", "Silly Category", true, "a silly saved setting"};
 }
 ```
-
-## UI
-ui builder but worse and tailored js for me :3c
 
 ## Utils
 the rest of the utils in this mod are prolly useless to u but i use them in my mods usually :3

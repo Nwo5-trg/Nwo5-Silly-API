@@ -1,5 +1,8 @@
 #pragma once
 
+#include <Geode/ui/Button.hpp>
+#include <Geode/ui/LazySprite.hpp>
+#include <Geode/ui/SliderNode.hpp>
 #include "constants.hpp"
 #include "utils.hpp"
 
@@ -379,6 +382,41 @@ namespace nwo5::ui {
         }
         Setup callback(TextInputCallback pCallback) requires std::derived_from<Node, geode::TextInput> {
             m_node->setCallback(std::move(pCallback));
+            return {m_node};
+        }
+        Setup callback(geode::Button::ButtonCallback pCallback) requires std::derived_from<Node, geode::Button> {
+            m_node->setActivateCallback(std::move(pCallback));
+            return {m_node};
+        }
+        Setup callback(geode::LazySprite::Callback pCallback) requires std::derived_from<Node, geode::LazySprite> {
+            m_node->setLoadCallback(pCallback);
+            return {m_node};
+        }
+        Setup callback(geode::SliderNode::SliderCallback pCallback) requires std::derived_from<Node, geode::SliderNode> {
+            m_node->setSlideCallback(pCallback);
+            return {m_node};
+        }
+
+        Setup callback(bool pEnabled) requires std::derived_from<Node, geode::TextInput> {
+            m_node->setCallbackEnabled(pEnabled);
+            return {m_node};
+        }
+
+        Setup callbackHold(geode::Button::ButtonCallback pCallback) requires std::derived_from<Node, geode::Button> {
+            m_node->setSelectCallback(std::move(pCallback));
+            return {m_node};
+        }
+        Setup callbackHold(geode::SliderNode::SliderCallback pCallback) requires std::derived_from<Node, geode::SliderNode> {
+            m_node->setClickCallback(pCallback);
+            return {m_node};
+        }
+
+        Setup callbackRelease(geode::Button::ButtonCallback pCallback) requires std::derived_from<Node, geode::Button> {
+            m_node->setUnselectCallback(std::move(pCallback));
+            return {m_node};
+        }
+        Setup callbackRelease(geode::SliderNode::SliderCallback pCallback) requires std::derived_from<Node, geode::SliderNode> {
+            m_node->setReleaseCallback(pCallback);
             return {m_node};
         }
 

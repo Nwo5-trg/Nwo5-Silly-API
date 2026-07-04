@@ -34,6 +34,13 @@ namespace nwo5::settings {
         }
     }
 
+    class SavedSettingChangedEvent : public geode::GlobalEvent<SavedSettingChangedEvent, bool(std::string_view pMod, std::string_view pKey, GenericSetting* pSetting), bool(GenericSetting* pSetting), std::string, std::string> {
+    public:
+        using GlobalEvent::GlobalEvent;
+        SavedSettingChangedEvent(geode::Mod* pMod, std::string pKey)
+            : SavedSettingChangedEvent(pMod->getID(), std::move(pKey)) {}
+    };
+
     template<typename T>
     class SavedSettingBase : public GenericSetting {
     protected:
@@ -88,6 +95,9 @@ namespace nwo5::settings {
             const auto ret = m_value;
 
             m_value = pVal;
+            if (m_loaded) {
+                SavedSettingChangedEvent(m_mod, m_key).send(this);
+            }
             save();
 
             return ret;
@@ -247,4 +257,20 @@ namespace nwo5::settings {
             return *this;
         }
     };
+
+    /// usage isnt the same as geode !
+    /// you call like
+    /// Settings::listenForSavedSettingChanges<SavedSetting<int>/*or whatever savedsetting inhereted type*/>("setting-uwu", [] (auto/*type is the same as what you passed into template param T*/& pSetting) {
+    ///     // do something
+    /// });
+    /// but also it doesnt automatically leak the listener, ur in charge of that
+    template<typename T, typename Callback>
+    auto listenForSavedSettingChanges(std::string pKey, Callback&& pCallback, geode::Mod* pMod = geode::Mod::get()) {
+        return SavedSettingChangedEvent(pMod, pKey).listen([callback = std::move(pCallback)] (GenericSetting* pSetting) {
+            if (auto ptr = geode::cast::typeinfo_pointer_cast<T>(pSetting)) {
+                return callback(*ptr);
+            }
+            return geode::ListenerResult::Propagate;
+        });
+    }
 }

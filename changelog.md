@@ -1,3 +1,11 @@
+## v1.9.0
+**Added**
+
+- allow for setting the callbacks of more stuff with setup
+- make ui header include some of geodes ui stuff
+- events for saved settings
+- little changes to readme
+
 ## v1.8.0
 **Added**
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Geode/ui/GeodeUI.hpp>
 #include "nodes.hpp"
 #include "utils.hpp"
 #include "setup.hpp"
