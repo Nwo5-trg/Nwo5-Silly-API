@@ -93,10 +93,21 @@ namespace nwo5::editor {
     template<typename T>
     void setUIHookPrio(T& pSelf) {
         if (geode::Loader::get()->getInstalledMod("alphalaneous.tinker")->isOrWillBeEnabled()) {
-            pSelf.setHookPriorityAfterPost("EditorUI::init", "alphalaneous.tinker");
+            pSelf.setHookPriorityAfter("EditorUI::init", "alphalaneous.tinker");
         }
         else {
-            pSelf.setHookPriorityAfterPost("EditorUI::init", "hjfod.betteredit");
+            pSelf.setHookPriorityAfter("EditorUI::init", "hjfod.betteredit");
+        }
+    }
+    /// set hook priority for leveleditorlayer::init to be after tinker/better edit
+    /// use in onModify and pass self
+    template<typename T>
+    void setLayerHookPrio(T& pSelf) {
+        if (geode::Loader::get()->getInstalledMod("alphalaneous.tinker")->isOrWillBeEnabled()) {
+            pSelf.setHookPriorityAfter("LevelEditorLayer::init", "alphalaneous.tinker");
+        }
+        else {
+            pSelf.setHookPriorityAfter("LevelEditorLayer::init", "hjfod.betteredit");
         }
     }
 
