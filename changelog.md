@@ -5,7 +5,6 @@
 - make ui header include some of geodes ui stuff
 - events for saved settings
 - little changes to readme
-- make hook prio function a bit more clear
 
 ## v1.8.0
 **Added**

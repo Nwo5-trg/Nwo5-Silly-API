@@ -88,29 +88,6 @@ namespace nwo5::editor {
     /// @note should work without any hookprio shenanigans
     /// @returns ui scale or 0 if editorui not loaded
     SILLY_API_DLL float uiScale(); 
-    /// set hook priority for editorui::init to be after tinker/better edit
-    /// use in onModify and pass self
-    template<typename T>
-    void setUIHookPrio(T& pSelf) {
-        if (geode::Loader::get()->getInstalledMod("alphalaneous.tinker")->isOrWillBeEnabled()) {
-            pSelf.setHookPriorityAfter("EditorUI::init", "alphalaneous.tinker");
-        }
-        else {
-            pSelf.setHookPriorityAfter("EditorUI::init", "hjfod.betteredit");
-        }
-    }
-    /// set hook priority for leveleditorlayer::init to be after tinker/better edit
-    /// use in onModify and pass self
-    template<typename T>
-    void setLayerHookPrio(T& pSelf) {
-        if (geode::Loader::get()->getInstalledMod("alphalaneous.tinker")->isOrWillBeEnabled()) {
-            pSelf.setHookPriorityAfter("LevelEditorLayer::init", "alphalaneous.tinker");
-        }
-        else {
-            pSelf.setHookPriorityAfter("LevelEditorLayer::init", "hjfod.betteredit");
-        }
-    }
-
 
     namespace impl {
         struct SILLY_API_DLL EditTabButton {
