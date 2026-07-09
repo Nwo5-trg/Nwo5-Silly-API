@@ -6,6 +6,10 @@
 - events for saved settings
 - little changes to readme
 
+**Fixed**
+
+- allow setup id to take string view
+
 ## v1.8.0
 **Added**
 
