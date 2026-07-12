@@ -1,5 +1,7 @@
 #pragma once
 
+// header only cuz most of this is template bs so makign eveyrthing inline was just easier
+
 #include <Geode/loader/ModSettingsManager.hpp>
 #include "../export.hpp"
 

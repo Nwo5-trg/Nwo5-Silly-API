@@ -1,3 +1,8 @@
+## v1.9.1
+**Added**
+
+- listener for saved settings using addeventlistener
+
 ## v1.9.0
 **Added**
 

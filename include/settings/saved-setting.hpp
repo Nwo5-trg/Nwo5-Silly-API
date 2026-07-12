@@ -264,7 +264,21 @@ namespace nwo5::settings {
     template<typename T, typename Callback>
     auto listenForSavedSettingChanges(std::string pKey, Callback&& pCallback, geode::Mod* pMod = geode::Mod::get()) {
         return SavedSettingChangedEvent(pMod, pKey).listen([callback = std::move(pCallback)] (GenericSetting* pSetting) {
-            if (auto ptr = geode::cast::typeinfo_pointer_cast<T>(pSetting)) {
+            if (auto ptr = geode::cast::typeinfo_cast<T*>(pSetting)) {
+                if constexpr (std::same_as<geode::utils::function::Return<decltype(callback)>, void>) {
+                    callback(ptr);
+                }
+                else {
+                    return callback(ptr);
+                }
+            }
+            return geode::ListenerResult::Propagate;
+        });
+    }
+    template<typename T, typename Callback>
+    auto listenForSavedSettingChanges(cocos2d::CCNode* pNode, std::string pKey, Callback&& pCallback, geode::Mod* pMod = geode::Mod::get()) {
+        return pNode->addEventListener(SavedSettingChangedEvent(pMod, pKey), [callback = std::move(pCallback)] (GenericSetting* pSetting) {
+            if (auto ptr = geode::cast::typeinfo_cast<T*>(pSetting)) {
                 if constexpr (std::same_as<geode::utils::function::Return<decltype(callback)>, void>) {
                     callback(ptr);
                 }
@@ -285,7 +299,21 @@ namespace nwo5::settings {
         return SavedSettingChangedEvent().listen([callback = std::move(pCallback), category = std::move(pCategory), modID = pMod->getID()] (std::string_view pMod, std::string_view pKey, GenericSetting* pSetting) {
             if (pMod == modID && (!category.has_value() || std::ranges::contains(pSetting->categories(), category.value()))) {
                 if constexpr (std::same_as<geode::utils::function::Return<decltype(callback)>, void>) {
-                    callback(pKey, pSetting); 
+                    callback(pKey, pSetting);
+                }
+                else {
+                    return callback(pKey, pSetting);
+                }
+            }
+            return geode::ListenerResult::Propagate;
+        });
+    }
+    template<typename Callback>
+    auto listenForAllSavedSettingChanges(cocos2d::CCNode* pNode, Callback&& pCallback, std::optional<std::string> pCategory, geode::Mod* pMod = geode::Mod::get()) {
+        return pNode->addEventListener(SavedSettingChangedEvent(), [callback = std::move(pCallback), category = std::move(pCategory), modID = pMod->getID()] (std::string_view pMod, std::string_view pKey, GenericSetting* pSetting) {
+            if (pMod == modID && (!category.has_value() || std::ranges::contains(pSetting->categories(), category.value()))) {
+                if constexpr (std::same_as<geode::utils::function::Return<decltype(callback)>, void>) {
+                    callback(pKey, pSetting);
                 }
                 else {
                     return callback(pKey, pSetting);
