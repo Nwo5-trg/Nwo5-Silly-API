@@ -3,6 +3,11 @@
 
 - listener for saved settings using addeventlistener
 
+**Fixed**
+
+- some saved setting listener thing
+- setup id string view fr fr
+
 ## v1.9.0
 **Added**
 
