@@ -290,6 +290,10 @@ namespace nwo5::ui {
             return {m_node};
         }
 
+        Setup id(std::string_view pID) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->setID(std::string{pID});
+            return {m_node};
+        }
         Setup id(std::string pID) requires std::derived_from<Node, cocos2d::CCNode> {
             m_node->setID(pID);
             return {m_node};
