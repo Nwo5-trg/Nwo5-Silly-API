@@ -354,6 +354,10 @@ namespace nwo5::utils {
         const auto fillTriangles = !pColor.a ? 0 : 2;
         const auto outlineTriangles = (!pOutlineThickness || !pOutlineColor.a) ? 0 : (2 * 4);
 
+        if (!fillTriangles && !outlineTriangles) {
+            return false;
+        }
+
         auto ptr = writeTriangles(fillTriangles + outlineTriangles);
 
         const auto v0 = toVert(pRect.origin);

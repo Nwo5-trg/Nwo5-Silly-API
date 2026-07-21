@@ -13,16 +13,22 @@ namespace nwo5::editor::selection {
             ui()->createUndoSelectObject(false);
         }
         
-        if (pApplyLinkControls) {
-            ui()->selectObject(pObj, !pUseFilter);
+        if (pApplyLinkControls && ui()->m_stickyControlsEnabled && !ui()->m_linkControlsDisabled && pObj->m_linkedGroup > 0) {
+            const auto group = static_cast<CCArray*>(layer()->m_linkedGroupDict->objectForKey(pObj->m_linkedGroup));
+
+            if (group && group->count() > 1) {
+                ui()->selectObjects(CCArray::createWithObject(pObj), !pUseFilter);
+            }
         }
         else {
-            const auto ret = ui()->m_stickyControlsEnabled;
-            ui()->m_stickyControlsEnabled = false;
+            ui()->m_snapSelected = true;
 
-            ui()->selectObject(pObj, !pUseFilter);
+            pObj->selectObject(ccGREEN);
+            pObj->m_unk460 = ui()->m_cycledObjectIndex;
 
-            ui()->m_stickyControlsEnabled = ret;
+            ui()->m_canActivateControls = true;
+
+            ui()->checkLiveColorSelect();
         }
     }
     void add(std::span<GameObject* const> pObjs, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
@@ -66,22 +72,30 @@ namespace nwo5::editor::selection {
             return;
         }
 
-        if (pUndo) {
+        // technically checking twice but idec 
+        if (pUndo && (!pUseFilter || ui()->canSelectObject(pObj))) {
             ui()->createUndoSelectObject(false);
         }
-        
+
         clear();
         
-        if (pApplyLinkControls) {
-            ui()->selectObject(pObj, !pUseFilter);
+        if (pApplyLinkControls && ui()->m_stickyControlsEnabled && !ui()->m_linkControlsDisabled && pObj->m_linkedGroup > 0) {
+            const auto group = static_cast<CCArray*>(layer()->m_linkedGroupDict->objectForKey(pObj->m_linkedGroup));
+
+            if (group && group->count() > 1) {
+                ui()->selectObjects(CCArray::createWithObject(pObj), !pUseFilter);
+            }
         }
         else {
-            const auto ret = ui()->m_stickyControlsEnabled;
-            ui()->m_stickyControlsEnabled = false;
+            ui()->m_snapSelected = true;
+            ui()->m_selectedObject = pObj;
 
-            ui()->selectObject(pObj, !pUseFilter);
+            pObj->selectObject(ccGREEN);
+            pObj->m_unk460 = ui()->m_cycledObjectIndex;
 
-            ui()->m_stickyControlsEnabled = ret;
+            ui()->m_canActivateControls = true;
+
+            ui()->checkLiveColorSelect();
         }
     }
     void set(std::span<GameObject* const> pObjs, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {

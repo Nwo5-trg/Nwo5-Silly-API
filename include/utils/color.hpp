@@ -112,6 +112,13 @@ namespace nwo5::utils {
         IsColor<T>
         || std::same_as<T, SillyHSV>
     );
+    template<typename T>
+    concept ColorHasOpacity = (
+        IsColorHSV<T>,
+        requires(T pVal) {
+            pVal.a;
+        }
+    );
 
     template<IsColorHSV After, IsColorHSV Before>
     constexpr After color_cast(Before pVal) {
@@ -148,6 +155,27 @@ namespace nwo5::utils {
                 return {static_cast<GLubyte>(pVal.r * 255), static_cast<GLubyte>(pVal.g * 255), static_cast<GLubyte>(pVal.b * 255), static_cast<GLubyte>(pVal.a * 255)};
             }
         }
+    }
+    
+    template<IsColor T, typename U>
+    constexpr T setRed(T pCol, U pRed) {
+        pCol.r = pRed;
+        return pCol;
+    }
+    template<IsColor T, typename U>
+    constexpr T setGreen(T pCol, U pRed) {
+        pCol.g = pRed;
+        return pCol;
+    }
+    template<IsColor T, typename U>
+    constexpr T setBlue(T pCol, U pRed) {
+        pCol.b = pRed;
+        return pCol;
+    }
+    template<ColorHasOpacity T, typename U>
+    constexpr T setOpacity(T pCol, U pOpacity) {
+        pCol.a = pOpacity;
+        return pCol;
     }
 
     template<IsColor T>

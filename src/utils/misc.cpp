@@ -77,4 +77,15 @@ namespace nwo5::utils {
 
         return ret;
     }
+
+    CCRect rectOverlap(const CCRect& pA, const CCRect& pB) {
+        const CCPoint a{std::max(pA.getMinX(), pB.getMinX()), std::max(pA.getMinY(), pB.getMinY())};
+        const CCPoint b{std::min(pA.getMaxX(), pB.getMaxX()), std::min(pA.getMaxY(), pB.getMaxY())};
+
+        if (b.x > a.x && b.y > a.y) {
+            return CCRect{a, b - a};
+        }
+
+        return CCRectZero;
+    }
 }

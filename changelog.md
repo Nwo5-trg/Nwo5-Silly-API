@@ -1,3 +1,14 @@
+## v1.10.0
+**Added**
+
+- some color utils
+- some misc utils
+
+**Fixed**
+
+- sillydrawnode crash
+- fix editor selection utils omg why were they so broken
+
 ## v1.9.1
 **Added**
 
