@@ -129,7 +129,7 @@ namespace nwo5::ui {
 
         return node;
     }
-    CCMenu* menu(AxisLayout* pLayout, bool pIgnoreAnchor) {
+    CCMenu* menu(Layout* pLayout, bool pIgnoreAnchor) {
         auto node = CCMenu::create();
 
         if (pLayout) {
@@ -140,6 +140,70 @@ namespace nwo5::ui {
 
         return node;
     }
+
+    CCNode* dummy() {
+        return CCNode::create();
+    }
+
+    AxisLayout* row(Alignment pAlignment, float pGap, std::optional<Alignment> pCrossAlignment) {
+        auto layout = RowLayout::create()
+            ->setGap(pGap)
+            ->setAxisAlignment(pAlignment)
+            ->setAutoScale(false)
+            ->setGrowCrossAxis(false);
+        
+        if (pCrossAlignment.has_value()) {
+            layout
+                ->setGrowCrossAxis(true)
+                ->setCrossAxisAlignment(pCrossAlignment.value());
+        }
+        
+        return layout;
+    }
+    AxisLayout* row(Alignment pAlignment, std::optional<Alignment> pCrossAlignment) {
+        auto layout = RowLayout::create()
+            ->setAxisAlignment(pAlignment)
+            ->setAutoScale(false)
+            ->setGrowCrossAxis(false);
+        
+        if (pCrossAlignment.has_value()) {
+            layout
+                ->setGrowCrossAxis(true)
+                ->setCrossAxisAlignment(pCrossAlignment.value());
+        }
+        
+        return layout;
+    }
+    AxisLayout* column(Alignment pAlignment, float pGap, std::optional<Alignment> pCrossAlignment) {
+        auto layout = ColumnLayout::create()
+            ->setGap(pGap)
+            ->setAxisAlignment(pAlignment)
+            ->setAutoScale(false)
+            ->setGrowCrossAxis(false);
+        
+        if (pCrossAlignment.has_value()) {
+            layout
+                ->setGrowCrossAxis(true)
+                ->setCrossAxisAlignment(pCrossAlignment.value());
+        }
+        
+        return layout;
+    }
+    AxisLayout* column(Alignment pAlignment, std::optional<Alignment> pCrossAlignment) {
+        auto layout = ColumnLayout::create()
+            ->setAxisAlignment(pAlignment)
+            ->setAutoScale(false)
+            ->setGrowCrossAxis(false);
+        
+        if (pCrossAlignment.has_value()) {
+            layout
+                ->setGrowCrossAxis(true)
+                ->setCrossAxisAlignment(pCrossAlignment.value());
+        }
+        
+        return layout;
+    }
+
 
     AxisLayout* horizontalDistrbLayout(float pGap, AxisAlignment pAlignment) {
         return RowLayout::create()

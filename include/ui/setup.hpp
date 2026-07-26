@@ -8,7 +8,7 @@
 
 namespace nwo5::ui {
     template<typename ImplNode, typename Node = std::remove_pointer_t<ImplNode>>
-    requires std::derived_from<Node, cocos2d::CCNode>
+    requires std::derived_from<Node, cocos2d::CCObject>
     class Setup final {
     private:
         Node* m_node;
@@ -32,10 +32,7 @@ namespace nwo5::ui {
 
         Setup parent(cocos2d::CCNode* pNode) requires std::derived_from<Node, cocos2d::CCNode> {
             pNode->addChild(m_node);
-
-            if (auto menu = geode::cast::typeinfo_cast<cocos2d::CCMenu*>(pNode); menu && menu->getLayout()) {
-                menu->updateLayout();
-            }
+            pNode->updateLayout();
 
             return {m_node};
         }
@@ -43,9 +40,7 @@ namespace nwo5::ui {
         Setup children(Args... pChildren) requires std::derived_from<Node, cocos2d::CCNode> {
             (m_node->addChild(pChildren), ...);
 
-            if constexpr (std::derived_from<Node, cocos2d::CCMenu>) {
-                m_node->updateLayout();
-            }
+            m_node->updateLayout();
 
             return {m_node};
         }
@@ -451,6 +446,78 @@ namespace nwo5::ui {
 
         Setup toggle(bool pOn) requires std::derived_from<Node, CCMenuItemToggler> {
             m_node->toggle(pOn);
+            return {m_node};
+        }
+
+
+
+        
+        Setup gap(float pGap) requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setGap(pGap);
+            return {m_node};
+        }
+
+        Setup alignment(Alignment pAlignment) requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setAxisAlignment(pAlignment);
+            return {m_node};
+        }
+        Setup crossAlignment(Alignment pAlignment) requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setCrossAxisAlignment(pAlignment);
+            m_node->setGrowCrossAxis(true);
+            return {m_node};
+        }
+
+        Setup row() requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setAxis(geode::Axis::Row);
+            return {m_node};
+        }
+        Setup column() requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setAxis(geode::Axis::Column);
+            return {m_node};
+        }
+
+        Setup cross(bool pOn) requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setGrowCrossAxis(pOn);
+            return {m_node};
+        }
+
+        Setup autoScale(bool pOn) requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setAutoScale(pOn);
+            return {m_node};
+        }
+
+        Setup ignoreInvisible() requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->ignoreInvisibleChildren(true);
+            return {m_node};
+        }
+
+        Setup padding(geode::Padding pPadding) requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setPadding(pPadding);
+            return {m_node};
+        }
+
+        template <typename T>
+        requires std::same_as<T, bool>
+        Setup grow(T pOn = true) requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setAutoGrowAxis(pOn ? std::optional<float>{0.0f} : std::nullopt);
+            return {m_node};
+        }
+        Setup grow(float pMin) requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setAutoGrowAxis(pMin);
+            return {m_node};
+        }
+
+        Setup reverse(bool pOn = true) requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setAxisReverse(pOn);
+            return {m_node};
+        }
+        Setup crossReverse(bool pOn = true) requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setCrossAxisReverse(pOn);
+            return {m_node};
+        }
+
+        Setup crossOverflow(bool pOn = true) requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setCrossAxisOverflow(pOn);
             return {m_node};
         }
 

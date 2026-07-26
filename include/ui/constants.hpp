@@ -16,6 +16,8 @@ namespace nwo5::ui {
     constexpr auto DEFAULT_TEXT_INPUT_HEIGHT = 30.0f;
     using TextInputCallback = geode::Function<void(const std::string&)>;
 
+    using Alignment = geode::AxisAlignment;
+
     struct Font {
         static constexpr auto BigFont = "bigFont.fnt";
         static constexpr auto Default = BigFont;

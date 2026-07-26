@@ -39,10 +39,19 @@ namespace nwo5::ui {
     SILLY_API_DLL geode::TextInput* input(float pWidth, std::optional<std::string> pPlaceholder, TextInputCallback pCallback = {});
 
     SILLY_API_DLL cocos2d::CCMenu* menu(bool pIgnoreAnchor);
-    SILLY_API_DLL cocos2d::CCMenu* menu(geode::AxisLayout* pLayout = nullptr, bool pIgnoreAnchor = false);
+    SILLY_API_DLL cocos2d::CCMenu* menu(geode::Layout* pLayout = nullptr, bool pIgnoreAnchor = false);
+
+    SILLY_API_DLL cocos2d::CCNode* dummy();
+
+    SILLY_API_DLL geode::AxisLayout* row(Alignment pAlignment, float pGap, std::optional<Alignment> pCrossAlignment = std::nullopt);
+    SILLY_API_DLL geode::AxisLayout* row(Alignment pAlignment, std::optional<Alignment> pCrossAlignment = std::nullopt);
+    SILLY_API_DLL geode::AxisLayout* column(Alignment pAlignment, float pGap, std::optional<Alignment> pCrossAlignment = std::nullopt);
+    SILLY_API_DLL geode::AxisLayout* column(Alignment pAlignment, std::optional<Alignment> pCrossAlignment = std::nullopt);
 
     /// no auto scale, grows axis, no cross axis
+    /// @deprecated use the other layout functions
     SILLY_API_DLL geode::AxisLayout* horizontalDistrbLayout(float pGap, geode::AxisAlignment pAlignment = geode::AxisAlignment::Start);
     /// no auto scale, grows axis, no cross axis
+    /// @deprecated use the other layout functions
     SILLY_API_DLL geode::AxisLayout* verticalDistrbLayout(float pGap, geode::AxisAlignment pAlignment = geode::AxisAlignment::Start);
 }

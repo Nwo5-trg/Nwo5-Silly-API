@@ -1,8 +1,10 @@
 ## v1.10.0
 **Added**
 
+- easier time making layout with ui
 - some color utils
 - some misc utils
+- fully deprecate old ui system 
 
 **Fixed**
 
