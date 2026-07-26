@@ -317,6 +317,57 @@ namespace nwo5::ui {
             return {m_node};
         }
 
+        Setup layoutOptions(geode::LayoutOptions* pLayout) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->setLayoutOptions(pLayout);
+            return {m_node};
+        }
+
+        Setup breakLine(bool pOn = true) requires std::derived_from<Node, cocos2d::CCNode> {
+            if (auto options = m_node->getLayoutOptions()) {
+                options->setBreakLine(pOn);
+            }
+            else {
+                m_node->setLayoutOptions(geode::AxisLayoutOptions::create()->setBreakLine(pOn));
+            }
+            return {m_node};
+        }
+        Setup sameLine(bool pOn = true) requires std::derived_from<Node, cocos2d::CCNode> {
+            if (auto options = m_node->getLayoutOptions()) {
+                options->setSameLine(pOn);
+            }
+            else {
+                m_node->setLayoutOptions(geode::AxisLayoutOptions::create()->setSameLine(pOn));
+            }
+            return {m_node};
+        }
+        Setup prevGap(float pGap) requires std::derived_from<Node, cocos2d::CCNode> {
+            if (auto options = m_node->getLayoutOptions()) {
+                options->setPrevGap(pGap);
+            }
+            else {
+                m_node->setLayoutOptions(geode::AxisLayoutOptions::create()->setPrevGap(pGap));
+            }
+            return {m_node};
+        }
+        Setup nextGap(float pGap) requires std::derived_from<Node, cocos2d::CCNode> {
+            if (auto options = m_node->getLayoutOptions()) {
+                options->setNextGap(pGap);
+            }
+            else {
+                m_node->setLayoutOptions(geode::AxisLayoutOptions::create()->setNextGap(pGap));
+            }
+            return {m_node};
+        }
+
+        Setup layout(geode::Layout* pLayout) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->setLayout(pLayout);
+            return {m_node};
+        }
+        Setup updateLayout() requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->updateLayout();
+            return {m_node};
+        }
+
 
 
         Setup flipX(bool pFlip = true) requires std::derived_from<Node, cocos2d::CCNode> {
@@ -353,17 +404,6 @@ namespace nwo5::ui {
         }
         Setup opacity(Node* pCopy) requires std::derived_from<Node, cocos2d::CCRGBAProtocol> {
             return opacity(pCopy->getOpacity());
-        }
-
-
-        
-        Setup layout(geode::Layout* pLayout) requires std::derived_from<Node, cocos2d::CCMenu> {
-            m_node->setLayout(pLayout);
-            return {m_node};
-        }
-        Setup updateLayout() requires std::derived_from<Node, cocos2d::CCMenu> {
-            m_node->updateLayout();
-            return {m_node};
         }
 
 
@@ -518,6 +558,45 @@ namespace nwo5::ui {
 
         Setup crossOverflow(bool pOn = true) requires std::derived_from<Node, geode::AxisLayout> {
             m_node->setCrossAxisOverflow(pOn);
+            return {m_node};
+        }
+
+
+
+        Setup prevGap(float pGap) requires std::derived_from<Node, geode::AxisLayoutOptions> {
+            m_node->setPrevGap(pGap);
+            return {m_node};
+        }
+        Setup nextGap(float pGap) requires std::derived_from<Node, geode::AxisLayoutOptions> {
+            m_node->setNextGap(pGap);
+            return {m_node};
+        }
+
+        Setup crossAlignment(Alignment pAlignment) requires std::derived_from<Node, geode::AxisLayoutOptions> {
+            m_node->setCrossAxisAlignment(pAlignment);
+            return {m_node};
+        }
+        
+        Setup autoScale(bool pOn = true) requires std::derived_from<Node, geode::AxisLayoutOptions> {
+            m_node->setAutoScale(pOn);
+            return {m_node};
+        }
+        Setup relativeScale(float pScale) requires std::derived_from<Node, geode::AxisLayoutOptions> {
+            m_node->setRelativeScale(pScale);
+            return {m_node};
+        }
+
+        Setup breakLine(bool pOn = true) requires std::derived_from<Node, geode::AxisLayoutOptions> {
+            m_node->setBreakLine(pOn);
+            return {m_node};
+        }
+        Setup sameLine(bool pOn = true) requires std::derived_from<Node, geode::AxisLayoutOptions> {
+            m_node->setSameLine(pOn);
+            return {m_node};
+        }
+
+        Setup scalePriority(int pPriority) requires std::derived_from<Node, geode::AxisLayoutOptions> {
+            m_node->setScalePriority(pPriority);
             return {m_node};
         }
 
