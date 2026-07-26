@@ -1,3 +1,8 @@
+## v1.10.1
+**Fixed**
+
+- that or im stupid
+
 ## v1.10.0
 **Added**
 

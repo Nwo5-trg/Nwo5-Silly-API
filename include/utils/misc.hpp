@@ -57,8 +57,20 @@ namespace nwo5::utils {
         if (!pPrecision) {
             return std::to_string(static_cast<long>(std::round(pNum)));
         }
+        
+        auto str = geode::utils::numToString(pNum, pPrecision);
+        
+        if (str.find('.') != std::string::npos) {
+            if (const auto end = str.find_last_not_of('0'); end != std::string::npos) {
+                str.erase(end + 1);
+            }
 
-        return fmt::format("{:.{}g}", pNum, pPrecision);
+            if (str.ends_with('.')) {
+                str.pop_back();
+            }
+        }
+
+        return str;
     }
 
     template<typename Callback>
