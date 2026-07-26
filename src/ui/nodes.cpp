@@ -204,6 +204,9 @@ namespace nwo5::ui {
         return layout;
     }
 
+    AxisLayoutOptions* options() {
+        return AxisLayoutOptions::create();
+    }
 
     AxisLayout* horizontalDistrbLayout(float pGap, AxisAlignment pAlignment) {
         return RowLayout::create()

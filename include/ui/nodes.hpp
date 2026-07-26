@@ -48,6 +48,8 @@ namespace nwo5::ui {
     SILLY_API_DLL geode::AxisLayout* column(Alignment pAlignment, float pGap, std::optional<Alignment> pCrossAlignment = std::nullopt);
     SILLY_API_DLL geode::AxisLayout* column(Alignment pAlignment, std::optional<Alignment> pCrossAlignment = std::nullopt);
 
+    SILLY_API_DLL geode::AxisLayoutOptions* options();
+
     /// no auto scale, grows axis, no cross axis
     /// @deprecated use the other layout functions
     SILLY_API_DLL geode::AxisLayout* horizontalDistrbLayout(float pGap, geode::AxisAlignment pAlignment = geode::AxisAlignment::Start);
