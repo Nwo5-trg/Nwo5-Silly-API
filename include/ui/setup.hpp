@@ -323,7 +323,7 @@ namespace nwo5::ui {
         }
 
         Setup breakLine(bool pOn = true) requires std::derived_from<Node, cocos2d::CCNode> {
-            if (auto options = m_node->getLayoutOptions()) {
+            if (auto options = geode::cast::typeinfo_cast<geode::AxisLayoutOptions*>(m_node->getLayoutOptions())) {
                 options->setBreakLine(pOn);
             }
             else {
@@ -332,7 +332,7 @@ namespace nwo5::ui {
             return {m_node};
         }
         Setup sameLine(bool pOn = true) requires std::derived_from<Node, cocos2d::CCNode> {
-            if (auto options = m_node->getLayoutOptions()) {
+            if (auto options = geode::cast::typeinfo_cast<geode::AxisLayoutOptions*>(m_node->getLayoutOptions())) {
                 options->setSameLine(pOn);
             }
             else {
@@ -341,7 +341,7 @@ namespace nwo5::ui {
             return {m_node};
         }
         Setup prevGap(float pGap) requires std::derived_from<Node, cocos2d::CCNode> {
-            if (auto options = m_node->getLayoutOptions()) {
+            if (auto options = geode::cast::typeinfo_cast<geode::AxisLayoutOptions*>(m_node->getLayoutOptions())) {
                 options->setPrevGap(pGap);
             }
             else {
@@ -350,7 +350,7 @@ namespace nwo5::ui {
             return {m_node};
         }
         Setup nextGap(float pGap) requires std::derived_from<Node, cocos2d::CCNode> {
-            if (auto options = m_node->getLayoutOptions()) {
+            if (auto options = geode::cast::typeinfo_cast<geode::AxisLayoutOptions*>(m_node->getLayoutOptions())) {
                 options->setNextGap(pGap);
             }
             else {
