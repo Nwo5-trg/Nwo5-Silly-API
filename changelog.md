@@ -1,3 +1,8 @@
+## v1.10.3
+**Fixed**
+
+- some editor functions
+
 ## v1.10.2
 **Fixed**
 

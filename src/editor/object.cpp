@@ -78,7 +78,7 @@ namespace nwo5::editor::object {
         }
         
         if (pSetup) {
-            return layer()->createObject(pID, CCPointZero, !pUndo);
+            return layer()->createObject(pID, pPos, !pUndo);
         }
         else {
             auto arr = layer()->createObjectsFromString(fmt::format("1,{},2,{},3,{}", pID, pPos.x, pPos.y), !pUndo, true);
@@ -608,10 +608,6 @@ namespace nwo5::editor::object {
     void remove(GameObject* pObj, bool pUndo) {
         if (notLoaded(LoadedType::Editor)) {
             return;
-        }
-
-        if (pUndo) {
-            layer()->addToUndoList(UndoObject::create(pObj, UndoCommand::Delete), false);
         }
 
         editor::selection::remove(pObj);
