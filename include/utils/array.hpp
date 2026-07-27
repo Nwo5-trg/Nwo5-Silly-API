@@ -11,6 +11,7 @@ namespace nwo5::utils::array {
     SILLY_API_DLL cocos2d::CCArray* shared(cocos2d::CCArray* pArray, cocos2d::CCArray* pOther);
     SILLY_API_DLL std::optional<ArrayIndex> find(cocos2d::CCArray* pArray, cocos2d::CCObject* pObj);
     template<typename Condition>
+    requires std::is_invocable_r_v<bool, Condition, cocos2d::CCObject*>
     std::optional<ArrayIndex> find(cocos2d::CCArray* pArray, Condition pCondition) {
         const auto size = pArray->count();
 
@@ -24,8 +25,9 @@ namespace nwo5::utils::array {
     }
     SILLY_API_DLL bool contains(cocos2d::CCArray* pArray, cocos2d::CCObject* pObj);
     template<typename Condition>
+    requires std::is_invocable_r_v<bool, Condition, cocos2d::CCObject*>
     bool contains(cocos2d::CCArray* pArray, Condition pCondition) {
-        return find(pArray, std::forward(pCondition)).has_value();
+        return find(pArray, std::forward<Condition>(pCondition)).has_value();
     }
     SILLY_API_DLL cocos2d::CCArray* before(cocos2d::CCArray* pArray, cocos2d::CCObject* pObj, bool pInclusive = true);
     SILLY_API_DLL cocos2d::CCArray* before(cocos2d::CCArray* pArray, ArrayIndex pIndex, bool pInclusive = true);

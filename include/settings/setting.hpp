@@ -1,6 +1,7 @@
 #pragma once
 
 // header only cuz most of this is template bs so makign eveyrthing inline was just easier
+/// no you dumbass fix this as soon as the next gd update happens
 
 #include <Geode/loader/ModSettingsManager.hpp>
 #include "../export.hpp"

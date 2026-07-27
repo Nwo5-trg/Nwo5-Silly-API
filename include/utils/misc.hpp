@@ -30,7 +30,6 @@ namespace nwo5::utils {
     public:
         static CCTag* create(int pTag = cocos2d::kCCNodeTagInvalid);
     };
-
     
 
     template<typename T>
