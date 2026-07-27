@@ -316,10 +316,10 @@ namespace nwo5::utils {
     }
 
     bool SillyDrawNode::drawPolygon(const CCPoint* pPoints, unsigned int pSize, const ccColor4F& pColor, float pOutlineThickness, const ccColor4F& pOutlineColor, cocos2d::BorderAlignment) {
-        return drawPolygon(const_cast<CCPoint*>(pPoints), pSize, pColor, pOutlineThickness, pOutlineColor);
+        return CCDrawNode::drawPolygon(const_cast<CCPoint*>(pPoints), pSize, pColor, pOutlineThickness, pOutlineColor, {});
     }
     bool SillyDrawNode::drawPolygon(std::span<const CCPoint> pPoints, const ccColor4F& pColor, float pOutlineThickness, const ccColor4F& pOutlineColor, cocos2d::BorderAlignment) {
-        return drawPolygon(pPoints.data(), pPoints.size(), pColor, pOutlineThickness, pOutlineColor);
+        return CCDrawNode::drawPolygon(const_cast<CCPoint*>(pPoints.data()), pPoints.size(), pColor, pOutlineThickness, pOutlineColor, {});
     }
 
     bool SillyDrawNode::drawDot(const CCPoint& pCenter, float pRadius, const ccColor4F& pColor) {

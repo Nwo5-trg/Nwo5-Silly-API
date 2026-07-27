@@ -1,3 +1,8 @@
+## v1.10.2
+**Fixed**
+
+- even dumber sillydrawnode crash
+
 ## v1.10.1
 **Fixed**
 
