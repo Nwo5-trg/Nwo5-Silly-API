@@ -1,3 +1,8 @@
+## v1.11.0
+**Fixed**
+
+- something
+
 ## v1.10.3
 **Fixed**
 

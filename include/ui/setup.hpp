@@ -516,12 +516,12 @@ namespace nwo5::ui {
             return {m_node};
         }
 
-        Setup cross(bool pOn) requires std::derived_from<Node, geode::AxisLayout> {
+        Setup cross(bool pOn = true) requires std::derived_from<Node, geode::AxisLayout> {
             m_node->setGrowCrossAxis(pOn);
             return {m_node};
         }
 
-        Setup autoScale(bool pOn) requires std::derived_from<Node, geode::AxisLayout> {
+        Setup autoScale(bool pOn = true) requires std::derived_from<Node, geode::AxisLayout> {
             m_node->setAutoScale(pOn);
             return {m_node};
         }

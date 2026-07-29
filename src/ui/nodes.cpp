@@ -145,7 +145,7 @@ namespace nwo5::ui {
         return CCNode::create();
     }
 
-    AxisLayout* row(Alignment pAlignment, float pGap, std::optional<Alignment> pCrossAlignment) {
+    Setup<AxisLayout> row(Alignment pAlignment, float pGap, std::optional<Alignment> pCrossAlignment) {
         auto layout = RowLayout::create()
             ->setGap(pGap)
             ->setAxisAlignment(pAlignment)
@@ -160,7 +160,7 @@ namespace nwo5::ui {
         
         return layout;
     }
-    AxisLayout* row(Alignment pAlignment, std::optional<Alignment> pCrossAlignment) {
+    Setup<AxisLayout> row(Alignment pAlignment, std::optional<Alignment> pCrossAlignment) {
         auto layout = RowLayout::create()
             ->setAxisAlignment(pAlignment)
             ->setAutoScale(false)
@@ -174,7 +174,7 @@ namespace nwo5::ui {
         
         return layout;
     }
-    AxisLayout* column(Alignment pAlignment, float pGap, std::optional<Alignment> pCrossAlignment) {
+    Setup<AxisLayout> column(Alignment pAlignment, float pGap, std::optional<Alignment> pCrossAlignment) {
         auto layout = ColumnLayout::create()
             ->setGap(pGap)
             ->setAxisAlignment(pAlignment)
@@ -189,7 +189,7 @@ namespace nwo5::ui {
         
         return layout;
     }
-    AxisLayout* column(Alignment pAlignment, std::optional<Alignment> pCrossAlignment) {
+    Setup<AxisLayout> column(Alignment pAlignment, std::optional<Alignment> pCrossAlignment) {
         auto layout = ColumnLayout::create()
             ->setAxisAlignment(pAlignment)
             ->setAutoScale(false)

@@ -2,6 +2,7 @@
 
 #include "../export.hpp"
 #include "constants.hpp"
+#include "setup.hpp"
 
 namespace nwo5::ui {
     SILLY_API_DLL CCMenuItemSpriteExtra* button(cocos2d::CCNode* pTop, cocos2d::CCObject* pTarget, cocos2d::SEL_MenuHandler pCallback);
@@ -43,10 +44,10 @@ namespace nwo5::ui {
 
     SILLY_API_DLL cocos2d::CCNode* dummy();
 
-    SILLY_API_DLL geode::AxisLayout* row(Alignment pAlignment, float pGap, std::optional<Alignment> pCrossAlignment = std::nullopt);
-    SILLY_API_DLL geode::AxisLayout* row(Alignment pAlignment, std::optional<Alignment> pCrossAlignment = std::nullopt);
-    SILLY_API_DLL geode::AxisLayout* column(Alignment pAlignment, float pGap, std::optional<Alignment> pCrossAlignment = std::nullopt);
-    SILLY_API_DLL geode::AxisLayout* column(Alignment pAlignment, std::optional<Alignment> pCrossAlignment = std::nullopt);
+    SILLY_API_DLL Setup<geode::AxisLayout> row(Alignment pAlignment, float pGap, std::optional<Alignment> pCrossAlignment = std::nullopt);
+    SILLY_API_DLL Setup<geode::AxisLayout> row(Alignment pAlignment, std::optional<Alignment> pCrossAlignment = std::nullopt);
+    SILLY_API_DLL Setup<geode::AxisLayout> column(Alignment pAlignment, float pGap, std::optional<Alignment> pCrossAlignment = std::nullopt);
+    SILLY_API_DLL Setup<geode::AxisLayout> column(Alignment pAlignment, std::optional<Alignment> pCrossAlignment = std::nullopt);
 
     SILLY_API_DLL geode::AxisLayoutOptions* options();
 

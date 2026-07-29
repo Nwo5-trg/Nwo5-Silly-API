@@ -91,7 +91,7 @@ namespace nwo5::utils {
         }
     }
 
-    cocos2d::CCRect rectOverlap(const cocos2d::CCRect& pA, const cocos2d::CCRect& pB);
+    SILLY_API_DLL cocos2d::CCRect rectOverlap(const cocos2d::CCRect& pA, const cocos2d::CCRect& pB);
 
     // very unnecessary template shenanigans but fun :33333
 

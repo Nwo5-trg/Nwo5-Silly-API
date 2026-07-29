@@ -16,4 +16,6 @@ namespace nwo5::ui::prelude {
     ui::BOTTOM_RIGHT_ANCHOR, ui::RIGHT_CENTER_ANCHOR, ui::CENTER_ANCHOR;
     
     using ui::Font;
+
+    using ui::Alignment;
 }
