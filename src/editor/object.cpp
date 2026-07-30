@@ -568,39 +568,39 @@ namespace nwo5::editor::object {
 
     void addGroup(GameObject* pObj, int pGroup) {
         if (loaded(LoadedType::Editor)) {
-            layer()->addToGroup(pObj, pGroup, false);
+            pObj->addToGroup(pGroup);
         }
     }
     void addGroup(std::span<GameObject* const> pObjs, int pGroup) {
         if (loaded(LoadedType::Editor)) {
             for (auto obj : pObjs) {
-                layer()->addToGroup(obj, pGroup, false);
+                obj->addToGroup(pGroup);
             }
         }
     }
     void addGroup(CCArray* pObjs, int pGroup) {
         if (loaded(LoadedType::Editor)) {
             for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
-                layer()->addToGroup(obj, pGroup, false);
+                obj->addToGroup(pGroup);
             }
         }
     }
     void removeGroup(GameObject* pObj, int pGroup) {
         if (loaded(LoadedType::Editor)) {
-            layer()->removeFromGroup(pObj, pGroup);
+            pObj->removeFromGroup(pGroup);
         }
     }
     void removeGroup(std::span<GameObject* const> pObjs, int pGroup) {
         if (loaded(LoadedType::Editor)) {
             for (auto obj : pObjs) {
-                layer()->removeFromGroup(obj, pGroup);
+                obj->removeFromGroup(pGroup);
             }
         }
     }
     void removeGroup(CCArray* pObjs, int pGroup) {
         if (loaded(LoadedType::Editor)) {
             for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
-                layer()->removeFromGroup(obj, pGroup);
+                obj->removeFromGroup(pGroup);
             }
         }
     }
