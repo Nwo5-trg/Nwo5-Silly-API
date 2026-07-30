@@ -10,9 +10,6 @@ namespace nwo5::editor {
     namespace impl {
         static bool s_shouldMoveObject = true;
 
-        static std::optional<float> s_tinkerUIScale = std::nullopt;
-        static std::optional<float> s_beUIScale = std::nullopt;
-
         static bool s_editButtonsLoaded = false;
         static std::vector<EditTabButton> s_editTabButtons;
         static std::unordered_map<std::string, CCMenuItemSpriteExtra*> s_editTabButtonMap;
@@ -175,19 +172,7 @@ namespace nwo5::editor {
 
             bool init(LevelEditorLayer* editorLayer) {
                 s_editorUIEarlyPtr = this;
-
-                if (auto mod = Loader::get()->getLoadedMod("alphalaneous.tinker")) {
-                    s_tinkerUIScale = mod->getSettingValue<bool>("UIScaling-enabled")
-                        ? mod->getSettingValue<float>("UIScaling-scale")
-                        : 1.0f;
-                }
-                if (auto mod = Loader::get()->getLoadedMod("hjfod.betteredit")) {
-                    s_beUIScale = mod->getSettingValue<float>("scale-factor");
-
-                    if (s_tinkerUIScale.has_value()) {
-                        s_tinkerUIScale = s_beUIScale;
-                    }
-                }
+                editorLayer->m_editorUI = this;
 
                 return EditorUI::init(editorLayer);
             }
@@ -501,14 +486,6 @@ namespace nwo5::editor {
         }
         
         impl::getFakePauseLayer()->saveLevel();
-    }
-
-    float uiScale() {
-        static auto _ = tinker::api::ui_scaling::UIScaleUpdated().listen([] (float pScale, bool, bool) {
-            impl::s_tinkerUIScale = pScale;
-        }, Priority::First);
-
-        return impl::s_tinkerUIScale.value_or(impl::s_beUIScale.value_or(1.0f));
     }
 
     bool registerEditTabButton(impl::EditTabButton::SpriteFunc pSprite, std::string pKey, float pScale, int pPrio, impl::EditTabButton::Callback pCallback) {

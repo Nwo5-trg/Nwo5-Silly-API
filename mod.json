@@ -17,11 +17,7 @@
 		"community": "https://discord.gg/AeFeYWGUxZ"
 	},
 	"dependencies": {
-		"geode.node-ids": ">=1.23.0",
-		"alphalaneous.tinker": {
-			"version": ">=v1.0.17",
-			"required": false
-		}
+		"geode.node-ids": ">=1.23.0"
 	},
 	"api": {
         "include": [

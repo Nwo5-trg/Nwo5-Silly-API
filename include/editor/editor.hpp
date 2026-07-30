@@ -84,11 +84,6 @@ namespace nwo5::editor {
     /// saves current level
     SILLY_API_DLL void save();
 
-    /// tinker and better edit compat for editor scaling
-    /// @note should work without any hookprio shenanigans
-    /// @returns ui scale or 0 if editorui not loaded
-    SILLY_API_DLL float uiScale(); 
-
     namespace impl {
         struct SILLY_API_DLL EditTabButton {
             using SpriteFunc = geode::Function<cocos2d::CCSprite*() const>;
