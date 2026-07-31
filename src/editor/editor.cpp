@@ -2,7 +2,6 @@
 #include <Geode/modify/EditorUI.hpp>
 #include <Geode/modify/LevelEditorLayer.hpp>
 #include <utils/include.hpp>
-#include <alphalaneous.tinker/include/UIScaling.hpp>
 
 using namespace geode::prelude;
 
