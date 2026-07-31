@@ -226,7 +226,7 @@ namespace nwo5::settings {
 
             geode::SettingChangedEventV3(m_mod, std::move(key())).listen([this] (std::shared_ptr<geode::SettingV3> pSetting) {
                 if (auto ty = geode::cast::typeinfo_pointer_cast<typename geode::SettingTypeForValueType<T>::SettingType>(pSetting)) {
-                    return m_value = ty->getValue();
+                    m_value = ty->getValue();
                 }
             }, geode::Priority::First).leak();
 
