@@ -172,7 +172,6 @@ namespace nwo5::editor {
 
             bool init(LevelEditorLayer* editorLayer) {
                 s_editorUIEarlyPtr = this;
-                editorLayer->m_editorUI = this;
 
                 return EditorUI::init(editorLayer);
             }
@@ -232,7 +231,7 @@ namespace nwo5::editor {
         switch (pType) {
             case LoadedType::Editor: return layer() && !layer()->m_initializing;
             case LoadedType::EditorValid: return layer();
-            case LoadedType::UI: return layer() && layer()->m_editorUI;
+            case LoadedType::UI: return layer() && impl::s_editorUIEarlyPtr;
             case LoadedType::UIValid: return ui();
         }
     }
