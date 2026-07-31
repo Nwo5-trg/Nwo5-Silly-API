@@ -224,9 +224,11 @@ namespace nwo5::settings {
 
             m_value = m_setting->getValue();
 
-            geode::listenForSettingChanges<T>(key(), [this] (T pVal) {
-                m_value = pVal;
-            }, m_mod);
+            geode::SettingChangedEventV3(m_mod, std::move(key())).listen([this] (std::shared_ptr<geode::SettingV3> pSetting) {
+                if (auto ty = geode::cast::typeinfo_pointer_cast<geode::SettingTypeForValueType<T>::SettingType>(pSetting)) {
+                    return m_value = ty->getValue();
+                }
+            }, geode::Priority::First).leak();
 
             m_loaded = true;
         }

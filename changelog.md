@@ -1,7 +1,13 @@
-## v1.11.0
+## v1.10.4
 **Fixed**
 
+- settings cache not updating before settings changed listener for some mods
+- some other editor things i forgot
 - something
+
+**Removed**
+
+- tinker options
 
 ## v1.10.3
 **Fixed**
