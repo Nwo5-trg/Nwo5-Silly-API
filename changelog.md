@@ -1,3 +1,8 @@
+## v1.10.5
+**Fixed**
+
+- add to in setup
+
 ## v1.10.4
 **Fixed**
 

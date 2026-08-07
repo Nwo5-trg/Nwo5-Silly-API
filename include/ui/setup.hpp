@@ -604,6 +604,7 @@ namespace nwo5::ui {
 
         Setup addTo(cocos2d::CCArray* pArray) {
             pArray->addObject(m_node);
+            return {m_node};
         }
     };
 
