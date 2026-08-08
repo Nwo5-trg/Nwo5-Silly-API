@@ -395,14 +395,14 @@ namespace nwo5::ui {
             m_node->setColor(pColor);
             return {m_node};
         }
-        Setup color(Node* pCopy) requires std::derived_from<Node, cocos2d::CCRGBAProtocol> {
+        Setup color(cocos2d::CCRGBAProtocol* pCopy) requires std::derived_from<Node, cocos2d::CCRGBAProtocol> {
             return color(pCopy->getColor());
         }
         Setup opacity(unsigned char pOpacity) requires std::derived_from<Node, cocos2d::CCRGBAProtocol> {
             m_node->setOpacity(pOpacity);
             return {m_node};
         }
-        Setup opacity(Node* pCopy) requires std::derived_from<Node, cocos2d::CCRGBAProtocol> {
+        Setup opacity(cocos2d::CCRGBAProtocol* pCopy) requires std::derived_from<Node, cocos2d::CCRGBAProtocol> {
             return opacity(pCopy->getOpacity());
         }
 
