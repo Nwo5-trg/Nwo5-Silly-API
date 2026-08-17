@@ -85,8 +85,8 @@ namespace nwo5::ui {
         m_label = Setup(Label::create("", pFont))
             .id("label"_spr)
             .pos(CCPointZero)
+            .maxWidth(300.0f - m_padding)
             .parent(this);
-        m_label->setMaxWidth(300.0f - m_padding);
 
         Setup(this)
             .order(10)

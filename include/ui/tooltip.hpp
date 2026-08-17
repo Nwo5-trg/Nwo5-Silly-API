@@ -1,11 +1,13 @@
 #pragma once
 
+#include "../export.hpp"
+
 namespace nwo5::ui {
     /// basic tooltip class !
     /// for automatic mode (which is default) add a TooltipInfo userobject with id "nwo5.silly-api/tooltip" to a node and those nodes will show tooltips !
     /// if you want to do all the logic yourself you can just set an updatefunc
     /// @note automatic mode does not pay attention to z order soooo gl with that might make that toggleable later cuz it would b slower
-    class Tooltip final : public cocos2d::CCNode {
+    class SILLY_API_DLL Tooltip final : public cocos2d::CCNode {
     protected:
         geode::NineSlice* m_background = nullptr;
         geode::Label* m_label = nullptr;
