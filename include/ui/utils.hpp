@@ -2,6 +2,7 @@
 
 #include "../export.hpp"
 
+// unfinished like all ofthis lol
 namespace nwo5::ui {
     enum class DirectionAlignment {
         Start,

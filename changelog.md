@@ -1,3 +1,17 @@
+## v1.11.0
+**Added**
+
+- tooltips ! (in ui namespace)
+- a bunch more setup functions
+- a couple ui layout utils
+- *some* geode label support (full support coming in v2 cuz i cant make breaking changes)
+- texture constants namespace(s) in ui
+
+**Fixed**
+
+- make ui layout functions not disable autoscale
+- some setup layout functions
+
 ## v1.10.5
 **Fixed**
 

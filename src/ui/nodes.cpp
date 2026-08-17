@@ -149,7 +149,6 @@ namespace nwo5::ui {
         auto layout = RowLayout::create()
             ->setGap(pGap)
             ->setAxisAlignment(pAlignment)
-            ->setAutoScale(false)
             ->setGrowCrossAxis(false);
         
         if (pCrossAlignment.has_value()) {
@@ -163,7 +162,6 @@ namespace nwo5::ui {
     Setup<AxisLayout> row(Alignment pAlignment, std::optional<Alignment> pCrossAlignment) {
         auto layout = RowLayout::create()
             ->setAxisAlignment(pAlignment)
-            ->setAutoScale(false)
             ->setGrowCrossAxis(false);
         
         if (pCrossAlignment.has_value()) {
@@ -178,7 +176,6 @@ namespace nwo5::ui {
         auto layout = ColumnLayout::create()
             ->setGap(pGap)
             ->setAxisAlignment(pAlignment)
-            ->setAutoScale(false)
             ->setGrowCrossAxis(false);
         
         if (pCrossAlignment.has_value()) {
@@ -192,7 +189,6 @@ namespace nwo5::ui {
     Setup<AxisLayout> column(Alignment pAlignment, std::optional<Alignment> pCrossAlignment) {
         auto layout = ColumnLayout::create()
             ->setAxisAlignment(pAlignment)
-            ->setAutoScale(false)
             ->setGrowCrossAxis(false);
         
         if (pCrossAlignment.has_value()) {
@@ -206,6 +202,9 @@ namespace nwo5::ui {
 
     AxisLayoutOptions* options() {
         return AxisLayoutOptions::create();
+    }
+    AnchorLayoutOptions* anchorOptions() {
+        return AnchorLayoutOptions::create();
     }
 
     AxisLayout* horizontalDistrbLayout(float pGap, AxisAlignment pAlignment) {
