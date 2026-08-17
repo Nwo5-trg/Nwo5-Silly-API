@@ -3,7 +3,19 @@ a bunch of utils for my mods to make my life easier
 
 if ur not a dev this is useless to u
 
-if u wanna use this mod for some reason theres a bunch of documentation in headers (mainly js for editor icl), otherwise heres an overview
+theres a documentation for pretty much everything in headers, otherwise heres a feature list and half finished docs !
+
+## Features
+- geode setting cache (by making them inline variables so also ide autocomplete)
+- plethora of editor/object/selection utils
+- tooltips using user objects
+- api to add edit tab buttons
+- highly opinionated uibuilder alternative
+- compile time info about every trigger in the game
+- bad drawnode rewrite
+- named constants for game textures
+- array/color utils
+- a bunch more stuff (mainly for sillyedit lol)
 
 ## Editor
 make fw the editor hopefully easier :3

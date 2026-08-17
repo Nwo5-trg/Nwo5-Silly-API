@@ -91,7 +91,7 @@ namespace nwo5::ui {
         static Tooltip* create(geode::ZStringView pFont, bool pFollowMouse = true, bool pAutomatic = true);
     };
 
-    class TooltipInfo final : public cocos2d::CCObject {
+    class SILLY_API_DLL TooltipInfo final : public cocos2d::CCObject {
     protected:
         std::string m_text;
         cocos2d::CCNode* m_node = nullptr;

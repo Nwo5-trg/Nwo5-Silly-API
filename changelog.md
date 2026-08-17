@@ -6,6 +6,7 @@
 - a couple ui layout utils
 - *some* geode label support (full support coming in v2 cuz i cant make breaking changes)
 - texture constants namespace(s) in ui
+- include feature list in metadata
 
 **Fixed**
 
