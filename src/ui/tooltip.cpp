@@ -271,16 +271,12 @@ namespace nwo5::ui {
     }
 
     ListenerHandle TooltipInfo::listener = UserObjectSetEvent("tooltip"_spr).listen([] (CCNode* pNode, CCObject* pObject) {
-        log::error("called");
-
         if (set.contains(pNode)) {
             set.erase(pNode);
         }
         if (auto info = typeinfo_cast<TooltipInfo*>(pObject)) {
             set.insert(pNode);
             info->m_node = pNode;
-
-            log::error("added");
         }
     });
 
