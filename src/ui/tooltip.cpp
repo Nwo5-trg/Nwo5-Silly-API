@@ -92,6 +92,9 @@ namespace nwo5::ui {
             .order(10)
             .hide();
 
+
+        this->updateText("");
+
         this->addEventListener(MouseMoveEvent(), [this] (int32_t, int32_t) {
             if (!this->getParent()) {
                 return;
