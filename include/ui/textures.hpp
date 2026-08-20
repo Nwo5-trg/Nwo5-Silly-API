@@ -20,11 +20,6 @@ namespace nwo5::ui {
         static constexpr auto MESSAGE = "geode.loader/message.png";
 
         // @geode-ignore(unknown-resource)
-        static constexpr auto INSTALL = "geode.loader/install.png";
-        // @geode-ignore(unknown-resource)
-        static constexpr auto DOWNLOAD = "geode.loader/install.png";
-
-        // @geode-ignore(unknown-resource)
         static constexpr auto ALERT = "geode.loader/info-alert.png";
         // @geode-ignore(unknown-resource)
         static constexpr auto ERROR = "geode.loader/info-alert.png";
@@ -108,7 +103,12 @@ namespace nwo5::ui {
 
         static constexpr auto CHECK = "GJ_completesIcon_001.png";
         
+        static constexpr auto INSTALL = "GJ_downloadsIcon_001.png";
         static constexpr auto DOWNLOAD = "GJ_downloadsIcon_001.png";
+        // @geode-ignore(unknown-resource)
+        static constexpr auto INSTALL_ALT = "geode.loader/install.png";
+        // @geode-ignore(unknown-resource)
+        static constexpr auto DOWNLOAD_ALT = "geode.loader/install.png";
 
         static constexpr auto TRASH = "edit_delBtn_001.png";
 
