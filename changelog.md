@@ -1,3 +1,15 @@
+## v1.12.0
+**Added**
+
+- for each obj
+- priority param to setupkeybind
+- a few new textures
+
+**Fixed**
+
+- make group labels properly update with trigger functions
+- tooltip anchor
+
 ## v1.11.0
 **Added**
 

@@ -5,6 +5,11 @@
 namespace nwo5::editor::object {
     SILLY_API_DLL size_t count();
 
+    /// calls callback for every object active in section
+    /// prevter iirc
+    /// @param pCallback callback
+    SILLY_API_DLL void forEachInSection(geode::Function<void(GameObject*)> pCallback);
+
     SILLY_API_DLL cocos2d::CCArray* getAll(bool pCopy = false);
     /// @note will copy anyway (creating a new empty ccarray) if pGroup doesnt have a m_groupDict entry
     SILLY_API_DLL cocos2d::CCArray* getWithGroup(int pGroup, bool pCopy = false);

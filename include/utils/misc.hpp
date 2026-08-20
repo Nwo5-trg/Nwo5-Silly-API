@@ -73,9 +73,9 @@ namespace nwo5::utils {
     }
 
     template<typename Callback>
-    void setupKeybind(cocos2d::CCNode* pNode, std::string pKeybind, Callback&& pCallback) {
+    void setupKeybind(cocos2d::CCNode* pNode, std::string pKeybind, Callback&& pCallback, int pPriority = geode::Priority::Normal) {
         // no string_view 3:
-        pNode->addEventListener(geode::KeybindSettingPressedEventV3(geode::Mod::get(), std::move(pKeybind)), std::forward<Callback>(pCallback));
+        pNode->addEventListener(geode::KeybindSettingPressedEventV3(geode::Mod::get(), std::move(pKeybind)), std::forward<Callback>(pCallback), pPriority);
     }
 
     /// convert between numbers and enums

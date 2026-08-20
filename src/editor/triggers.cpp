@@ -129,6 +129,8 @@ namespace nwo5::editor::trigger {
                 static_cast<EffectGameObject*>(pObj)->m_targetGroupID = pVal;
             break;}
         }
+        
+        editor::layer()->updateObjectLabel(pObj);
     }
     int target(GameObject* pObj) {
         return primaryTarget(pObj);
@@ -219,6 +221,8 @@ namespace nwo5::editor::trigger {
                 static_cast<EffectGameObject*>(pObj)->m_centerGroupID = pVal;
             break; }
         }
+
+        editor::layer()->updateObjectLabel(pObj);
     }
     int center(GameObject* pObj) {
         return secondaryTarget(pObj);
@@ -308,6 +312,8 @@ namespace nwo5::editor::trigger {
                 static_cast<EffectGameObject*>(pObj)->m_itemID = pVal;
             break; }
         }
+
+        editor::layer()->updateObjectLabel(pObj);
     }
     int identifier(GameObject* pObj) {
         return primaryInput(pObj);
@@ -363,6 +369,8 @@ namespace nwo5::editor::trigger {
                 static_cast<EffectGameObject*>(pObj)->m_itemID2 = pVal;
             break; }
         }
+
+        editor::layer()->updateObjectLabel(pObj);
     }
 
     bool hasDuration(int pID) {

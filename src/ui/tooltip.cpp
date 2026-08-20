@@ -13,7 +13,7 @@ namespace nwo5::ui {
         Setup(m_background).center();
         Setup(m_label).center();
     }
-    void Tooltip::updateVisible() {
+    void Tooltip::updateAutomatic() {
         if (!this->getParent()) {
             return;
         }
@@ -102,12 +102,13 @@ namespace nwo5::ui {
             
             if (this->m_followingMouse) {
                 this->setPosition(this->getParent()->convertToNodeSpace(cocos::getMousePos()));
-            }
-            if (this->m_dynamicAnchor) {
-                this->updateAnchor();
-            }
-            if (m_automatic) {
-                this->updateVisible();
+
+                if (m_automatic) {
+                    this->updateAutomatic();
+                }
+                if (this->m_dynamicAnchor) {
+                    this->updateAnchor();
+                }
             }
 
             if (m_updateFunc) {
@@ -115,13 +116,20 @@ namespace nwo5::ui {
             }
         });
         
-        this->addEventListener(ScrollWheelEvent(), [this] (int32_t, int32_t) {
+        this->addEventListener(ScrollWheelEvent(), [this] (double, double) {
             if (!this->getParent()) {
                 return;
             }
 
-            if (m_automatic) {
-                this->updateVisible();
+            if (this->m_followingMouse) {
+                this->setPosition(this->getParent()->convertToNodeSpace(cocos::getMousePos()));
+
+                if (m_automatic) {
+                    this->updateAutomatic();
+                }
+                if (this->m_dynamicAnchor) {
+                    this->updateAnchor();
+                }   
             }
 
             if (m_updateFunc) {
@@ -150,9 +158,10 @@ namespace nwo5::ui {
             return;
         }
 
-        const auto rect = this->boundingBox();
-        const auto min = parent->convertToWorldSpace(rect.origin);
-        const auto max = parent->convertToWorldSpace({rect.getMaxX(), rect.getMaxY()});
+        const CCPoint pos{ui::sw(this) * -m_defaultAnchor.x, ui::sh(this) * -m_defaultAnchor.y};
+
+        const auto min = parent->convertToWorldSpace(pos);
+        const auto max = parent->convertToWorldSpace(pos + ui::ssize(this));
 
         auto anchor = m_defaultAnchor;
 

@@ -8,6 +8,44 @@ namespace nwo5::editor::object {
         return getAll()->count();
     }
 
+    void forEach(geode::Function<void(GameObject*)> pCallback) {
+        if (notLoaded(LoadedType::Editor)) {
+            return;
+        }
+
+        auto game = editor::layer();
+
+        const int count = game->m_sections.empty() ? -1 : game->m_sections.size();
+
+        for (int i = game->m_leftSectionIndex; i <= game->m_rightSectionIndex && i < count; i++) {
+            auto leftSection = game->m_sections[i];
+            
+            if (!leftSection) {
+                continue;
+            }
+
+            const auto leftSectionSize = leftSection->size();
+
+            for (int j = game->m_bottomSectionIndex; j <= game->m_topSectionIndex && j < leftSectionSize; j++) {
+                auto section = leftSection->at(j);
+
+                if (!section) {
+                    continue;
+                }
+
+                const auto sectionSize = game->m_sectionSizes[i]->at(j);
+
+                for (int k = 0; k < sectionSize; k++) {
+                    auto obj = section->at(k);
+                    
+                    if (obj) {
+                        pCallback(obj);
+                    }
+                }
+            }
+        }
+    }
+
     CCArray* getAll(bool pCopy) {
         return loaded(LoadedType::Editor) ? (pCopy ? CCArray::createWithArray(layer()->m_objects) : layer()->m_objects) : CCArray::create();
     }

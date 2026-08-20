@@ -2,6 +2,60 @@
 
 namespace nwo5::ui {
     namespace frame {
+        // @geode-ignore(unknown-resource)
+        static constexpr auto GEAR = "geode.loader/settings.png";
+        // @geode-ignore(unknown-resource)
+        static constexpr auto COG = "geode.loader/settings.png";
+        // @geode-ignore(unknown-resource)
+        static constexpr auto OPTIONS = "geode.loader/settings.png";
+
+        // @geode-ignore(unknown-resource)
+        static constexpr auto MAGNIFYING_GLASS = "geode.loader/search.png";
+        // @geode-ignore(unknown-resource)
+        static constexpr auto SEARCH = "geode.loader/search.png";
+
+        // @geode-ignore(unknown-resource)
+        static constexpr auto COMMENT = "geode.loader/message.png";
+        // @geode-ignore(unknown-resource)
+        static constexpr auto MESSAGE = "geode.loader/message.png";
+
+        // @geode-ignore(unknown-resource)
+        static constexpr auto INSTALL = "geode.loader/install.png";
+        // @geode-ignore(unknown-resource)
+        static constexpr auto DOWNLOAD = "geode.loader/install.png";
+
+        // @geode-ignore(unknown-resource)
+        static constexpr auto ALERT = "geode.loader/info-alert.png";
+        // @geode-ignore(unknown-resource)
+        static constexpr auto ERROR = "geode.loader/info-alert.png";
+        // @geode-ignore(unknown-resource)
+        static constexpr auto WARNING = "geode.loader/info-warning.png";
+
+        // @geode-ignore(unknown-resource)
+        static constexpr auto PIN = "geode.loader/pin.png";
+        
+        // @geode-ignore(unknown-resource)
+        static constexpr auto GLOBE = "geode.loader/globe.png";
+
+        // @geode-ignore(unknown-resource)
+        static constexpr auto RESET = "geode.loader/reset.png";
+        // @geode-ignore(unknown-resource)
+        static constexpr auto YELLOW_RESET = "geode.loader/reset-gold.png";
+
+        // @geode-ignore(unknown-resource)
+        static constexpr auto RELOAD = "geode.loader/reload.png";
+        // @geode-ignore(unknown-resource)
+        static constexpr auto YELLOW_RELOAD = "geode.loader/reload-gold.png";
+
+        // @geode-ignore(unknown-resource)
+        static constexpr auto SAVE = "geode.loader/save.png";
+
+        // @geode-ignore(unknown-resource)
+        static constexpr auto UPDATE = "geode.loader/update.png";
+
+        // @geode-ignore(unknown-resource)
+        static constexpr auto FILE = "geode.loader/file.png";
+
         static constexpr auto GREEN_ARROW = "GJ_arrow_01_001.png";
         static constexpr auto BLUE_ARROW = "GJ_arrow_02_001.png";
         static constexpr auto PINK_ARROW = "GJ_arrow_03_001.png";
@@ -19,6 +73,8 @@ namespace nwo5::ui {
         static constexpr auto CCW_ARROW = "edit_ccwBtn_001.png";
 
         static constexpr auto RED_X = "GJ_deleteIcon_001.png";
+        // @geode-ignore(unknown-resource)
+        static constexpr auto YELLOW_X = "geode.loader/close.png";
 
         static constexpr auto LOCK = "GJ_lock_001.png";
         static constexpr auto OPEN_LOCK = "GJ_lock_open_001.png";

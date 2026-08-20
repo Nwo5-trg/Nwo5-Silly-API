@@ -22,7 +22,7 @@ namespace nwo5::ui {
         float m_padding = 5.0f;
 
         void updateText(geode::ZStringView pText);
-        void updateVisible();
+        void updateAutomatic();
 
         bool init(geode::ZStringView pFont, bool pFollowMouse, bool pAutomatic);
     public:
