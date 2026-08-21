@@ -1541,17 +1541,20 @@ namespace nwo5::editor::trigger {
     SILLY_API_DLL Category category(int pID);
     SILLY_API_DLL Category category(GameObject* pObj);
 
-    /// this took a while
+    /// color of trigger sprite
+    /// @returns static trigger color (unfinished)
     SILLY_API_DLL cocos2d::ccColor3B color(int pID);
-    /// returns target color for color trigger/pulse so that might be useful :3
+    /// color of trigger sprite
+    /// @returns static trigger color or target color for color trigger/pulse so that might be useful :3
     SILLY_API_DLL cocos2d::ccColor3B color(GameObject* pObj);
 
     /// check if activate group enabled, e.g. toggle 
     /// @note touch trigger always reutrns false
-    /// @returns false if trigger doesnt supprot option, activate group enabled otherwise
+    /// @returns false if trigger doesnt support option, activate group enabled otherwise
     SILLY_API_DLL bool activateGroup(GameObject* pObj);
     /// check if target mode enabled
     /// - target option in some shaders
+    /// - follow object in static camera trigger
     /// - target/direction mode in move trigger
     /// - aim/follow mode in rotation trigger
     /// @returns false if trigger doesnt support option, target mode enabled otherwise

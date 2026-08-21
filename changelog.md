@@ -9,6 +9,7 @@
 
 - make group labels properly update with trigger functions
 - tooltip anchor
+- some editor::triggers functions
 
 ## v1.11.0
 **Added**

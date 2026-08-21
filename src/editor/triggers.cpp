@@ -497,13 +497,14 @@ namespace nwo5::editor::trigger {
     }
 
     bool activateGroup(GameObject* pObj) {
-        return pObj->m_isActivated;
+        return is(pObj) ? static_cast<EffectGameObject*>(pObj)->m_activateGroup : false;
     }
     bool targetModeEnabled(GameObject* pObj) {
         switch (pObj->m_objectID) {
             case SHOCK_WAVE_SHADER_TRIGGER: [[__fallthrough__]];
             case SHOCK_LINE_SHADER_TRIGGER: [[__fallthrough__]];
             case RADIAL_BLUR_SHADER_TRIGGER: [[__fallthrough__]];
+            case STATIC_CAMERA_TRIGGER: return static_cast<CameraTriggerGameObject*>(pObj)->m_followObject;
             case BULGE_SHADER_TRIGGER: return static_cast<ShaderGameObject*>(pObj)->m_useX;
             case MOVE_TRIGGER: [[__fallthrough__]];
             case ROTATE_TRIGGER: return static_cast<EffectGameObject*>(pObj)->m_useMoveTarget || static_cast<EffectGameObject*>(pObj)->m_isDirectionFollowSnap360;
