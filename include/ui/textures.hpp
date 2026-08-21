@@ -22,8 +22,6 @@ namespace nwo5::ui {
         // @geode-ignore(unknown-resource)
         static constexpr auto ALERT = "geode.loader/info-alert.png";
         // @geode-ignore(unknown-resource)
-        static constexpr auto ERROR = "geode.loader/info-alert.png";
-        // @geode-ignore(unknown-resource)
         static constexpr auto WARNING = "geode.loader/info-warning.png";
 
         // @geode-ignore(unknown-resource)
