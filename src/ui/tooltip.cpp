@@ -158,7 +158,7 @@ namespace nwo5::ui {
             return;
         }
 
-        const CCPoint pos{ui::sw(this) * -m_defaultAnchor.x, ui::sh(this) * -m_defaultAnchor.y};
+        const auto pos = this->getPosition() + CCPoint{ui::sw(this) * m_defaultAnchor.x * 2 - 1, ui::sh(this) * m_defaultAnchor.y * 2 - 1};
 
         const auto min = parent->convertToWorldSpace(pos);
         const auto max = parent->convertToWorldSpace(pos + ui::ssize(this));
