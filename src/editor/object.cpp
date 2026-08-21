@@ -8,7 +8,7 @@ namespace nwo5::editor::object {
         return getAll()->count();
     }
 
-    void forEach(geode::Function<void(GameObject*)> pCallback) {
+    void forEachInSection(geode::Function<void(GameObject*)> pCallback) {
         if (notLoaded(LoadedType::Editor)) {
             return;
         }
