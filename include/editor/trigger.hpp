@@ -1308,6 +1308,15 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
+    constexpr int SCALE_ENTER_TRIGGER = 3019;
+    template<> struct impl::Trigger<SCALE_ENTER_TRIGGER> {
+        static constexpr TriggerInfo info{
+            InputType::EnterChannel, InputType::None, InputType::Effect, InputType::None, 
+            false, true, LabelType::None,
+            {255, 255, 255}, Category::AdvancedEnter // todo
+        };
+        using TriggerType = EffectGameObject;
+    };
     constexpr int FADE_ENTER_TRIGGER = 3020;
     template<> struct impl::Trigger<FADE_ENTER_TRIGGER> {
         static constexpr TriggerInfo info{
@@ -1460,6 +1469,7 @@ namespace nwo5::editor::trigger {
             arr[NO_ENTER_EFFECT_TRIGGER] = Info<NO_ENTER_EFFECT_TRIGGER>;
             arr[MOVE_ENTER_TRIGGER] = Info<MOVE_ENTER_TRIGGER>;
             arr[ROTATE_ENTER_TRIGGER] = Info<ROTATE_ENTER_TRIGGER>;
+            arr[SCALE_ENTER_TRIGGER] = Info<SCALE_ENTER_TRIGGER>;
             arr[FADE_ENTER_TRIGGER] = Info<FADE_ENTER_TRIGGER>;
             arr[TINT_ENTER_TRIGGER] = Info<TINT_ENTER_TRIGGER>;
             arr[ENTER_STOP_TRIGGER] = Info<ENTER_STOP_TRIGGER>;
