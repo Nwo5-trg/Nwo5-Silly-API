@@ -525,7 +525,7 @@ namespace nwo5::editor::trigger {
             false, false, LabelType::Item,
             {255, 108, 0}, Category::Other
         };
-        using TriggerType = EffectGameObject;
+        using TriggerType = CountTriggerGameObject;
     };
     constexpr int TIME_TRIGGER = 3614;
     template<> struct impl::Trigger<TIME_TRIGGER> {
