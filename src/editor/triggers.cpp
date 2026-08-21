@@ -17,7 +17,7 @@ namespace nwo5::editor::trigger {
     }
 
     const TriggerInfo& get(int pID) {
-        static auto arr = impl::createTriggerInfoArray();
+        static const auto arr = impl::createTriggerInfoArray();
         
         if (pID < COLOR_TRIGGER || pID > constants::OBJECT_IDS) {
             return arr.front();
