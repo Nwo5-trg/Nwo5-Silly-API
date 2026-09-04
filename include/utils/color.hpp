@@ -1,4 +1,4 @@
-#pragma 
+#pragma once
 
 #include "../export.hpp"
 #include "misc.hpp"

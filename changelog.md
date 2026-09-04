@@ -1,3 +1,30 @@
+## v2.0.0
+**Added**
+
+- a couple editor events
+- renamed a couple Setup functions
+- make all ui/node functions return setup
+- reworked a couple ui/node functions
+- some more ui/node functions
+- more color utils
+- make ui functions use geode::Label
+- make nwo5::utils have alias misc in prelude instead of nutils
+- deprecated a few ui functions
+- reworked getchildquery (now nwo5::utils::Query)
+- more docs
+
+**Fixed**
+
+- make tooltips not break words by default
+- typo in gensettings
+- made saved setting events final
+- easing
+- smth smth function call ambiguous (fuck you ?????)
+
+**Internal**
+
+- update todo list and make it appear on repo
+
 ## v1.12.0
 **Added**
 

@@ -148,6 +148,9 @@ namespace nwo5::ui {
         static constexpr auto COG_BUTTON = "GJ_optionsBtn_001.png";
         static constexpr auto OPTIONS_BUTTON = "GJ_optionsBtn_001.png";
 
+        static constexpr auto COPY_BUTTON = "GJ_copyBtn_001.png";
+        static constexpr auto PASTE_BUTTON = "GJ_pasteBtn_001.png";
+
         static constexpr auto HELP_BUTTON = "GJ_helpBtn_001.png";
 
         static constexpr auto AUDIO_BUTTON = "GJ_fxOnBtn_001.png";

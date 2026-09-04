@@ -6,7 +6,7 @@
 # the only flag u can pass rn is -t which tries to shorten variable names that are prefixed with a title name
 #
 # limitations rn: (ill fix atleast some of these in the future)
-# - expects key to be in kebab-case and mod.json to be valid
+# - expects key to be in kebab-case
 # - expects mod.json to be valid
 # - uses 4 spaces for indenting and indents every setting
 # - brace initailizes settings

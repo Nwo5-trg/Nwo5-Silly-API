@@ -62,16 +62,36 @@ namespace nwo5::editor {
     /// LevelEditorLayer::m_playbackMode
     SILLY_API_DLL PlaybackMode playbackMode();
 
+    /// activate rotation control
+    /// @param pRefresh deactivate rotation control before activating it again
     SILLY_API_DLL void activateRotationControl(bool pRefresh = true);
+    /// deactivate rotation control
+    SILLY_API_DLL void deactivateRotationControl();
+    /// activate scale control
+    /// @param pXY show xy control instead of normal scale control
+    /// @param pRefresh deactivate scale control before activating it again
     SILLY_API_DLL void activateScaleControl(bool pXY, bool pRefresh = true);
+    /// deactivate scale control
+    SILLY_API_DLL void deactivateScaleControl();
+    /// activate transform control
+    /// @param pRefresh deactivate transform control before activating it again
     SILLY_API_DLL void activateTransformControl(bool pRefresh = true);
+    /// deactivate transform control
+    SILLY_API_DLL void deactivateTransformControl();
 
     /// get current layer
     /// @returns current layer or editor::constants::ALL_LAYERS if editor not loaded
     SILLY_API_DLL int currentLayer();
-    /// get if layer is selectable
+    /// get if layer is currently selectable
+    /// @param pLayer layer
+    /// @param pIgnoreLocked if a layer is locked but otherwise selectable, still return true
+    /// @returns if layer is currently selectable
     SILLY_API_DLL bool layerSelectable(int pLayer = currentLayer(), bool pIgnoreLocked = false);
+    /// get if layer is locked
+    /// @param pLayer
+    /// @returns if layer is locked
     SILLY_API_DLL bool layerLocked(int pLayer = currentLayer());
+    /// set current layer to pLayer
     SILLY_API_DLL void setLayer(int pLayer);
     SILLY_API_DLL void lockLayer(int pLayer, bool pLock);
 
@@ -82,6 +102,7 @@ namespace nwo5::editor {
     SILLY_API_DLL int nextFreeGroup(int pOffset = 1, bool pCheckTargetGroups = false);
 
     /// saves current level
+    /// @note does nothing if playtesting
     SILLY_API_DLL void save();
 
     namespace impl {
@@ -159,6 +180,8 @@ namespace nwo5::editor {
             unregisterEditTabButton(pKey);
         }
     }
+    /// update editor tab buttons (e.g. a button is registered/unregistered)
+    /// @note automatically called usually
     SILLY_API_DLL void updateEditorTabButtons();
 
     constexpr cocos2d::CCPoint AUTO_CENTER{std::numeric_limits<float>::max() - 1.0f, std::numeric_limits<float>::max() - 1.0f};

@@ -1,4 +1,4 @@
-#pragma 
+#pragma once
 
 #include "../export.hpp"
 
@@ -10,13 +10,12 @@ namespace nwo5::utils::array {
     SILLY_API_DLL void remove(cocos2d::CCArray* pArray, cocos2d::CCArray* pOther, bool pRelease = false);
     SILLY_API_DLL cocos2d::CCArray* shared(cocos2d::CCArray* pArray, cocos2d::CCArray* pOther);
     SILLY_API_DLL std::optional<ArrayIndex> find(cocos2d::CCArray* pArray, cocos2d::CCObject* pObj);
-    template<typename Condition>
-    requires std::is_invocable_r_v<bool, Condition, cocos2d::CCObject*>
-    std::optional<ArrayIndex> find(cocos2d::CCArray* pArray, Condition pCondition) {
+    template<typename ImplT = cocos2d::CCObject, typename T = std::remove_pointer_t<ImplT>, std::predicate<T*> Condition>
+    std::optional<ArrayIndex> find(cocos2d::CCArray* pArray, Condition&& pCondition) {
         const auto size = pArray->count();
 
         for (ArrayIndex i = 0; i < size; i++) {
-            if (pCondition(pArray->objectAtIndex(i))) {
+            if (pCondition(static_cast<T*>(pArray->objectAtIndex(i)))) {
                 return i;
             }
         }
@@ -24,9 +23,8 @@ namespace nwo5::utils::array {
         return std::nullopt;
     }
     SILLY_API_DLL bool contains(cocos2d::CCArray* pArray, cocos2d::CCObject* pObj);
-    template<typename Condition>
-    requires std::is_invocable_r_v<bool, Condition, cocos2d::CCObject*>
-    bool contains(cocos2d::CCArray* pArray, Condition pCondition) {
+    template<typename ImplT = cocos2d::CCObject, typename T = std::remove_pointer_t<ImplT>, std::predicate<T*> Condition>
+    bool contains(cocos2d::CCArray* pArray, Condition&& pCondition) {
         return find(pArray, std::forward<Condition>(pCondition)).has_value();
     }
     SILLY_API_DLL cocos2d::CCArray* before(cocos2d::CCArray* pArray, cocos2d::CCObject* pObj, bool pInclusive = true);

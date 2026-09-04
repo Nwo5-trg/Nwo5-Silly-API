@@ -3,6 +3,7 @@
 #include "nodes.hpp"
 #include "misc.hpp"
 #include "color.hpp"
+#include "color-type.hpp"
 #include "easings.hpp"
 #include "array.hpp"
 #include "drawnode.hpp"
@@ -10,24 +11,25 @@
 #include <ranges>
 
 namespace nwo5::utils::prelude {
-    namespace nutils = nwo5::utils;
+    namespace misc = nwo5::utils;
     namespace array = nwo5::utils::array;
 
     using array::ArrayIndex;
 
-    using nutils::enum_cast, nutils::color_cast;
+    using misc::enum_cast, misc::color_cast;
 
-    using nutils::ccMax, nutils::ccMin, nutils::ccAdd, 
-    nutils::ccSub, nutils::ccMul, nutils::ccDiv;
+    using misc::ccMax, misc::ccMin, misc::ccAdd, 
+    misc::ccSub, misc::ccMul, misc::ccDiv;
 
-    using nutils::EasingFunction;
+    using misc::EasingFunction;
 
-    using nutils::SillyDrawNode;
+    using misc::SillyDrawNode;
 
-    using nutils::SillyHSV;
+    using misc::SillyHSV;
 
-    using nutils::CLEAR_COLOR;
+    using misc::CLEAR_COLOR;
 
-    using nutils::GetChildQuery, nutils::GetChildQueryID, nutils::GetChildQueryIndex,
-    nutils::GetChildQueryType;
+    using misc::Query;
+
+    using misc::Col;
 }

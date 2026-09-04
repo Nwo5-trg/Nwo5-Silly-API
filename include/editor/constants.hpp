@@ -28,6 +28,8 @@ namespace nwo5::editor::constants {
 
     constexpr int OBJECT_IDS = 4539;
 
+    /// convert speed enum to units per seccond
+    /// @returns units per second for speed
     constexpr float toSpeed(Speed pSpeed) {
         switch (pSpeed) {
             case Speed::Normal: return NORMAL_SPEED;

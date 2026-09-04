@@ -134,8 +134,8 @@ namespace nwo5::editor {
                         const auto& key = data.key;
 
                         if (
-                            nwo5::utils::array::find(buttonArray, [key] (auto pPtr) {
-                                return pPtr && static_cast<CCNode*>(pPtr)->getID() == key;
+                            nwo5::utils::array::find<CCNode*>(buttonArray, [key] (auto pPtr) {
+                                return pPtr && pPtr->getID() == key;
                             }).has_value()
                         ) {
                             continue;
@@ -336,13 +336,18 @@ namespace nwo5::editor {
         }
 
         if (pRefresh) {
-            ui()->deactivateRotationControl();
+            deactivateRotationControl();
         }
         else if (ui()->m_rotationControl->isVisible()) {
             return;
         }
 
         ui()->activateRotationControl(nullptr);
+    }
+    void deactivateRotationControl() {
+        if (loaded(LoadedType::UI) && ui()->m_rotationControl && ui()->m_rotationControl->isVisible()) {
+            ui()->deactivateRotationControl();
+        }
     }
     void activateScaleControl(bool pXY, bool pRefresh) {
         if (notLoaded(LoadedType::UI)) {
@@ -354,13 +359,18 @@ namespace nwo5::editor {
         }
 
         if (pRefresh) {
-            ui()->deactivateScaleControl();
+            deactivateScaleControl();
         }
         else if (ui()->m_scaleControl->isVisible()) {
             return;
         }
 
         ui()->activateScaleControl(nwo5::utils::CCTag::create(pXY ? 30 : 29));
+    }
+    void deactivateScaleControl() {
+        if (loaded(LoadedType::UI) && ui()->m_scaleControl && ui()->m_scaleControl->isVisible()) {
+            ui()->deactivateScaleControl();
+        }
     }
     void activateTransformControl(bool pRefresh) {
         if (notLoaded(LoadedType::UI)) {
@@ -372,13 +382,18 @@ namespace nwo5::editor {
         }
 
         if (pRefresh) {
-            ui()->deactivateTransformControl();
+            deactivateTransformControl();
         }
         else if (ui()->m_transformControl->isVisible()) {
             return;
         }
 
         ui()->activateTransformControl(nullptr);
+    }
+    void deactivateTransformControl() {
+        if (loaded(LoadedType::UI) && ui()->m_transformControl && ui()->m_transformControl->isVisible()) {
+            ui()->deactivateTransformControl();
+        }
     }
 
     int currentLayer() {
@@ -479,7 +494,7 @@ namespace nwo5::editor {
     }
 
     void save() {
-        if (notLoaded(LoadedType::Editor)) {
+        if (notLoaded(LoadedType::Editor) || editor::isPlaytesting()) {
             return;
         }
         

@@ -3,15 +3,24 @@
 #include "editor.hpp"
 
 namespace nwo5::editor::object {
+    /// obj count for level
+    /// @returns object
     SILLY_API_DLL size_t count();
 
     /// calls callback for every object active in section
-    /// prevter iirc
+    /// prevter made this iirc
     /// @param pCallback callback
     SILLY_API_DLL void forEachInSection(geode::Function<void(GameObject*)> pCallback);
 
+    /// get all objects
+    /// @param pCopy whether to copy obj array (why)
+    /// @returns objs
     SILLY_API_DLL cocos2d::CCArray* getAll(bool pCopy = false);
+    /// get all objects with group
+    /// @param pGroup group
+    /// @param pCopy whether to copy obj array (why)
     /// @note will copy anyway (creating a new empty ccarray) if pGroup doesnt have a m_groupDict entry
+    /// @returns objs
     SILLY_API_DLL cocos2d::CCArray* getWithGroup(int pGroup, bool pCopy = false);
     /// get group parent
     /// @returns group parent or returns nullptr if group has no group parent
@@ -24,29 +33,46 @@ namespace nwo5::editor::object {
     /// get obj string seperated with ;
     SILLY_API_DLL std::string string(cocos2d::CCArray* pObjs);
     /// create basic object
+    /// @param pID obj id
     /// @param pSetup do the basic object setup (e.g. 0.5 duration default for triggers)
+    /// @returns obj created
     SILLY_API_DLL GameObject* createObject(int pID, bool pUndo = false, bool pSetup = true);
     /// create basic object
+    /// @param pID obj id
+    /// @param pPos pos to create obj at
     /// @param pSetup do the basic object setup (e.g. 0.5 duration default for triggers)
+    /// @returns obj created
     SILLY_API_DLL GameObject* createObject(int pID, cocos2d::CCPoint pPos, bool pUndo = false, bool pSetup = true);
     /// pretty much fmt::format("1,{},2,0,3,0,{}", pID, pArgs)
-    /// @note pArgs can have a leading comma
+    /// @param pID obj id
+    /// @param pArgs any additional config for the obj as an obj string, can include leading comma
+    /// @returns obj created
     SILLY_API_DLL GameObject* createObject(int pID, geode::ZStringView pArgs, bool pUndo = false);
     /// pretty much fmt::format("1,{},2,{},3,{},{}", pID, pPos.x, pPos.y, pArgs)
-    /// @note pArgs can have a leading comma
+    /// @param pID obj id
+    /// @param pPos pos to create obj at
+    /// @param pArgs any additional config for the obj as an obj string, can include leading comma
+    /// @note does *not* do basic obj setup (e.g. 0.5 duration default for triggers)
+    /// @returns obj created
     SILLY_API_DLL GameObject* createObject(int pID, cocos2d::CCPoint pPos, geode::ZStringView pArgs, bool pUndo = false);
     /// create object from string
+    /// @param pStr obj string
+    /// @returns objscreated
     SILLY_API_DLL GameObject* createObject(geode::ZStringView pStr, bool pUndo = false);
     /// create objects from string
+    /// @param pStr obj string
+    /// @returns objs created
     SILLY_API_DLL cocos2d::CCArray* createObjects(geode::ZStringView pStr, bool pUndo = false);
 
+    /// objects
     SILLY_API_DLL std::vector<int> groups(GameObject* pObj);
     SILLY_API_DLL std::vector<int> groups(std::span<GameObject* const> pObjs, bool pSort = false);
     SILLY_API_DLL std::vector<int> groups(cocos2d::CCArray* pObjs, bool pSort = false);
-    /// check if an object has groups
+    /// check if an object has any groups
     /// @returns true if object has any groups, false otherwise
     SILLY_API_DLL bool hasGroups(GameObject* pObj);
-    /// check if an object has a group
+    /// check if an object has a specific group
+    /// @param pGroup
     /// @returns true if object has group or group is 0
     SILLY_API_DLL bool hasGroup(GameObject* pObj, int pGroup);
     SILLY_API_DLL bool sharesGroup(std::span<GameObject* const> pObjs, int pGroup);
@@ -83,12 +109,36 @@ namespace nwo5::editor::object {
     /// @param pAddSize adds scaled content size of the objects to the position checked
     /// @returns bounds or CCRectZero, origin is the center of the bottom left most object, size is distance to the top right most objects center
     SILLY_API_DLL cocos2d::CCRect bounds(cocos2d::CCArray* pObjs, bool pAddSize = false);
-    SILLY_API_DLL cocos2d::CCPoint center(std::span<GameObject* const> pObjs, bool pIgnoreParent = false);
-    SILLY_API_DLL cocos2d::CCPoint center(cocos2d::CCArray* pObjs, bool pIgnoreParent = false);
+    /// get center of objects
+    /// @param pObjs objects
+    /// @param pIgnoreParent keep this as true its kinda broken rn lol
+    /// @returns center of bounds or parent group
+    SILLY_API_DLL cocos2d::CCPoint center(std::span<GameObject* const> pObjs, bool pIgnoreParent = true);
+    /// get center of objects
+    /// @param pObjs objects
+    /// @param pIgnoreParent keep this as true its kinda broken rn lol
+    /// @returns center of bounds
+    SILLY_API_DLL cocos2d::CCPoint center(cocos2d::CCArray* pObjs, bool pIgnoreParent = true);
 
+    /// cluster objects in place
+    /// @param pOut output vector
+    /// @param pObjs objects
+    /// @param pClusterSize cluster size
     SILLY_API_DLL void cluster(std::vector<std::vector<GameObject*>>& pOut, std::span<GameObject* const> pObjs, float pClusterSize);
+    /// cluster objects in place
+    /// @param pOut output vector
+    /// @param pObjs objects
+    /// @param pClusterSize cluster size
     SILLY_API_DLL void cluster(std::vector<std::vector<GameObject*>>& pOut, cocos2d::CCArray* pObjs, float pClusterSize);
+    /// cluster objects not in place (why)
+    /// @param pObjs objects
+    /// @param pClusterSize cluster size
+    /// @returns object clusters
     SILLY_API_DLL std::vector<std::vector<GameObject*>> cluster(std::span<GameObject* const> pObjs, float pClusterSize);
+    /// cluster objects not in place (why)
+    /// @param pObjs objects
+    /// @param pClusterSize cluster size
+    /// @returns object clusters
     SILLY_API_DLL std::vector<std::vector<GameObject*>> cluster(cocos2d::CCArray* pObjs, float pClusterSize);
 
     /// get (grid)size of object
@@ -102,29 +152,50 @@ namespace nwo5::editor::object {
     SILLY_API_DLL cocos2d::CCPoint snappedPos(GameObject* pObj, float pGridSize = 30.0f);
 
     /// move camera to obj and optionally zoom out
+    /// @param pObj object
     /// @param pZoomToFit zoom out to fit obj on screen
     /// @param pZoomBuffer *divide* zoom by this
     /// @param pMinimumZoom clamps zoom to this
     /// @param pMaximumZoom clamps zoom to this
     SILLY_API_DLL void moveTo(GameObject* pObj, bool pZoomToFit = true, float pZoomBuffer = 1.5f, float pMinimumZoom = 0.0f, float pMaximumZoom = editor::zoom());
     /// move camera to objs and optionally zoom out
+    /// @param pObjs objects (gets center)
     /// @param pZoomToFit zoom out to fit objs on screen
     /// @param pZoomBuffer *divide* zoom by this
     /// @param pMinimumZoom clamps zoom to this
     /// @param pMaximumZoom clamps zoom to this
     SILLY_API_DLL void moveTo(std::span<GameObject* const> pObjs, bool pZoomToFit = true, float pZoomBuffer = 1.5f, float pMinimumZoom = 0.0f, float pMaximumZoom = editor::zoom());
     /// move camera to objs and optionally zoom out
+    /// @param pObjs objects (gets center)
     /// @param pZoomToFit zoom out to fit objs on screen
     /// @param pZoomBuffer *divide* zoom by this
     /// @param pMinimumZoom clamps zoom to this
     /// @param pMaximumZoom clamps zoom to this
     SILLY_API_DLL void moveTo(cocos2d::CCArray* pObjs, bool pZoomToFit = true, float pZoomBuffer = 1.5f, float pMinimumZoom = 0.0f, float pMaximumZoom = editor::zoom());
 
+    /// add group to object
+    /// @param pObj target
+    /// @param pGroup group
     SILLY_API_DLL void addGroup(GameObject* pObj, int pGroup);
+    /// add group to objects
+    /// @param pObjs targets
+    /// @param pGroup group
     SILLY_API_DLL void addGroup(std::span<GameObject* const> pObjs, int pGroup);
+    /// add group to objects
+    /// @param pObjs targets
+    /// @param pGroup group
     SILLY_API_DLL void addGroup(cocos2d::CCArray* pObjs, int pGroup);
+    /// remove group from object
+    /// @param pObj targets
+    /// @param pGroup group
     SILLY_API_DLL void removeGroup(GameObject* pObj, int pGroup);
+    /// remove group from objects
+    /// @param pObjs targets
+    /// @param pGroup group
     SILLY_API_DLL void removeGroup(std::span<GameObject* const> pObjs, int pGroup);
+    /// remove group from objects
+    /// @param pObjs targets
+    /// @param pGroup group
     SILLY_API_DLL void removeGroup(cocos2d::CCArray* pObjs, int pGroup);
 
     /// deletes object

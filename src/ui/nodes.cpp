@@ -3,107 +3,116 @@
 using namespace geode::prelude;
 
 namespace nwo5::ui {
-    CCMenuItemSpriteExtra* button(CCNode* pTop, CCObject* pTarget, SEL_MenuHandler pCallback) {
+    Setup<CCMenuItemSpriteExtra> button(CCNode* pTop, CCObject* pTarget, SEL_MenuHandler pCallback) {
         return CCMenuItemSpriteExtra::create(pTop, pTarget, pCallback);
     }
-    CCMenuItemSpriteExtra* button(CCNode* pTop, Function<void(CCMenuItemSpriteExtra*)> pCallback) {
+    Setup<CCMenuItemSpriteExtra> button(CCNode* pTop, Function<void(CCMenuItemSpriteExtra*)> pCallback) {
         return CCMenuItemExt::createSpriteExtra(pTop, std::move(pCallback));
     }
-    CCMenuItemSpriteExtra* buttonSprite(ZStringView pName, CCObject* pTarget, SEL_MenuHandler pCallback, float pScale) {
+    Setup<CCMenuItemSpriteExtra> buttonSprite(ZStringView pName, CCObject* pTarget, SEL_MenuHandler pCallback, float pScale) {
         return CCMenuItemSpriteExtra::create(CCSprite::create(pName.c_str()), pTarget, pCallback);
     }
-    CCMenuItemSpriteExtra* buttonSprite(ZStringView pName, Function<void(CCMenuItemSpriteExtra*)> pCallback, float pScale) {
+    Setup<CCMenuItemSpriteExtra> buttonSprite(ZStringView pName, Function<void(CCMenuItemSpriteExtra*)> pCallback, float pScale) {
         return CCMenuItemExt::createSpriteExtraWithFilename(pName, pScale, std::move(pCallback));
     }
-    CCMenuItemSpriteExtra* buttonFrame(ZStringView pName, CCObject* pTarget, SEL_MenuHandler pCallback, float pScale) {
+    Setup<CCMenuItemSpriteExtra> buttonFrame(ZStringView pName, CCObject* pTarget, SEL_MenuHandler pCallback, float pScale) {
         return CCMenuItemSpriteExtra::create(CCSprite::createWithSpriteFrameName(pName.c_str()), pTarget, pCallback);
     }
-    CCMenuItemSpriteExtra* buttonFrame(ZStringView pName, Function<void(CCMenuItemSpriteExtra*)> pCallback, float pScale) {
+    Setup<CCMenuItemSpriteExtra> buttonFrame(ZStringView pName, Function<void(CCMenuItemSpriteExtra*)> pCallback, float pScale) {
         return CCMenuItemExt::createSpriteExtraWithFrameName(pName, pScale, std::move(pCallback));
     }
-    CCMenuItemSpriteExtra* circleButton(CCNode* pTop, CircleBaseColor pColor, CCObject* pTarget, SEL_MenuHandler pCallback) {
+    Setup<CCMenuItemSpriteExtra> circleButton(CCNode* pTop, CircleBaseColor pColor, CCObject* pTarget, SEL_MenuHandler pCallback) {
         return CCMenuItemSpriteExtra::create(CircleButtonSprite::create(pTop, pColor), pTarget, pCallback);
     }
-    CCMenuItemSpriteExtra* circleButton(CCNode* pTop, CircleBaseColor pColor, Function<void(CCMenuItemSpriteExtra*)> pCallback) {
+    Setup<CCMenuItemSpriteExtra> circleButton(CCNode* pTop, CircleBaseColor pColor, Function<void(CCMenuItemSpriteExtra*)> pCallback) {
         return CCMenuItemExt::createSpriteExtra(CircleButtonSprite::create(pTop, pColor), std::move(pCallback));
     }
-    CCMenuItemSpriteExtra* circleButtonSprite(ZStringView pName, CircleBaseColor pColor, CCObject* pTarget, SEL_MenuHandler pCallback, float pScale) {
+    Setup<CCMenuItemSpriteExtra> circleButtonSprite(ZStringView pName, CircleBaseColor pColor, CCObject* pTarget, SEL_MenuHandler pCallback, float pScale) {
         return CCMenuItemSpriteExtra::create(CircleButtonSprite::createWithSprite(pName.c_str(), pScale, pColor), pTarget, pCallback);
     }
-    CCMenuItemSpriteExtra* circleButtonSprite(ZStringView pName, CircleBaseColor pColor, Function<void(CCMenuItemSpriteExtra*)> pCallback, float pScale) {
+    Setup<CCMenuItemSpriteExtra> circleButtonSprite(ZStringView pName, CircleBaseColor pColor, Function<void(CCMenuItemSpriteExtra*)> pCallback, float pScale) {
         return CCMenuItemExt::createSpriteExtra(CircleButtonSprite::createWithSprite(pName.c_str(), pScale, pColor), std::move(pCallback));
     }
-    CCMenuItemSpriteExtra* circleButtonFrame(ZStringView pName, CircleBaseColor pColor, CCObject* pTarget, SEL_MenuHandler pCallback, float pScale) {
+    Setup<CCMenuItemSpriteExtra> circleButtonFrame(ZStringView pName, CircleBaseColor pColor, CCObject* pTarget, SEL_MenuHandler pCallback, float pScale) {
         return CCMenuItemSpriteExtra::create(CircleButtonSprite::createWithSpriteFrameName(pName.c_str(), pScale, pColor), pTarget, pCallback);
     }
-    CCMenuItemSpriteExtra* circleButtonFrame(ZStringView pName, CircleBaseColor pColor, Function<void(CCMenuItemSpriteExtra*)> pCallback, float pScale) {
+    Setup<CCMenuItemSpriteExtra> circleButtonFrame(ZStringView pName, CircleBaseColor pColor, Function<void(CCMenuItemSpriteExtra*)> pCallback, float pScale) {
         return CCMenuItemExt::createSpriteExtra(CircleButtonSprite::createWithSpriteFrameName(pName.c_str(), pScale, pColor), std::move(pCallback));
     }
 
-    CCMenuItemToggler* toggler(CCNode* pOff, CCNode* pOn, CCObject* pTarget, SEL_MenuHandler pCallback) {
+    Setup<CCMenuItemToggler> toggler(CCNode* pOff, CCNode* pOn, CCObject* pTarget, SEL_MenuHandler pCallback) {
         return CCMenuItemToggler::create(pOff, pOn, pTarget, pCallback);
     }
-    CCMenuItemToggler* toggler(CCNode* pOff, CCNode* pOn, Function<void(CCMenuItemToggler*)> pCallback) {
+    Setup<CCMenuItemToggler> toggler(CCNode* pOff, CCNode* pOn, Function<void(CCMenuItemToggler*)> pCallback) {
         return CCMenuItemExt::createToggler(pOff, pOn, std::move(pCallback));
     }
-    CCMenuItemToggler* togglerBase(CCObject* pTarget, SEL_MenuHandler pCallback, float pScale) {
+    Setup<CCMenuItemToggler> togglerBase(CCObject* pTarget, SEL_MenuHandler pCallback, float pScale) {
         return CCMenuItemToggler::createWithStandardSprites(pTarget, pCallback, pScale);
     }
-    CCMenuItemToggler* togglerBase(Function<void(CCMenuItemToggler*)> pCallback, float pScale) {
+    Setup<CCMenuItemToggler> togglerBase(Function<void(CCMenuItemToggler*)> pCallback, float pScale) {
         return CCMenuItemExt::createTogglerWithStandardSprites(pScale, std::move(pCallback));
     }
-    CCMenuItemToggler* togglerSprite(ZStringView pOff, ZStringView pOn, CCObject* pTarget, SEL_MenuHandler pCallback, float pOffScale, float pOnScale) {
+    Setup<CCMenuItemToggler>  togglerSprite(ZStringView pOff, ZStringView pOn, CCObject* pTarget, SEL_MenuHandler pCallback, float pOffScale, float pOnScale) {
         auto off = CCSprite::create(pOff.c_str());
         auto on = CCSprite::create(pOn.c_str());
         off->setScale(pOffScale);
         on->setScale(pOnScale);
         return CCMenuItemToggler::create(off, on, pTarget, pCallback);
     }
-    CCMenuItemToggler* togglerSprite(ZStringView pOff, ZStringView pOn, Function<void(CCMenuItemToggler*)> pCallback, float pOffScale, float pOnScale) {
+    Setup<CCMenuItemToggler>  togglerSprite(ZStringView pOff, ZStringView pOn, Function<void(CCMenuItemToggler*)> pCallback, float pOffScale, float pOnScale) {
         auto off = CCSprite::create(pOff.c_str());
         auto on = CCSprite::create(pOn.c_str());
         off->setScale(pOffScale);
         on->setScale(pOnScale);
         return CCMenuItemExt::createToggler(off, on, std::move(pCallback));
     }
-    CCMenuItemToggler* togglerFrame(ZStringView pOff, ZStringView pOn, CCObject* pTarget, SEL_MenuHandler pCallback, float pOffScale, float pOnScale) {
+    Setup<CCMenuItemToggler>  togglerFrame(ZStringView pOff, ZStringView pOn, CCObject* pTarget, SEL_MenuHandler pCallback, float pOffScale, float pOnScale) {
         auto off = CCSprite::createWithSpriteFrameName(pOff.c_str());
         auto on = CCSprite::createWithSpriteFrameName(pOn.c_str());
         off->setScale(pOffScale);
         on->setScale(pOnScale);
         return CCMenuItemToggler::create(off, on, pTarget, pCallback);
     }
-    CCMenuItemToggler* togglerFrame(ZStringView pOff, ZStringView pOn, Function<void(CCMenuItemToggler*)> pCallback, float pOffScale, float pOnScale) {
+    Setup<CCMenuItemToggler>  togglerFrame(ZStringView pOff, ZStringView pOn, Function<void(CCMenuItemToggler*)> pCallback, float pOffScale, float pOnScale) {
         auto off = CCSprite::createWithSpriteFrameName(pOff.c_str());
         auto on = CCSprite::createWithSpriteFrameName(pOn.c_str());
         off->setScale(pOffScale);
         on->setScale(pOnScale);
         return CCMenuItemExt::createToggler(off, on, std::move(pCallback));
     }
-    CCMenuItemToggler* circleToggler(CCNode* pOff, CircleBaseColor pOffColor, CCNode* pOn, CircleBaseColor pOnColor, CCObject* pTarget, SEL_MenuHandler pCallback) {
+    Setup<CCMenuItemToggler>  circleToggler(CCNode* pOff, CircleBaseColor pOffColor, CCNode* pOn, CircleBaseColor pOnColor, CCObject* pTarget, SEL_MenuHandler pCallback) {
         return CCMenuItemToggler::create(CircleButtonSprite::create(pOff, pOffColor), CircleButtonSprite::create(pOn, pOnColor), pTarget, pCallback);
     }
-    CCMenuItemToggler* circleToggler(CCNode* pOff, CircleBaseColor pOffColor, CCNode* pOn, CircleBaseColor pOnColor, Function<void(CCMenuItemToggler*)> pCallback) {
+    Setup<CCMenuItemToggler>  circleToggler(CCNode* pOff, CircleBaseColor pOffColor, CCNode* pOn, CircleBaseColor pOnColor, Function<void(CCMenuItemToggler*)> pCallback) {
         return CCMenuItemExt::createToggler(CircleButtonSprite::create(pOff, pOffColor), CircleButtonSprite::create(pOn, pOnColor), std::move(pCallback));
     }
-    CCMenuItemToggler* circleTogglerSprite(ZStringView pOff, CircleBaseColor pOffColor, ZStringView pOn, CircleBaseColor pOnColor, CCObject* pTarget, SEL_MenuHandler pCallback, float pOffScale, float pOnScale) {
+    Setup<CCMenuItemToggler>  circleTogglerSprite(ZStringView pOff, CircleBaseColor pOffColor, ZStringView pOn, CircleBaseColor pOnColor, CCObject* pTarget, SEL_MenuHandler pCallback, float pOffScale, float pOnScale) {
         return CCMenuItemToggler::create(CircleButtonSprite::createWithSprite(pOff.c_str(), pOffScale, pOffColor), CircleButtonSprite::createWithSprite(pOn.c_str(), pOnScale, pOnColor), pTarget, pCallback);
     }
-    CCMenuItemToggler* circleTogglerSprite(ZStringView pOff, CircleBaseColor pOffColor, ZStringView pOn, CircleBaseColor pOnColor, Function<void(CCMenuItemToggler*)> pCallback, float pOffScale, float pOnScale) {
+    Setup<CCMenuItemToggler>  circleTogglerSprite(ZStringView pOff, CircleBaseColor pOffColor, ZStringView pOn, CircleBaseColor pOnColor, Function<void(CCMenuItemToggler*)> pCallback, float pOffScale, float pOnScale) {
         return CCMenuItemExt::createToggler(CircleButtonSprite::createWithSprite(pOff.c_str(), pOffScale, pOffColor), CircleButtonSprite::createWithSprite(pOn.c_str(), pOnScale, pOnColor), std::move(pCallback));
     }
-    CCMenuItemToggler* circleTogglerFrame(ZStringView pOff, CircleBaseColor pOffColor, ZStringView pOn, CircleBaseColor pOnColor, CCObject* pTarget, SEL_MenuHandler pCallback, float pOffScale, float pOnScale) {
+    Setup<CCMenuItemToggler>  circleTogglerFrame(ZStringView pOff, CircleBaseColor pOffColor, ZStringView pOn, CircleBaseColor pOnColor, CCObject* pTarget, SEL_MenuHandler pCallback, float pOffScale, float pOnScale) {
         return CCMenuItemToggler::create(CircleButtonSprite::createWithSpriteFrameName(pOff.c_str(), pOffScale, pOffColor), CircleButtonSprite::createWithSpriteFrameName(pOn.c_str(), pOnScale, pOnColor), pTarget, pCallback);
     }
-    CCMenuItemToggler* circleTogglerFrame(ZStringView pOff, CircleBaseColor pOffColor, ZStringView pOn, CircleBaseColor pOnColor, Function<void(CCMenuItemToggler*)> pCallback, float pOffScale, float pOnScale) {
+    Setup<CCMenuItemToggler>  circleTogglerFrame(ZStringView pOff, CircleBaseColor pOffColor, ZStringView pOn, CircleBaseColor pOnColor, Function<void(CCMenuItemToggler*)> pCallback, float pOffScale, float pOnScale) {
         return CCMenuItemExt::createToggler(CircleButtonSprite::createWithSpriteFrameName(pOff.c_str(), pOffScale, pOffColor), CircleButtonSprite::createWithSpriteFrameName(pOn.c_str(), pOnScale, pOnColor), std::move(pCallback));
     }
 
-    CCLabelBMFont* label(ZStringView pText, ZStringView pFont) {
-        return CCLabelBMFont::create(pText.c_str(), pFont.c_str());
+    Setup<Label> label(ZStringView pFont) {
+        return Label::create(pFont);
+    }
+    Setup<Label> label(ZStringView pText, ZStringView pFont) {
+        return Label::create(pText, pFont);
+    }
+    Setup<Label> labelRich(ZStringView pFont) {
+        return Label::createRich("", pFont);
+    }
+    Setup<Label> labelRich(ZStringView pText, ZStringView pFont) {
+        return Label::createRich(pText, pFont);
     }
 
-    TextInput* input(CCSize pSize, std::optional<std::string> pPlaceholder, TextInputCallback pCallback) {
+    Setup<TextInput> input(CCSize pSize, std::optional<std::string> pPlaceholder, TextInputCallback pCallback) {
         const float scale = pSize.height / DEFAULT_TEXT_INPUT_HEIGHT;
 
         auto textInput = TextInput::create(pSize.width / scale, pPlaceholder.value_or(""));
@@ -112,24 +121,24 @@ namespace nwo5::ui {
 
         return textInput;
     }
-    TextInput* input(float pWidth, float pHeight, std::optional<std::string> pPlaceholder, TextInputCallback pCallback) {
+    Setup<TextInput> input(float pWidth, float pHeight, std::optional<std::string> pPlaceholder, TextInputCallback pCallback) {
         return input({pWidth, pHeight}, std::move(pPlaceholder), std::move(pCallback));
     }
-    TextInput* input(float pWidth, std::optional<std::string> pPlaceholder, TextInputCallback pCallback) {
+    Setup<TextInput> input(float pWidth, std::optional<std::string> pPlaceholder, TextInputCallback pCallback) {
         auto textInput = TextInput::create(pWidth, pPlaceholder.value());
         textInput->setCallback(std::move(pCallback));
 
         return textInput;
     }
 
-    CCMenu* menu(bool pIgnoreAnchor) {
+    Setup<CCMenu> menu(bool pIgnoreAnchor) {
         auto node = CCMenu::create();
         
         node->ignoreAnchorPointForPosition(pIgnoreAnchor);
 
         return node;
     }
-    CCMenu* menu(Layout* pLayout, bool pIgnoreAnchor) {
+    Setup<CCMenu> menu(Layout* pLayout, bool pIgnoreAnchor) {
         auto node = CCMenu::create();
 
         if (pLayout) {
@@ -141,87 +150,47 @@ namespace nwo5::ui {
         return node;
     }
 
-    CCNode* dummy() {
-        return CCNode::create();
+    Setup<CCNode> dummy(Layout* pLayout) {
+        auto node = CCNode::create();
+
+        if (pLayout) {
+            node->setLayout(pLayout);
+        }
+
+        return node;
     }
 
-    Setup<AxisLayout> row(Alignment pAlignment, float pGap, std::optional<Alignment> pCrossAlignment) {
-        auto layout = RowLayout::create()
-            ->setGap(pGap)
-            ->setAxisAlignment(pAlignment)
-            ->setGrowCrossAxis(false);
-        
-        if (pCrossAlignment.has_value()) {
-            layout
-                ->setGrowCrossAxis(true)
-                ->setCrossAxisAlignment(pCrossAlignment.value());
+    Setup<NineSlice> nineSlice(ZStringView pTexture, Layout* pLayout) {
+        auto node = NineSlice::create(pTexture);
+
+        if (pLayout) {
+            node->setLayout(pLayout);
         }
-        
-        return layout;
-    }
-    Setup<AxisLayout> row(Alignment pAlignment, std::optional<Alignment> pCrossAlignment) {
-        auto layout = RowLayout::create()
-            ->setAxisAlignment(pAlignment)
-            ->setGrowCrossAxis(false);
-        
-        if (pCrossAlignment.has_value()) {
-            layout
-                ->setGrowCrossAxis(true)
-                ->setCrossAxisAlignment(pCrossAlignment.value());
-        }
-        
-        return layout;
-    }
-    Setup<AxisLayout> column(Alignment pAlignment, float pGap, std::optional<Alignment> pCrossAlignment) {
-        auto layout = ColumnLayout::create()
-            ->setGap(pGap)
-            ->setAxisAlignment(pAlignment)
-            ->setGrowCrossAxis(false);
-        
-        if (pCrossAlignment.has_value()) {
-            layout
-                ->setGrowCrossAxis(true)
-                ->setCrossAxisAlignment(pCrossAlignment.value());
-        }
-        
-        return layout;
-    }
-    Setup<AxisLayout> column(Alignment pAlignment, std::optional<Alignment> pCrossAlignment) {
-        auto layout = ColumnLayout::create()
-            ->setAxisAlignment(pAlignment)
-            ->setGrowCrossAxis(false);
-        
-        if (pCrossAlignment.has_value()) {
-            layout
-                ->setGrowCrossAxis(true)
-                ->setCrossAxisAlignment(pCrossAlignment.value());
-        }
-        
-        return layout;
+
+        return node;
     }
 
-    AxisLayoutOptions* options() {
+    Setup<CCSprite> spr(ZStringView pTexture) {
+        return CCSprite::create(pTexture.c_str());
+    }
+    Setup<CCSprite> sprFrame(ZStringView pTexture) {
+        return CCSprite::createWithSpriteFrameName(pTexture.c_str());
+    }
+
+    Setup<AxisLayout> row() {
+        return RowLayout::create();
+    }
+    Setup<AxisLayout> column() {
+        return ColumnLayout::create();
+    }
+    Setup<AnchorLayout> anchor() {
+        return AnchorLayout::create();
+    }
+
+    Setup<AxisLayoutOptions> axisOptions() {
         return AxisLayoutOptions::create();
     }
-    AnchorLayoutOptions* anchorOptions() {
+    Setup<AnchorLayoutOptions> anchorOptions() {
         return AnchorLayoutOptions::create();
-    }
-
-    AxisLayout* horizontalDistrbLayout(float pGap, AxisAlignment pAlignment) {
-        return RowLayout::create()
-            ->setGap(pGap)
-            ->setAxisAlignment(pAlignment)
-            ->setAutoGrowAxis(true)
-            ->setGrowCrossAxis(false)
-            ->setAutoScale(false);
-
-    }
-    AxisLayout* verticalDistrbLayout(float pGap, AxisAlignment pAlignment) {
-        return ColumnLayout::create()
-            ->setGap(pGap)
-            ->setAxisAlignment(pAlignment)
-            ->setAutoGrowAxis(true)
-            ->setGrowCrossAxis(false)
-            ->setAutoScale(false);
     }
 }

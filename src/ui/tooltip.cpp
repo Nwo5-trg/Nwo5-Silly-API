@@ -76,22 +76,22 @@ namespace nwo5::ui {
         m_dynamicAnchor = pFollowMouse;
         m_automatic = pAutomatic;
 
-        m_background = Setup(NineSlice::create("square02_001.png"))
+        m_background = ui::nineSlice(ui::sprite::SQUARE)
             .id("background"_spr)
             .pos(CCPointZero)
             .opacity(127)
             .parent(this);
 
-        m_label = Setup(Label::create("", pFont))
+        m_label = ui::label(pFont)
             .id("label"_spr)
             .pos(CCPointZero)
             .maxWidth(300.0f - m_padding)
+            .breakWords(false)
             .parent(this);
 
         Setup(this)
             .order(10)
             .hide();
-
 
         this->updateText("");
 
