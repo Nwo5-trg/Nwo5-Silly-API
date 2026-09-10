@@ -41,30 +41,31 @@ namespace nwo5::utils {
                 return T{0.5} * std::pow(pX, pE);
             }
 
-            return T{0.5} * (T{2} - std::pow(T{2} - pX, pE));
+            return 1 - T{0.5} * std::pow(T{2} - pX, pE);
         }
         static T in(T pX, T pE) {
             return std::pow(pX, pE);
         }
         static T out(T pX, T pE) {
-            return 1 - std::pow(1 - pX, pE);
+            return std::pow(pX, 1 / pE);
         }
         static T elasticInOut(T pX, T pE) {
             if (pX == 0 || pX == 1) {
                 return pX;
             }
-            
+
+            pX *= 2;
+
             if (!pE) {
                 pE = T{0.3} * T{1.5};
             }
 
-            pX = pX * 2 - 1; 
+            pX -= 1;
 
             if (pX < 0) {
                 return -T{0.5} * std::pow(2, 10 * pX) * std::sin((pX - (pE / 4)) * (std::numbers::pi_v<T> * 2) / pE);
             }
-            else
-            {
+            else {
                 return std::pow(2, -10 * pX) * std::sin((pX - (pE / 4)) * (std::numbers::pi_v<T> * 2) / pE) * T{0.5} + 1;
             }
         }
