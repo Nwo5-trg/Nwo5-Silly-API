@@ -592,11 +592,11 @@ namespace nwo5::ui {
             return m_node;
         }
         Setup callback(geode::LazySprite::Callback pCallback) requires std::derived_from<Node, geode::LazySprite> {
-            m_node->setLoadCallback(pCallback);
+            m_node->setLoadCallback(std::move(pCallback));
             return m_node;
         }
         Setup callback(geode::SliderNode::SliderCallback pCallback) requires std::derived_from<Node, geode::SliderNode> {
-            m_node->setSlideCallback(pCallback);
+            m_node->setSlideCallback(std::move(pCallback));
             return m_node;
         }
         Setup callback(TextInputCallback pCallback) requires std::derived_from<Node, geode::TextInput> {
@@ -609,7 +609,7 @@ namespace nwo5::ui {
             return m_node;
         }
         Setup callbackSelect(geode::SliderNode::SliderCallback pCallback) requires std::derived_from<Node, geode::SliderNode> {
-            m_node->setClickCallback(pCallback);
+            m_node->setClickCallback(std::move(pCallback));
             return m_node;
         }
 
@@ -618,12 +618,12 @@ namespace nwo5::ui {
             return m_node;
         }
         Setup callbackUnselect(geode::SliderNode::SliderCallback pCallback) requires std::derived_from<Node, geode::SliderNode> {
-            m_node->setReleaseCallback(pCallback);
+            m_node->setReleaseCallback(std::move(pCallback));
             return m_node;
         }
 
         Setup callback(bool pEnabled) requires std::derived_from<Node, geode::TextInput> {
-            m_node->setCallbackEnabled(pEnabled);
+            m_node->setCallbackEnabled(std::move(pEnabled));
             return m_node;
         }
 
@@ -688,6 +688,15 @@ namespace nwo5::ui {
 
         Setup maxWidth(float pWidth, bool pValidate = true) requires std::derived_from<Node, geode::Label> {
             m_node->setMaxWidth(pWidth);
+
+            if (pValidate) {
+                m_node->validate();
+            }
+
+            return m_node;
+        }
+        Setup fitBox(cocos2d::CCSize pBox, float pMaxScale, bool pValidate = true) requires std::derived_from<Node, geode::Label> {
+            m_node->setFitBox(pBox, pMaxScale);
 
             if (pValidate) {
                 m_node->validate();

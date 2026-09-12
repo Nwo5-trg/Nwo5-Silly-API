@@ -60,7 +60,7 @@ namespace nwo5::utils {
             }
         } Gray;
         static constexpr impl::ColBase<{ 200, 200, 200, 255 }> LightGray;
-        static constexpr struct : impl::ColBase<{ 255, 0, 0, 255 }> {
+        static constexpr struct : impl::ColBase<{ 100, 100, 100, 255 }> {
             constexpr operator geode::EditorBaseColor() const {
                 return geode::EditorBaseColor::DarkGray;
             }

@@ -2,6 +2,7 @@
 **Fixed**
 
 - easing again
+- more stuff but like fuck documenting right
 
 ## v2.0.0
 **Added**
