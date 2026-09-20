@@ -42,51 +42,7 @@ namespace nwo5::editor::selection {
             return nullptr;
         }
     }
-    /// get vector specializations but typeinfo_cast instead of static_cast
-    template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
-    requires std::derived_from<T, GameObject>
-    std::vector<T*> getType() {
-        if constexpr (std::same_as<T, GameObject>) {
-            return get<T>();
-        }
-            
-        if (notLoaded()) {
-            return std::vector<T*>{};
-        }
-        else if (auto obj = ui()->m_selectedObject) {
-            if (geode::cast::typeinfo_cast<T*>(obj)) {
-                return {static_cast<T*>(obj)};
-            }
-            else {
-                return std::vector<T*>{};
-            }
-        }
-        else {
-            std::vector<T*> out;
-            auto objs = get();
-            out.reserve(objs->count());
-
-            for (auto obj : geode::cocos::CCArrayExt<T*>(objs)) {
-                if constexpr (std::derived_from<T, EffectGameObject>) {
-                    if (obj->m_classType != GameObjectClassType::Effect) {
-                        continue;
-                    }
-                }
-                else if constexpr (std::derived_from<T, EnhancedGameObject>) {
-                    if (obj->m_classType != GameObjectClassType::Enhanced) {
-                        continue;
-                    }
-                }
-
-                if (auto casted = geode::cast::typeinfo_cast<T*>(obj)) {
-                    out.push_back(casted);
-                }
-            }
-
-            return out;
-        }
-    }
-
+    
     SILLY_API_DLL bool empty();
     SILLY_API_DLL size_t count();
 

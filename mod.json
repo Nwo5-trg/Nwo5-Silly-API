@@ -7,10 +7,10 @@
 		"ios": "2.2081"
 	},
 	"id": "nwo5.silly-api",
-	"name": "Nwo5's Silly API",
-	"version": "v2.0.1",
+	"name": "Silly API",
+	"version": "v2.1.0",
 	"developer": "Nwo5",
-	"description": "api used in my mods :3",
+	"description": "silly editor and general util api :3",
 	"tags": ["developer", "api"],
 	"links": {
 		"source": "https://github.com/Nwo5-trg/Nwo5-Silly-API",

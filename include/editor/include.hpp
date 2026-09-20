@@ -5,6 +5,7 @@
 #include "selection.hpp"
 #include "constants.hpp"
 #include "trigger.hpp"
+#include "filter.hpp"
 #include "events.hpp"
 
 namespace nwo5::editor::prelude {

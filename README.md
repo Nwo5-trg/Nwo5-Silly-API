@@ -1,4 +1,4 @@
-# Nwo5's Silly API
+# Silly API
 a bunch of utils for my mods to make my life easier
 
 if ur not a dev this is useless to u

@@ -30,7 +30,6 @@ namespace nwo5::utils {
     public:
         static CCTag* create(int pTag = cocos2d::kCCNodeTagInvalid);
     };
-    
 
     template<typename T>
     T random(T pMin, T pMax) {
@@ -76,6 +75,46 @@ namespace nwo5::utils {
     void setupKeybind(cocos2d::CCNode* pNode, std::string pKeybind, Callback&& pCallback, int pPriority = geode::Priority::Normal) {
         // no string_view 3:
         pNode->addEventListener(geode::KeybindSettingPressedEventV3(geode::Mod::get(), std::move(pKeybind)), std::forward<Callback>(pCallback), pPriority);
+    }
+
+    template<typename T>
+    requires std::same_as<T, geode::KeyboardInputData>
+    auto dataInfo(const T& pData) {
+        struct {
+            const T& data;
+
+            bool down() const {
+                return data.action != geode::KeyboardInputData::Action::Release;
+            }
+            bool repeat() const {
+                return data.action == geode::KeyboardInputData::Action::Repeat;
+            }
+        } wrapper{pData};
+        
+        return wrapper;
+    }
+    template<typename T>
+    requires std::same_as<T, geode::MouseInputData>
+    auto dataInfo(const T& pData) {
+        struct {
+            const T& data;
+
+            bool down() const {
+                return data.action == geode::MouseInputData::Action::Press;
+            }
+
+            bool leftButton() const {
+                return data.button == geode::MouseInputData::Button::Left;
+            }
+            bool rightButton() const {
+                return data.button == geode::MouseInputData::Button::Right;
+            }
+            bool middleButton() const {
+                return data.button == geode::MouseInputData::Button::Middle;
+            }
+        } wrapper{pData};
+        
+        return wrapper;
     }
 
     /// convert between numbers and enums

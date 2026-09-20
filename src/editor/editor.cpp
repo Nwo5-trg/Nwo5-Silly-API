@@ -443,6 +443,25 @@ namespace nwo5::editor {
         layer()->m_layerLockingEnabled = lockingEnabled;
     }
 
+    CCArray* objectArray(bool pCopy) {
+        return loaded(LoadedType::Editor) ? (pCopy ? CCArray::createWithArray(layer()->m_objects) : layer()->m_objects) : CCArray::create();
+    }
+    CCArray* objectsWithGroup(int pGroup, bool pCopy) {
+        if (notLoaded(LoadedType::Editor)) {
+            return CCArray::create();
+        }
+        
+        if (auto ptr = layer()->m_groupDict->objectForKey(pGroup)) {
+            return pCopy ? CCArray::createWithArray(static_cast<CCArray*>(ptr)) : static_cast<CCArray*>(ptr);
+        }
+        else {
+            return CCArray::create();
+        }
+    }
+    GameObject* groupParent(int pGroup) {
+        return loaded(LoadedType::Editor) ? layer()->getGroupParent(pGroup) : nullptr;
+    }
+
     int nextFreeGroup(int pOffset, bool pCheckTargetGroups) {
         if (notLoaded(LoadedType::Editor)) {
             return 0;

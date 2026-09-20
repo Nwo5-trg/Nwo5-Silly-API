@@ -203,7 +203,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::Color, {InputType::Color, true}, InputType::None, InputType::None, 
             false, false, LabelType::Target,
-            {255, 255, 255}, Category::Other // todo
+            {255, 255, 255}, Category::Other // todo color
         };
         using TriggerType = EffectGameObject;
         static constexpr auto note = "target is m_targetColor";
@@ -316,7 +316,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Group, InputType::Animation, InputType::None, 
             false, false, LabelType::Target,
-            {255, 255, 255}, Category::Other // todo
+            {255, 255, 255}, Category::Other // todo color
         };
         using TriggerType = KeyframeAnimTriggerObject;
         static constexpr auto note = "parent gid is center, animation group is m_animationID";
@@ -367,7 +367,7 @@ namespace nwo5::editor::trigger {
             {255, 0, 255}, Category::Area
         };
         using TriggerType = EnterEffectObject;
-        static constexpr auto note = "easing has 2 types stored in EnterEffectObject, effect id is m_effectID";
+        static constexpr auto note = "easing has 2 types stored in EnterEffectObject, effect id is m_effectID, when m_special target isnt 0, its prioritized over center group";
     };
     constexpr int AREA_ROTATE_TRIGGER = 3007;
     template<> struct impl::Trigger<AREA_ROTATE_TRIGGER> {
@@ -377,7 +377,7 @@ namespace nwo5::editor::trigger {
             {127, 127, 255}, Category::Area
         };
         using TriggerType = EnterEffectObject;
-        static constexpr auto note = "easing has 2 types stored in EnterEffectObject, effect id is m_effectID";
+        static constexpr auto note = "easing has 2 types stored in EnterEffectObject, effect id is m_effectID, when m_special target isnt 0, its prioritized over center group";
     };
     constexpr int AREA_SCALE_TRIGGER = 3008;
     template<> struct impl::Trigger<AREA_SCALE_TRIGGER> {
@@ -387,7 +387,7 @@ namespace nwo5::editor::trigger {
             {63, 191, 255}, Category::Area
         };
         using TriggerType = EnterEffectObject;
-        static constexpr auto note = "easing has 2 types stored in EnterEffectObject, effect id is m_effectID";
+        static constexpr auto note = "easing has 2 types stored in EnterEffectObject, effect id is m_effectID, when m_special target isnt 0, its prioritized over center group";
     };
     constexpr int AREA_FADE_TRIGGER = 3009;
     template<> struct impl::Trigger<AREA_FADE_TRIGGER> {
@@ -397,7 +397,7 @@ namespace nwo5::editor::trigger {
             {0, 255, 255}, Category::Area
         };
         using TriggerType = EnterEffectObject;
-        static constexpr auto note = "easing has 2 types stored in EnterEffectObject, effect id is m_effectID";
+        static constexpr auto note = "easing has 2 types stored in EnterEffectObject, effect id is m_effectID, when m_special target isnt 0, its prioritized over center group";
     };
     constexpr int AREA_TINT_TRIGGER = 3010;
     template<> struct impl::Trigger<AREA_TINT_TRIGGER> {
@@ -407,7 +407,7 @@ namespace nwo5::editor::trigger {
             {255, 255, 0}, Category::Area
         };
         using TriggerType = EnterEffectObject;
-        static constexpr auto note = "easing has 2 types stored in EnterEffectObject, effect id is m_effectID, color reference channel is m_tintChannelID";
+        static constexpr auto note = "easing has 2 types stored in EnterEffectObject, effect id is m_effectID, color reference channel is m_tintChannelID, when m_special target isnt 0, its prioritized over center group";
     };
     constexpr int EDIT_AREA_MOVE_TRIGGER = 3011;
     template<> struct impl::Trigger<EDIT_AREA_MOVE_TRIGGER> {
@@ -459,7 +459,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::Effect, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::Other // todo
+            {255, 255, 255}, Category::Other // todo color
         };
         using TriggerType = EffectGameObject;
         static constexpr auto note = "effect id is target";
@@ -469,7 +469,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::Other // todo
+            {255, 255, 255}, Category::Other // todo color
         };
         using TriggerType = ArtTriggerGameObject;
     };
@@ -478,7 +478,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::Other // todo
+            {255, 255, 255}, Category::Other // todo color
         };
         using TriggerType = ArtTriggerGameObject;
     };
@@ -487,7 +487,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::Other // todo
+            {255, 255, 255}, Category::Other // todo color
         };
         using TriggerType = ArtTriggerGameObject;
     };
@@ -532,7 +532,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Item, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::Other // todo
+            {255, 255, 255}, Category::Other // todo color
         };
         using TriggerType = TimerTriggerGameObject;
     };
@@ -579,7 +579,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::Item, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::Other // todo
+            {255, 255, 255}, Category::Other // todo color
         };
         using TriggerType = EffectGameObject;
     };
@@ -654,7 +654,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             true, true, LabelType::None,
-            {255, 255, 255}, Category::Camera // todo
+            {255, 255, 255}, Category::Camera // todo color
         };
         using TriggerType = CameraTriggerGameObject;
     };
@@ -663,7 +663,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::Camera // todo
+            {255, 255, 255}, Category::Camera // todo color
         };
         using TriggerType = EffectGameObject;
     };
@@ -690,16 +690,16 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::Camera // todo
+            {255, 255, 255}, Category::Camera // todo color
         };
-        using TriggerType = EffectGameObject;
+        using TriggerType = CameraTriggerGameObject;
     };
     constexpr int OLD_REVERSE_TRIGGER = 1917;
     template<> struct impl::Trigger<OLD_REVERSE_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::Other // todo
+            {255, 255, 255}, Category::Other // todo color
         };
         using TriggerType = EffectGameObject;
     };
@@ -708,7 +708,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             {InputType::Channel, true}, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::Other // todo
+            {255, 255, 255}, Category::Other // todo color
         };
         using TriggerType = RotateGameplayGameObject;
     };
@@ -717,7 +717,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::SongChannel, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::Other // todo
+            {255, 255, 255}, Category::Other // todo color
         };
         using TriggerType = SongTriggerGameObject;
     };
@@ -726,7 +726,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::SongChannel, InputType::None, InputType::Group, InputType::Group, 
             true, false, LabelType::None,
-            {255, 255, 255}, Category::Other // todo
+            {255, 255, 255}, Category::Other // todo color
         };
         using TriggerType = SongTriggerGameObject;
         static constexpr auto note = "gid 1 is target, gid 2 is center";
@@ -890,7 +890,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::Other // todo
+            {255, 255, 255}, Category::Other // todo color
         };
         using TriggerType = EffectGameObject;
     };
@@ -899,7 +899,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::Other // todo
+            {255, 255, 255}, Category::Other // todo color
         };
         using TriggerType = EffectGameObject;
     };
@@ -908,7 +908,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::Other // todo
+            {255, 255, 255}, Category::Other // todo color
         };
         using TriggerType = EffectGameObject;
     };
@@ -917,7 +917,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::Other // todo
+            {255, 255, 255}, Category::Other // todo color
         };
         using TriggerType = EffectGameObject;
     };
@@ -926,7 +926,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::Other // todo
+            {255, 255, 255}, Category::Other // todo color
         };
         using TriggerType = EffectGameObject;
     };
@@ -935,7 +935,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::Other // todo
+            {255, 255, 255}, Category::Other // todo color
         };
         using TriggerType = EffectGameObject;
     };
@@ -963,7 +963,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::Other // todo
+            {255, 255, 255}, Category::Other // todo color
         };
         using TriggerType = GameOptionsTrigger;
     };
@@ -972,7 +972,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::Gradient, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::Other // todo
+            {255, 255, 255}, Category::Other // todo color
         };
         using TriggerType = GradientTriggerObject;
     };
@@ -999,7 +999,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::Other // todo
+            {255, 255, 255}, Category::Other // todo color
         };
         using TriggerType = ShaderGameObject;
     };
@@ -1028,7 +1028,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             true, false, LabelType::None,
-            {255, 255, 255}, Category::Shader // todo
+            {255, 255, 255}, Category::Shader // todo color
         };
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "fadetime is ShaderGameObject fade in";
@@ -1038,7 +1038,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             true, true, LabelType::None,
-            {255, 255, 255}, Category::Shader // todo
+            {255, 255, 255}, Category::Shader // todo color
         };
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "fadetime is ShaderGameObject fade in";
@@ -1048,7 +1048,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             true, true, LabelType::None,
-            {255, 255, 255}, Category::Shader // todo
+            {255, 255, 255}, Category::Shader // todo color
         };
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "fadetime is ShaderGameObject fade in";
@@ -1058,7 +1058,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             true, true, LabelType::None,
-            {255, 255, 255}, Category::Shader // todo
+            {255, 255, 255}, Category::Shader // todo color
         };
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "fadetime is ShaderGameObject fade in";
@@ -1078,7 +1078,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Color, InputType::None, InputType::None, 
             true, true, LabelType::None,
-            {255, 255, 255}, Category::Shader // todo
+            {255, 255, 255}, Category::Shader // todo color
         };
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "center id (which btw appears when u click target) is target, fadetime is ShaderGameObject fade in";
@@ -1108,7 +1108,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             {InputType::Group, true}, InputType::None, InputType::None, InputType::None, 
             true, true, LabelType::None,
-            {255, 255, 255}, Category::Shader // todo
+            {255, 255, 255}, Category::Shader // todo color
         };
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "center id (which btw appears when u click target) is target, fadetime is ShaderGameObject fade in";
@@ -1118,7 +1118,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::Color, InputType::None, InputType::None, InputType::None, 
             true, true, LabelType::None,
-            {255, 255, 255}, Category::Shader // todo
+            {255, 255, 255}, Category::Shader // todo color
         };
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "fadetime is ShaderGameObject fade in";
@@ -1128,7 +1128,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             true, true, LabelType::None,
-            {255, 255, 255}, Category::Shader // todo
+            {255, 255, 255}, Category::Shader // todo color
         };
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "fadetime is ShaderGameObject fade in";
@@ -1138,7 +1138,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             true, true, LabelType::None,
-            {255, 255, 255}, Category::Shader // todo
+            {255, 255, 255}, Category::Shader // todo color
         };
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "fadetime is ShaderGameObject fade in";
@@ -1148,7 +1148,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             true, true, LabelType::None,
-            {255, 255, 255}, Category::Shader // todo
+            {255, 255, 255}, Category::Shader // todo color
         };
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "fadetime is ShaderGameObject fade in";
@@ -1158,7 +1158,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             true, true, LabelType::None,
-            {255, 255, 255}, Category::Shader // todo
+            {255, 255, 255}, Category::Shader // todo color
         };
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "fadetime is ShaderGameObject fade in";
@@ -1168,7 +1168,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
             true, true, LabelType::None,
-            {255, 255, 255}, Category::Shader // todo
+            {255, 255, 255}, Category::Shader // todo color
         };
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "fadetime is ShaderGameObject fade in";
@@ -1178,7 +1178,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::EnterEffect // todo
+            {255, 255, 255}, Category::EnterEffect // todo color
         };
         using TriggerType = EnterEffectObject;
     };
@@ -1187,7 +1187,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::EnterEffect // todo
+            {255, 255, 255}, Category::EnterEffect // todo color
         };
         using TriggerType = EnterEffectObject;
     };
@@ -1196,7 +1196,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::EnterEffect // todo
+            {255, 255, 255}, Category::EnterEffect // todo color
         };
         using TriggerType = EnterEffectObject;
     };
@@ -1205,7 +1205,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::EnterEffect // todo
+            {255, 255, 255}, Category::EnterEffect // todo color
         };
         using TriggerType = EnterEffectObject;
     };
@@ -1214,7 +1214,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::EnterEffect // todo
+            {255, 255, 255}, Category::EnterEffect // todo color
         };
         using TriggerType = EnterEffectObject;
     };
@@ -1223,7 +1223,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::EnterEffect // todo
+            {255, 255, 255}, Category::EnterEffect // todo color
         };
         using TriggerType = EnterEffectObject;
     };
@@ -1232,7 +1232,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::EnterEffect // todo
+            {255, 255, 255}, Category::EnterEffect // todo color
         };
         using TriggerType = EnterEffectObject;
     };
@@ -1241,7 +1241,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::EnterEffect // todo
+            {255, 255, 255}, Category::EnterEffect // todo color
         };
         using TriggerType = EnterEffectObject;
     };
@@ -1250,7 +1250,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::EnterEffect // todo
+            {255, 255, 255}, Category::EnterEffect // todo color
         };
         using TriggerType = EnterEffectObject;
     };
@@ -1259,7 +1259,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::EnterEffect // todo
+            {255, 255, 255}, Category::EnterEffect // todo color
         };
         using TriggerType = EnterEffectObject;
     };
@@ -1268,7 +1268,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::EnterEffect // todo
+            {255, 255, 255}, Category::EnterEffect // todo color
         };
         using TriggerType = EnterEffectObject;
     };
@@ -1277,7 +1277,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::EnterEffect // todo
+            {255, 255, 255}, Category::EnterEffect // todo color
         };
         using TriggerType = EnterEffectObject;
     };
@@ -1286,7 +1286,7 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::EnterEffect // todo
+            {255, 255, 255}, Category::EnterEffect // todo color
         };
         using TriggerType = EnterEffectObject;
     };  
@@ -1295,54 +1295,54 @@ namespace nwo5::editor::trigger {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::Effect, InputType::None, 
             false, true, LabelType::None,
-            {255, 255, 255}, Category::AdvancedEnter // todo
+            {255, 255, 255}, Category::AdvancedEnter // todo color
         };
-        using TriggerType = EffectGameObject;
+        using TriggerType = EnterEffectObject;
     };
     constexpr int ROTATE_ENTER_TRIGGER = 3018;
     template<> struct impl::Trigger<ROTATE_ENTER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::Effect, InputType::None, 
             false, true, LabelType::None,
-            {255, 255, 255}, Category::AdvancedEnter // todo
+            {255, 255, 255}, Category::AdvancedEnter // todo color
         };
-        using TriggerType = EffectGameObject;
+        using TriggerType = EnterEffectObject;
     };
     constexpr int SCALE_ENTER_TRIGGER = 3019;
     template<> struct impl::Trigger<SCALE_ENTER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::Effect, InputType::None, 
             false, true, LabelType::None,
-            {255, 255, 255}, Category::AdvancedEnter // todo
+            {255, 255, 255}, Category::AdvancedEnter // todo color
         };
-        using TriggerType = EffectGameObject;
+        using TriggerType = EnterEffectObject;
     };
     constexpr int FADE_ENTER_TRIGGER = 3020;
     template<> struct impl::Trigger<FADE_ENTER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::Effect, InputType::None, 
             false, true, LabelType::None,
-            {255, 255, 255}, Category::AdvancedEnter // todo
+            {255, 255, 255}, Category::AdvancedEnter // todo color
         };
-        using TriggerType = EffectGameObject;
+        using TriggerType = EnterEffectObject;
     };
     constexpr int TINT_ENTER_TRIGGER = 3021;
     template<> struct impl::Trigger<TINT_ENTER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::Effect, InputType::None, 
             false, true, LabelType::None,
-            {255, 255, 255}, Category::AdvancedEnter // todo
+            {255, 255, 255}, Category::AdvancedEnter // todo color
         };
-        using TriggerType = EffectGameObject;
+        using TriggerType = EnterEffectObject;
     };
     constexpr int ENTER_STOP_TRIGGER = 3023;
     template<> struct impl::Trigger<ENTER_STOP_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::Effect, InputType::None, InputType::None, 
             false, false, LabelType::None,
-            {255, 255, 255}, Category::Other // todo
+            {255, 255, 255}, Category::Other // todo color
         };
-        using TriggerType = EffectGameObject;
+        using TriggerType = EnterEffectObject;
     };
 }
 

@@ -130,7 +130,9 @@ namespace nwo5::editor::trigger {
             break;}
         }
         
-        editor::layer()->updateObjectLabel(pObj);
+        if (auto layer = editor::layer()) {
+            layer->updateObjectLabel(pObj);
+        }
     }
     int target(GameObject* pObj) {
         return primaryTarget(pObj);
@@ -149,6 +151,14 @@ namespace nwo5::editor::trigger {
         
         if (!info.secondaryTarget().exists() || id == SPAWN_TRIGGER) {
             return 0;
+        }
+
+        if (info.category() == Category::Area) {
+            const auto specialTarget = static_cast<EffectGameObject*>(pObj)->m_specialTarget;
+
+            if (specialTarget) {
+                return specialTarget;
+            }
         }
 
         switch (id) {
@@ -194,6 +204,23 @@ namespace nwo5::editor::trigger {
             return;
         }
 
+        if (info.category() == Category::Area) {
+            auto trigger = static_cast<EffectGameObject*>(pObj);
+
+            if (pVal >= 0) {
+                trigger->m_specialTarget = 0;
+            }
+            else {
+                trigger->m_specialTarget = pVal;
+
+                if (auto layer = editor::layer()) {
+                    layer->updateObjectLabel(pObj);
+                }
+                
+                return;
+            }
+        }
+
         switch (id) {
             case COLOR_TRIGGER: [[__fallthrough__]];
             case PULSE_TRIGGER: {
@@ -222,7 +249,9 @@ namespace nwo5::editor::trigger {
             break; }
         }
 
-        editor::layer()->updateObjectLabel(pObj);
+        if (auto layer = editor::layer()) {
+            layer->updateObjectLabel(pObj);
+        }
     }
     int center(GameObject* pObj) {
         return secondaryTarget(pObj);
@@ -313,7 +342,9 @@ namespace nwo5::editor::trigger {
             break; }
         }
 
-        editor::layer()->updateObjectLabel(pObj);
+        if (auto layer = editor::layer()) {
+            layer->updateObjectLabel(pObj);
+        }
     }
     int identifier(GameObject* pObj) {
         return primaryInput(pObj);
@@ -370,7 +401,9 @@ namespace nwo5::editor::trigger {
             break; }
         }
 
-        editor::layer()->updateObjectLabel(pObj);
+        if (auto layer = editor::layer()) {
+            layer->updateObjectLabel(pObj);
+        }
     }
 
     bool hasDuration(int pID) {
@@ -422,7 +455,9 @@ namespace nwo5::editor::trigger {
 
         static_cast<EffectGameObject*>(pObj)->m_duration = pDuration;
 
-        layer()->m_drawGridLayer->m_updateTimeMarkers = true;
+        if (auto layer = editor::layer()) {
+            layer->m_drawGridLayer->m_updateTimeMarkers = true;
+        }
     } 
     bool hasEasing(int pID) {
         return get(pID).easing();

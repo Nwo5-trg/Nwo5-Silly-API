@@ -12,18 +12,11 @@ namespace nwo5::editor::object {
     /// @param pCallback callback
     SILLY_API_DLL void forEachInSection(geode::Function<void(GameObject*)> pCallback);
 
-    /// get all objects
-    /// @param pCopy whether to copy obj array (why)
-    /// @returns objs
+    /// @deprecated use editor::objectArray
     SILLY_API_DLL cocos2d::CCArray* getAll(bool pCopy = false);
-    /// get all objects with group
-    /// @param pGroup group
-    /// @param pCopy whether to copy obj array (why)
-    /// @note will copy anyway (creating a new empty ccarray) if pGroup doesnt have a m_groupDict entry
-    /// @returns objs
+    /// @deprecated use editor::objectsWithGroup
     SILLY_API_DLL cocos2d::CCArray* getWithGroup(int pGroup, bool pCopy = false);
-    /// get group parent
-    /// @returns group parent or returns nullptr if group has no group parent
+    /// @deprecated use editor::groupParent
     SILLY_API_DLL GameObject* getParent(int pGroup);
 
     /// get obj string
@@ -111,12 +104,12 @@ namespace nwo5::editor::object {
     SILLY_API_DLL cocos2d::CCRect bounds(cocos2d::CCArray* pObjs, bool pAddSize = false);
     /// get center of objects
     /// @param pObjs objects
-    /// @param pIgnoreParent keep this as true its kinda broken rn lol
+    /// @param pIgnoreParent use robtops function if false lol
     /// @returns center of bounds or parent group
     SILLY_API_DLL cocos2d::CCPoint center(std::span<GameObject* const> pObjs, bool pIgnoreParent = true);
     /// get center of objects
     /// @param pObjs objects
-    /// @param pIgnoreParent keep this as true its kinda broken rn lol
+    /// @param pIgnoreParent use robtops function if false lol
     /// @returns center of bounds
     SILLY_API_DLL cocos2d::CCPoint center(cocos2d::CCArray* pObjs, bool pIgnoreParent = true);
 

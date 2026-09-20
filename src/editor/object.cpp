@@ -402,11 +402,16 @@ namespace nwo5::editor::object {
             return CCPointZero;
         }
 
+        if (!pIgnoreParent) {
+            if (notLoaded(LoadedType::Editor)) {
+                return CCPointZero;
+            }
+            
+            return editor::ui()->getGroupCenter(CCArrayExt(pObjs).inner(), false);
+        }
+
         CCPoint min = {std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
         CCPoint max = {std::numeric_limits<float>::lowest(), std::numeric_limits<float>::lowest()};
-
-        GameObject* parent = nullptr;
-        bool multipleParents = false;
 
         for (auto obj : pObjs) {
             const auto pos = obj->getRealPosition();
@@ -415,16 +420,7 @@ namespace nwo5::editor::object {
             min.y = std::min(min.y, pos.y);
             max.x = std::max(max.x, pos.x);
             max.y = std::max(max.y, pos.y);
-
-            if (!pIgnoreParent && obj->m_hasGroupParent) {
-                // highkey code golfing but like who even cares
-                parent = (multipleParents = parent) ? parent : obj;
-            }
         }
-
-        if (parent && !multipleParents) {
-            return parent->getRealPosition();
-        } 
 
         return (min + max) / 2;
     }
@@ -433,11 +429,16 @@ namespace nwo5::editor::object {
             return CCPointZero;
         }
 
+        if (!pIgnoreParent) {
+            if (notLoaded(LoadedType::Editor)) {
+                return CCPointZero;
+            }
+
+            return editor::ui()->getGroupCenter(pObjs, false);
+        }
+
         CCPoint min = {std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
         CCPoint max = {std::numeric_limits<float>::lowest(), std::numeric_limits<float>::lowest()};
-
-        GameObject* parent = nullptr;
-        bool multipleParents = false;
 
         for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
             const auto pos = obj->getRealPosition();
@@ -446,16 +447,7 @@ namespace nwo5::editor::object {
             min.y = std::min(min.y, pos.y);
             max.x = std::max(max.x, pos.x);
             max.y = std::max(max.y, pos.y);
-
-            if (!pIgnoreParent && obj->m_hasGroupParent) {
-                // highkey code golfing but like who even cares
-                parent = (multipleParents = parent) ? parent : obj;
-            }
         }
-
-        if (parent && !multipleParents) {
-            return parent->getRealPosition();
-        } 
 
         return (min + max) / 2;
     }

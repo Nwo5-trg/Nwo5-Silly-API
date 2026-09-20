@@ -63,5 +63,5 @@ build-*/
 .idea/
 /cmake-build-*/
 
-Icon
+Icon*
 flash.toml

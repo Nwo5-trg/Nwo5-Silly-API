@@ -1,9 +1,9 @@
-# Nwo5's Silly API
+# Silly API
 a bunch of utils for my mods to make my life easier
 
 if ur not a dev this is useless to u
 
-github has docs for setting cache
+github has docs for setting cache, rest is in headers
 
 ## Features
 - geode setting cache (by making them inline variables so also ide autocomplete)

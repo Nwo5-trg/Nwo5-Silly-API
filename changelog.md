@@ -1,3 +1,14 @@
+## v2.1.0
+**Added**
+
+- rebranded a bit
+- better area trigger support
+- node utils
+
+**Fixed**
+
+- i dont even remember lol
+
 ## v2.0.1
 **Fixed**
 

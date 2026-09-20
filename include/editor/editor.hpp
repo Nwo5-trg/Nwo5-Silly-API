@@ -28,7 +28,7 @@ namespace nwo5::editor {
         EditorValid,
         /// editorui initialized
         UI,
-        /// editorui (right before init starts)
+        /// editorui (valid right before init starts)
         UIValid
     };
     
@@ -94,6 +94,20 @@ namespace nwo5::editor {
     /// set current layer to pLayer
     SILLY_API_DLL void setLayer(int pLayer);
     SILLY_API_DLL void lockLayer(int pLayer, bool pLock);
+
+    /// get all objects
+    /// @param pCopy whether to copy obj array (why)
+    /// @returns objs
+    SILLY_API_DLL cocos2d::CCArray* objectArray(bool pCopy = false);
+    /// get all objects with group
+    /// @param pGroup group
+    /// @param pCopy whether to copy obj array (why)
+    /// @note will copy anyway (creating a new empty ccarray) if pGroup doesnt have a m_groupDict entry
+    /// @returns objs
+    SILLY_API_DLL cocos2d::CCArray* objectsWithGroup(int pGroup, bool pCopy = false);
+    /// get group parent
+    /// @returns group parent or returns nullptr if group has no group parent
+    SILLY_API_DLL GameObject* groupParent(int pGroup);
 
     /// get next free group
     /// @param pOffset search starts from this gid, clamped from 1-9999
