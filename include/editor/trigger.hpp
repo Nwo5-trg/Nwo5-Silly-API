@@ -202,7 +202,7 @@ namespace nwo5::editor::trigger {
     template<> struct impl::Trigger<COLOR_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Color, {InputType::Color, true}, InputType::None, InputType::None, 
-            false, false, LabelType::Target,
+            true, false, LabelType::Target,
             {255, 255, 255}, Category::Other // todo color
         };
         using TriggerType = EffectGameObject;
@@ -287,7 +287,7 @@ namespace nwo5::editor::trigger {
     template<> struct impl::Trigger<FOLLOW_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Group, InputType::None, InputType::None, 
-            false, false, LabelType::Target,
+            true, false, LabelType::Target,
             {255, 127, 127}, Category::Other
         };
         using TriggerType = EffectGameObject;
