@@ -1,3 +1,8 @@
+## v2.1.1
+**Fixed**
+
+- tooltipinfo create function and made documentation a bit clearer
+
 ## v2.1.0
 **Added**
 

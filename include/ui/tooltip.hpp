@@ -3,7 +3,8 @@
 #include "../export.hpp"
 
 namespace nwo5::ui {
-    /// basic tooltip class !
+    /// basic tooltip class 
+    // just create and add as child to ur popup (or to whatever node is the parent to all the nodes thatll have tooltip)
     /// for automatic mode (which is default) add a TooltipInfo userobject with id "nwo5.silly-api/tooltip" to a node and those nodes will show tooltips !
     /// if you want to do all the logic yourself you can just set an updatefunc
     /// @note automatic mode does not pay attention to z order soooo gl with that might make that toggleable later cuz it would b slower

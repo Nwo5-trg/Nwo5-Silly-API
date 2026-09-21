@@ -273,7 +273,7 @@ namespace nwo5::ui {
         m_text = pText;
 
         if (pNode) {
-            pNode->setUserObject(this);
+            pNode->setUserObject("tooltip"_spr, this);
         }
 
         return true;
