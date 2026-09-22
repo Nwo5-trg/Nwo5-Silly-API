@@ -28,6 +28,33 @@ namespace nwo5::editor::constants {
 
     constexpr int OBJECT_IDS = 4539;
 
+    constexpr int BACKGROUND_COLOR = 1000;
+    constexpr int GROUND_COLOR = 1001;
+    constexpr int LINE_COLOR = 1002;
+    constexpr int LINE_3D_COLOR = 1003;
+    constexpr int OBJECT_COLOR = 1004;
+    constexpr int PLAYER_1_COLOR = 1005;
+    constexpr int PLAYER_2_COLOR = 1006;
+    constexpr int LIGHT_BACKGROUND_COLOR = 1007;
+    constexpr int GROUND_2_COLOR = 1009;
+    constexpr int BLACK_COLOR = 1010;
+    constexpr int WHITE_COLOR = 1011;
+    constexpr int LIGHTER_COLOR = 1012;
+    constexpr int MIDDLEGROUND_COLOR = 1013;
+    constexpr int MIDDLEGROUND_2_COLOR = 1014;
+
+    constexpr int P1_AREA_SPECIAL_TARGET = -1;
+    constexpr int P2_AREA_SPECIAL_TARGET = -2;
+    constexpr int CAMERA_AREA_SPECIAL_TARGET = -3;
+    constexpr int BOTTOM_LEFT_AREA_SPECIAL_TARGET = -4;
+    constexpr int CENTER_LEFT_AREA_SPECIAL_TARGET = -5;
+    constexpr int TOP_LEFT_AREA_SPECIAL_TARGET = -6;
+    constexpr int BOTTOM_CENTER_AREA_SPECIAL_TARGET = -7;
+    constexpr int TOP_CENTER_AREA_SPECIAL_TARGET = -8;
+    constexpr int BOTTOM_RIGHT_AREA_SPECIAL_TARGET = -9;
+    constexpr int CENTER_RIGHT_AREA_SPECIAL_TARGET = -10;
+    constexpr int TOP_RIGHT_AREA_SPECIAL_TARGET = -11;
+
     /// convert speed enum to units per seccond
     /// @returns units per second for speed
     constexpr float toSpeed(Speed pSpeed) {

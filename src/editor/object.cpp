@@ -4,69 +4,8 @@
 using namespace geode::prelude;
 
 namespace nwo5::editor::object {
-    size_t count() {
-        return getAll()->count();
-    }
-
-    void forEachInSection(geode::Function<void(GameObject*)> pCallback) {
-        if (notLoaded(LoadedType::Editor)) {
-            return;
-        }
-
-        auto game = editor::layer();
-
-        const int count = game->m_sections.empty() ? -1 : game->m_sections.size();
-
-        for (int i = game->m_leftSectionIndex; i <= game->m_rightSectionIndex && i < count; i++) {
-            auto leftSection = game->m_sections[i];
-            
-            if (!leftSection) {
-                continue;
-            }
-
-            const auto leftSectionSize = leftSection->size();
-
-            for (int j = game->m_bottomSectionIndex; j <= game->m_topSectionIndex && j < leftSectionSize; j++) {
-                auto section = leftSection->at(j);
-
-                if (!section) {
-                    continue;
-                }
-
-                const auto sectionSize = game->m_sectionSizes[i]->at(j);
-
-                for (int k = 0; k < sectionSize; k++) {
-                    auto obj = section->at(k);
-                    
-                    if (obj) {
-                        pCallback(obj);
-                    }
-                }
-            }
-        }
-    }
-
-    CCArray* getAll(bool pCopy) {
-        return loaded(LoadedType::Editor) ? (pCopy ? CCArray::createWithArray(layer()->m_objects) : layer()->m_objects) : CCArray::create();
-    }
-    CCArray* getWithGroup(int pGroup, bool pCopy) {
-        if (notLoaded(LoadedType::Editor)) {
-            return CCArray::create();
-        }
-        
-        if (auto ptr = layer()->m_groupDict->objectForKey(pGroup)) {
-            return pCopy ? CCArray::createWithArray(static_cast<CCArray*>(ptr)) : static_cast<CCArray*>(ptr);
-        }
-        else {
-            return CCArray::create();
-        }
-    }
-    GameObject* getParent(int pGroup) {
-        return loaded(LoadedType::Editor) ? layer()->getGroupParent(pGroup) : nullptr;
-    }
-
     std::string string(GameObject* pObj) {
-        return loaded(LoadedType::EditorValid) ? std::string(pObj->getSaveString(layer())) : "";
+        return loaded(LoadedType::EditorValid) ? std::string(pObj->getSaveString(editor::layer())) : "";
     }
     std::string string(std::span<GameObject* const> pObjs) {
         if (notLoaded(LoadedType::EditorValid) || pObjs.empty()) {
@@ -76,7 +15,7 @@ namespace nwo5::editor::object {
         return string::join(
             std::ranges::to<std::vector>( // fuck pipe operator all my homies hate pipe operator
                 std::views::transform(pObjs, [] (GameObject* pObj) {
-                    return std::string(pObj->getSaveString(layer()));
+                    return std::string(pObj->getSaveString(editor::layer()));
                 })
             ), ";"
         );
@@ -91,7 +30,7 @@ namespace nwo5::editor::object {
         return string::join(
             std::ranges::to<std::vector>( // fuck pipe operator all my homies hate pipe operator
                 std::views::transform(ext, [] (GameObject* pObj) {
-                    return std::string(pObj->getSaveString(layer()));
+                    return std::string(pObj->getSaveString(editor::layer()));
                 })
             ), ";"
         );
@@ -102,10 +41,10 @@ namespace nwo5::editor::object {
         }
         
         if (pSetup) {
-            return layer()->createObject(pID, CCPointZero, !pUndo);
+            return editor::layer()->createObject(pID, CCPointZero, !pUndo);
         }
         else {
-            auto arr = layer()->createObjectsFromString(fmt::format("1,{},2,0,3,0", pID), !pUndo, true);
+            auto arr = editor::layer()->createObjectsFromString(fmt::format("1,{},2,0,3,0", pID), !pUndo, true);
 
             return arr ? static_cast<GameObject*>(arr->firstObject()) : nullptr;
         }
@@ -116,10 +55,10 @@ namespace nwo5::editor::object {
         }
         
         if (pSetup) {
-            return layer()->createObject(pID, pPos, !pUndo);
+            return editor::layer()->createObject(pID, pPos, !pUndo);
         }
         else {
-            auto arr = layer()->createObjectsFromString(fmt::format("1,{},2,{},3,{}", pID, pPos.x, pPos.y), !pUndo, true);
+            auto arr = editor::layer()->createObjectsFromString(fmt::format("1,{},2,{},3,{}", pID, pPos.x, pPos.y), !pUndo, true);
 
             return arr ? static_cast<GameObject*>(arr->firstObject()) : nullptr;
         }
@@ -129,7 +68,7 @@ namespace nwo5::editor::object {
             return nullptr;
         }
 
-        auto arr = layer()->createObjectsFromString(
+        auto arr = editor::layer()->createObjectsFromString(
             fmt::format(
                 "1,{},2,0,3,0,{}", pID, pArgs.view().starts_with(',') ? pArgs.view().substr(1) : pArgs.view()
             ), !pUndo, true
@@ -138,7 +77,7 @@ namespace nwo5::editor::object {
         return arr ? static_cast<GameObject*>(arr->firstObject()) : nullptr;
     }
     GameObject* createObject(int pID, CCPoint pPos, geode::ZStringView pArgs, bool pUndo) {
-        auto arr = layer()->createObjectsFromString(
+        auto arr = editor::layer()->createObjectsFromString(
             fmt::format(
                 "1,{},2,{},3,{},{}", pID, pPos.x, pPos.y, pArgs.view().starts_with(',') ? pArgs.view().substr(1) : pArgs.view()
             ), !pUndo, true
@@ -147,12 +86,52 @@ namespace nwo5::editor::object {
         return arr ? static_cast<GameObject*>(arr->firstObject()) : nullptr;
     }
     GameObject* createObject(geode::ZStringView pStr, bool pUndo) {
-        auto arr = layer()->createObjectsFromString(pStr, !pUndo, true);
+        auto arr = editor::layer()->createObjectsFromString(pStr, !pUndo, true);
 
         return arr ? static_cast<GameObject*>(arr->firstObject()) : nullptr;
     }
     CCArray* createObjects(geode::ZStringView pStr, bool pUndo) {
-        return layer()->createObjectsFromString(pStr, !pUndo, true);
+        return editor::layer()->createObjectsFromString(pStr, !pUndo, true);
+    }
+
+    void remove(GameObject* pObj, bool pUndo) {
+        if (notLoaded(LoadedType::Editor)) {
+            return;
+        }
+
+        editor::selection::remove(pObj);
+
+        editor::layer()->removeObject(pObj, !pUndo);
+    }
+    void remove(std::span<GameObject* const> pObjs, bool pUndo) {
+        if (notLoaded(LoadedType::Editor)) {
+            return;
+        }
+        
+        if (pUndo && !pObjs.empty()) {
+            editor::layer()->addToUndoList(UndoObject::createWithArray(CCArrayExt(pObjs).inner(), UndoCommand::DeleteMulti), false);
+        }
+
+        editor::selection::remove(pObjs);
+
+        for (auto obj : pObjs) {
+            editor::layer()->removeObject(obj, true);
+        }
+    }
+    void remove(CCArray* pObjs, bool pUndo) {
+        if (notLoaded(LoadedType::Editor)) {
+            return;
+        }
+        
+        if (pUndo && pObjs->count()) {
+            editor::layer()->addToUndoList(UndoObject::createWithArray(pObjs, UndoCommand::DeleteMulti), false);
+        }
+
+        editor::selection::remove(pObjs);
+
+        for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
+            editor::layer()->removeObject(obj, true);
+        }
     }
 
     std::vector<int> groups(GameObject* pObj) {
@@ -216,6 +195,7 @@ namespace nwo5::editor::object {
 
         return out;
     }
+
     bool hasGroups(GameObject* pObj) {
         if (!pObj->m_groups) {
             return false;
@@ -237,6 +217,7 @@ namespace nwo5::editor::object {
             return pObj->m_groups && std::ranges::contains(*pObj->m_groups, pGroup);
         }
     }
+
     bool sharesGroup(std::span<GameObject* const> pObjs, int pGroup) {
         if (pObjs.empty()) {
             return false;
@@ -263,6 +244,80 @@ namespace nwo5::editor::object {
 
         return true;
     }
+    std::vector<int> sharedGroups(std::span<GameObject* const> pObjs, bool pSort) {
+        if (pObjs.empty()) {
+            return {};
+        }
+
+        std::vector<int> shared = groups(pObjs.front());
+
+        std::erase_if(shared, [&] (int group) {
+            return !sharesGroup(pObjs, group);
+        });
+
+        if (pSort) {
+            std::ranges::sort(shared);
+        }
+
+        return shared;
+    }
+    std::vector<int> sharedGroups(CCArray* pObjs, bool pSort) {
+        if (!pObjs || !pObjs->count()) {
+            return {};
+        }
+
+        std::vector<int> shared = groups(static_cast<GameObject*>(pObjs->firstObject()));
+
+        std::erase_if(shared, [&] (int group) {
+            return !sharesGroup(pObjs, group);
+        });
+
+        if (pSort) {
+            std::ranges::sort(shared);
+        }
+
+        return shared;
+    }
+
+    void addGroup(GameObject* pObj, int pGroup) {
+        if (loaded(LoadedType::Editor)) {
+            pObj->addToGroup(pGroup);
+        }
+    }
+    void addGroup(std::span<GameObject* const> pObjs, int pGroup) {
+        if (loaded(LoadedType::Editor)) {
+            for (auto obj : pObjs) {
+                obj->addToGroup(pGroup);
+            }
+        }
+    }
+    void addGroup(CCArray* pObjs, int pGroup) {
+        if (loaded(LoadedType::Editor)) {
+            for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
+                obj->addToGroup(pGroup);
+            }
+        }
+    }
+    void removeGroup(GameObject* pObj, int pGroup) {
+        if (loaded(LoadedType::Editor)) {
+            pObj->removeFromGroup(pGroup);
+        }
+    }
+    void removeGroup(std::span<GameObject* const> pObjs, int pGroup) {
+        if (loaded(LoadedType::Editor)) {
+            for (auto obj : pObjs) {
+                obj->removeFromGroup(pGroup);
+            }
+        }
+    }
+    void removeGroup(CCArray* pObjs, int pGroup) {
+        if (loaded(LoadedType::Editor)) {
+            for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
+                obj->removeFromGroup(pGroup);
+            }
+        }
+    }
+
     bool hasParent(int pGroup) {
         return getParent(pGroup);
     }
@@ -294,6 +349,24 @@ namespace nwo5::editor::object {
 
         return col->m_colorID ? col->m_colorID : col->m_defaultColorID;
     }
+    void setBaseColor(GameObject* pObj, int pColor) {
+        auto col = pObj->m_baseColor;
+
+        if (!col) {
+            return;
+        }
+
+        if (pColor == 0) {
+            int defaultId = std::clamp(col->m_defaultColorID, 0, 1101);
+            col->m_defaultColorID = defaultId;
+            col->m_colorID = 0;
+        }
+        else {
+            col->m_colorID = std::clamp(pColor, 0, 1101);
+        }
+
+        pObj->m_updateParents = true;
+    }
     std::optional<int> detailColor(GameObject* pObj) {
         auto col = pObj->m_detailColor;
 
@@ -302,6 +375,24 @@ namespace nwo5::editor::object {
         }
 
         return col->m_colorID ? col->m_colorID : col->m_defaultColorID;
+    }
+    void setDetailColor(GameObject* pObj, int pColor) {
+       auto col = pObj->m_detailColor;
+
+        if (!col) {
+            return;
+        }
+
+        if (pColor == 0) {
+            int defaultId = std::clamp(col->m_defaultColorID, 0, 1101);
+            col->m_defaultColorID = defaultId;
+            col->m_colorID = 0;
+        }
+        else {
+            col->m_colorID = std::clamp(pColor, 0, 1101);
+        }
+
+        pObj->m_updateParents = true;
     }
     bool hasColor(GameObject* pObj, int pColor, bool pPrimary) {
         auto col = pPrimary ? pObj->m_baseColor : pObj->m_detailColor;
@@ -313,6 +404,10 @@ namespace nwo5::editor::object {
         return pObj->m_objectID;
     }
     std::vector<int> ids(std::span<GameObject* const> pObjs, bool pSort) {
+        if (pObjs.empty()) {
+            return {};
+        }
+
         std::unordered_set<int> ids;
 
         for (auto obj : pObjs) {
@@ -328,6 +423,10 @@ namespace nwo5::editor::object {
         return out;
     }
     std::vector<int> ids(CCArray* pObjs, bool pSort) {
+        if (!pObjs->count()) {
+            return {};
+        }
+
         std::unordered_set<int> ids;
 
         for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
@@ -341,6 +440,23 @@ namespace nwo5::editor::object {
         }
 
         return out;
+    }
+
+    int layer(GameObject* pObj) {
+        return pObj->m_editorLayer;
+    }
+    void setLayer(GameObject* pObj, int pLayer) {
+        if (pLayer >= 0 && pLayer <= editor::constants::MAX_LAYERS) {
+            pObj->m_editorLayer = pLayer;
+        }
+    }
+    int layer2(GameObject* pObj) {
+        return pObj->m_editorLayer2;
+    }
+    void setLayer2(GameObject* pObj, int pLayer) {
+        if (pLayer >= 0 && pLayer <= editor::constants::MAX_LAYERS) {
+            pObj->m_editorLayer2 = pLayer;
+        }
     }
 
     bool canSelectLayer(GameObject* pObj, bool pIgnoreLocked) {
@@ -560,119 +676,6 @@ namespace nwo5::editor::object {
             (std::floor(pos.x / gridSize) + 0.5f) * gridSize,
             (std::floor(pos.y / gridSize) + 0.5f) * gridSize
         } + offset;
-    }
-
-    void moveTo(GameObject* pObj, bool pZoomToFit, float pZoomBuffer, float pMinimumZoom, float pMaximumZoom) {
-        const auto bounds = editor::object::bounds(pObj, true);
-
-        editor::move(bounds.origin + bounds.size / 2);
-        editor::setZoom(
-            std::clamp(
-                (CCDirector::get()->getWinSize().width / bounds.size.width) / 1.5f, 
-                pMinimumZoom, pMaximumZoom
-            )
-        );
-    }
-    void moveTo(std::span<GameObject* const> pObjs, bool pZoomToFit, float pZoomBuffer, float pMinimumZoom, float pMaximumZoom) {
-        const auto bounds = editor::object::bounds(pObjs, true);
-
-        editor::move(bounds.origin + bounds.size / 2);
-        editor::setZoom(
-            std::clamp(
-                (CCDirector::get()->getWinSize().width / bounds.size.width) / 1.5f, 
-                pMinimumZoom, pMaximumZoom
-            )
-        );
-    }
-    void moveTo(CCArray* pObjs, bool pZoomToFit, float pZoomBuffer, float pMinimumZoom, float pMaximumZoom) {
-        const auto bounds = editor::object::bounds(pObjs);
-
-        editor::move(bounds.origin + bounds.size / 2);
-        editor::setZoom(
-            std::clamp(
-                (CCDirector::get()->getWinSize().width / bounds.size.width) / 1.5f, 
-                pMinimumZoom, pMaximumZoom
-            )
-        );
-    }
-
-    void addGroup(GameObject* pObj, int pGroup) {
-        if (loaded(LoadedType::Editor)) {
-            pObj->addToGroup(pGroup);
-        }
-    }
-    void addGroup(std::span<GameObject* const> pObjs, int pGroup) {
-        if (loaded(LoadedType::Editor)) {
-            for (auto obj : pObjs) {
-                obj->addToGroup(pGroup);
-            }
-        }
-    }
-    void addGroup(CCArray* pObjs, int pGroup) {
-        if (loaded(LoadedType::Editor)) {
-            for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
-                obj->addToGroup(pGroup);
-            }
-        }
-    }
-    void removeGroup(GameObject* pObj, int pGroup) {
-        if (loaded(LoadedType::Editor)) {
-            pObj->removeFromGroup(pGroup);
-        }
-    }
-    void removeGroup(std::span<GameObject* const> pObjs, int pGroup) {
-        if (loaded(LoadedType::Editor)) {
-            for (auto obj : pObjs) {
-                obj->removeFromGroup(pGroup);
-            }
-        }
-    }
-    void removeGroup(CCArray* pObjs, int pGroup) {
-        if (loaded(LoadedType::Editor)) {
-            for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
-                obj->removeFromGroup(pGroup);
-            }
-        }
-    }
-
-    void remove(GameObject* pObj, bool pUndo) {
-        if (notLoaded(LoadedType::Editor)) {
-            return;
-        }
-
-        editor::selection::remove(pObj);
-
-        layer()->removeObject(pObj, !pUndo);
-    }
-    void remove(std::span<GameObject* const> pObjs, bool pUndo) {
-        if (notLoaded(LoadedType::Editor)) {
-            return;
-        }
-        
-        if (pUndo && !pObjs.empty()) {
-            layer()->addToUndoList(UndoObject::createWithArray(CCArrayExt(pObjs).inner(), UndoCommand::DeleteMulti), false);
-        }
-
-        editor::selection::remove(pObjs);
-
-        for (auto obj : pObjs) {
-            layer()->removeObject(obj, true);
-        }
-    }
-    void remove(CCArray* pObjs, bool pUndo) {
-        if (notLoaded(LoadedType::Editor)) {
-            return;
-        }
-        
-        if (pUndo && pObjs->count()) {
-            layer()->addToUndoList(UndoObject::createWithArray(pObjs, UndoCommand::DeleteMulti), false);
-        }
-
-        editor::selection::remove(pObjs);
-
-        for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
-            layer()->removeObject(obj, true);
-        }
     }
 
     void move(GameObject* pObj, CCPoint pTo, bool pUndo) {
@@ -1074,5 +1077,100 @@ namespace nwo5::editor::object {
 
             obj->updateCustomScaleY(obj->m_scaleY * pMod);
         }
+    }
+
+    size_t count() {
+        return getAll()->count();
+    }
+
+    void forEachInSection(geode::Function<void(GameObject*)> pCallback) {
+        if (notLoaded(LoadedType::Editor)) {
+            return;
+        }
+
+        auto game = editor::layer();
+
+        const int count = game->m_sections.empty() ? -1 : game->m_sections.size();
+
+        for (int i = game->m_leftSectionIndex; i <= game->m_rightSectionIndex && i < count; i++) {
+            auto leftSection = game->m_sections[i];
+            
+            if (!leftSection) {
+                continue;
+            }
+
+            const auto leftSectionSize = leftSection->size();
+
+            for (int j = game->m_bottomSectionIndex; j <= game->m_topSectionIndex && j < leftSectionSize; j++) {
+                auto section = leftSection->at(j);
+
+                if (!section) {
+                    continue;
+                }
+
+                const auto sectionSize = game->m_sectionSizes[i]->at(j);
+
+                for (int k = 0; k < sectionSize; k++) {
+                    auto obj = section->at(k);
+                    
+                    if (obj) {
+                        pCallback(obj);
+                    }
+                }
+            }
+        }
+    }
+
+    CCArray* getAll(bool pCopy) {
+        return loaded(LoadedType::Editor) ? (pCopy ? CCArray::createWithArray(editor::layer()->m_objects) : editor::layer()->m_objects) : CCArray::create();
+    }
+    CCArray* getWithGroup(int pGroup, bool pCopy) {
+        if (notLoaded(LoadedType::Editor)) {
+            return CCArray::create();
+        }
+        
+        if (auto ptr = editor::layer()->m_groupDict->objectForKey(pGroup)) {
+            return pCopy ? CCArray::createWithArray(static_cast<CCArray*>(ptr)) : static_cast<CCArray*>(ptr);
+        }
+        else {
+            return CCArray::create();
+        }
+    }
+    GameObject* getParent(int pGroup) {
+        return loaded(LoadedType::Editor) ? editor::layer()->getGroupParent(pGroup) : nullptr;
+    }
+
+    void moveTo(GameObject* pObj, bool pZoomToFit, float pZoomBuffer, float pMinimumZoom, float pMaximumZoom) {
+        const auto bounds = editor::object::bounds(pObj, true);
+
+        editor::move(bounds.origin + bounds.size / 2);
+        editor::setZoom(
+            std::clamp(
+                (CCDirector::get()->getWinSize().width / bounds.size.width) / 1.5f, 
+                pMinimumZoom, pMaximumZoom
+            )
+        );
+    }
+    void moveTo(std::span<GameObject* const> pObjs, bool pZoomToFit, float pZoomBuffer, float pMinimumZoom, float pMaximumZoom) {
+        const auto bounds = editor::object::bounds(pObjs, true);
+
+        editor::move(bounds.origin + bounds.size / 2);
+        editor::setZoom(
+            std::clamp(
+                (CCDirector::get()->getWinSize().width / bounds.size.width) / 1.5f, 
+                pMinimumZoom, pMaximumZoom
+            )
+        );
+    }
+    void moveTo(CCArray* pObjs, bool pZoomToFit, float pZoomBuffer, float pMinimumZoom, float pMaximumZoom) {
+        const auto bounds = editor::object::bounds(pObjs);
+
+        editor::move(bounds.origin + bounds.size / 2);
+        editor::setZoom(
+            std::clamp(
+                (CCDirector::get()->getWinSize().width / bounds.size.width) / 1.5f, 
+                pMinimumZoom, pMaximumZoom
+            )
+        );
     }
 }

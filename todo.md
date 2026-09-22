@@ -1,6 +1,5 @@
 # stuff i can (should) do whenever
 - fix next free group id or just remove it
-- finish the bounding box utils
 
 # changes to make in 2.209
 - rewrite edit button tab api
@@ -11,3 +10,4 @@
 - change createObject functions to just be create
 - make the create object functions templated so it just static casts on construct
 - remove deprecated functions
+- make all the trigger/editor constants inline constexpr

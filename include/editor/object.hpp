@@ -3,22 +3,6 @@
 #include "editor.hpp"
 
 namespace nwo5::editor::object {
-    /// obj count for level
-    /// @returns object
-    SILLY_API_DLL size_t count();
-
-    /// calls callback for every object active in section
-    /// prevter made this iirc
-    /// @param pCallback callback
-    SILLY_API_DLL void forEachInSection(geode::Function<void(GameObject*)> pCallback);
-
-    /// @deprecated use editor::objectArray
-    SILLY_API_DLL cocos2d::CCArray* getAll(bool pCopy = false);
-    /// @deprecated use editor::objectsWithGroup
-    SILLY_API_DLL cocos2d::CCArray* getWithGroup(int pGroup, bool pCopy = false);
-    /// @deprecated use editor::groupParent
-    SILLY_API_DLL GameObject* getParent(int pGroup);
-
     /// get obj string
     SILLY_API_DLL std::string string(GameObject* pObj);
     /// get obj string seperated with ;
@@ -57,10 +41,17 @@ namespace nwo5::editor::object {
     /// @returns objs created
     SILLY_API_DLL cocos2d::CCArray* createObjects(geode::ZStringView pStr, bool pUndo = false);
 
-    /// objects
+    /// deletes object
+    SILLY_API_DLL void remove(GameObject* pObj, bool pUndo = false);
+    /// deletes objects
+    SILLY_API_DLL void remove(std::span<GameObject* const> pObjs, bool pUndo = false);
+    /// deletes objects
+    SILLY_API_DLL void remove(cocos2d::CCArray* pObjs, bool pUndo = false);
+
     SILLY_API_DLL std::vector<int> groups(GameObject* pObj);
     SILLY_API_DLL std::vector<int> groups(std::span<GameObject* const> pObjs, bool pSort = false);
     SILLY_API_DLL std::vector<int> groups(cocos2d::CCArray* pObjs, bool pSort = false);
+
     /// check if an object has any groups
     /// @returns true if object has any groups, false otherwise
     SILLY_API_DLL bool hasGroups(GameObject* pObj);
@@ -68,8 +59,37 @@ namespace nwo5::editor::object {
     /// @param pGroup
     /// @returns true if object has group or group is 0
     SILLY_API_DLL bool hasGroup(GameObject* pObj, int pGroup);
+
     SILLY_API_DLL bool sharesGroup(std::span<GameObject* const> pObjs, int pGroup);
     SILLY_API_DLL bool sharesGroup(cocos2d::CCArray* pObjs, int pGroup);
+    SILLY_API_DLL std::vector<int> sharedGroups(std::span<GameObject* const> pObjs, bool pSort = false);
+    SILLY_API_DLL std::vector<int> sharedGroups(cocos2d::CCArray* pObjs, bool pSort = false);
+
+    /// add group to object
+    /// @param pObj target
+    /// @param pGroup group
+    SILLY_API_DLL void addGroup(GameObject* pObj, int pGroup);
+    /// add group to objects
+    /// @param pObjs targets
+    /// @param pGroup group
+    SILLY_API_DLL void addGroup(std::span<GameObject* const> pObjs, int pGroup);
+    /// add group to objects
+    /// @param pObjs targets
+    /// @param pGroup group
+    SILLY_API_DLL void addGroup(cocos2d::CCArray* pObjs, int pGroup);
+    /// remove group from object
+    /// @param pObj targets
+    /// @param pGroup group
+    SILLY_API_DLL void removeGroup(GameObject* pObj, int pGroup);
+    /// remove group from objects
+    /// @param pObjs targets
+    /// @param pGroup group
+    SILLY_API_DLL void removeGroup(std::span<GameObject* const> pObjs, int pGroup);
+    /// remove group from objects
+    /// @param pObjs targets
+    /// @param pGroup group
+    SILLY_API_DLL void removeGroup(cocos2d::CCArray* pObjs, int pGroup);
+
     /// check if a group has a group parent
     /// @returns true if group has a parent, false otherwise
     SILLY_API_DLL bool hasParent(int pGroup);
@@ -81,12 +101,33 @@ namespace nwo5::editor::object {
     SILLY_API_DLL bool hasParent(cocos2d::CCArray* pObjs, int pGroup);
 
     SILLY_API_DLL std::optional<int> baseColor(GameObject* pObj);
+    /// set objects color channel or does nothing if object doesnt support base color
+    /// @param pColor color channel
+    /// @note pretty much js a decomp of CustomizeObjectLayer::updateSelected
+    SILLY_API_DLL void setBaseColor(GameObject* pObj, int pColor);
     SILLY_API_DLL std::optional<int> detailColor(GameObject* pObj);
+    /// set objects color channel or does nothing if object doesnt support detail color
+    /// @param pColor color channel
+    /// @note pretty much js a decomp of CustomizeObjectLayer::updateSelected
+    SILLY_API_DLL void setDetailColor(GameObject* pObj, int pColor);
     SILLY_API_DLL bool hasColor(GameObject* pObj, int pColor, bool pPrimary);
 
+    /// get obj id
+    /// @returns obj id
     SILLY_API_DLL int id(GameObject* pObj);
+    /// get obj id(s)
+    /// @param pSort sort the output vector
+    /// @returns obj ids
     SILLY_API_DLL std::vector<int> ids(std::span<GameObject* const> pObjs, bool pSort = false);
+    /// get obj id(s)
+    /// @param pSort sort the output vector
+    /// @returns obj ids
     SILLY_API_DLL std::vector<int> ids(cocos2d::CCArray* pObjs, bool pSort = false);
+
+    SILLY_API_DLL int layer(GameObject* pObj);
+    SILLY_API_DLL void setLayer(GameObject* pObj, int pLayer);
+    SILLY_API_DLL int layer2(GameObject* pObj);
+    SILLY_API_DLL void setLayer2(GameObject* pObj, int pLayer);
 
     SILLY_API_DLL bool canSelectLayer(GameObject* pObj, bool pIgnoreLocked = false);
 
@@ -144,60 +185,6 @@ namespace nwo5::editor::object {
     /// @returns pos of object snapped to pGridSize
     SILLY_API_DLL cocos2d::CCPoint snappedPos(GameObject* pObj, float pGridSize = 30.0f);
 
-    /// move camera to obj and optionally zoom out
-    /// @param pObj object
-    /// @param pZoomToFit zoom out to fit obj on screen
-    /// @param pZoomBuffer *divide* zoom by this
-    /// @param pMinimumZoom clamps zoom to this
-    /// @param pMaximumZoom clamps zoom to this
-    SILLY_API_DLL void moveTo(GameObject* pObj, bool pZoomToFit = true, float pZoomBuffer = 1.5f, float pMinimumZoom = 0.0f, float pMaximumZoom = editor::zoom());
-    /// move camera to objs and optionally zoom out
-    /// @param pObjs objects (gets center)
-    /// @param pZoomToFit zoom out to fit objs on screen
-    /// @param pZoomBuffer *divide* zoom by this
-    /// @param pMinimumZoom clamps zoom to this
-    /// @param pMaximumZoom clamps zoom to this
-    SILLY_API_DLL void moveTo(std::span<GameObject* const> pObjs, bool pZoomToFit = true, float pZoomBuffer = 1.5f, float pMinimumZoom = 0.0f, float pMaximumZoom = editor::zoom());
-    /// move camera to objs and optionally zoom out
-    /// @param pObjs objects (gets center)
-    /// @param pZoomToFit zoom out to fit objs on screen
-    /// @param pZoomBuffer *divide* zoom by this
-    /// @param pMinimumZoom clamps zoom to this
-    /// @param pMaximumZoom clamps zoom to this
-    SILLY_API_DLL void moveTo(cocos2d::CCArray* pObjs, bool pZoomToFit = true, float pZoomBuffer = 1.5f, float pMinimumZoom = 0.0f, float pMaximumZoom = editor::zoom());
-
-    /// add group to object
-    /// @param pObj target
-    /// @param pGroup group
-    SILLY_API_DLL void addGroup(GameObject* pObj, int pGroup);
-    /// add group to objects
-    /// @param pObjs targets
-    /// @param pGroup group
-    SILLY_API_DLL void addGroup(std::span<GameObject* const> pObjs, int pGroup);
-    /// add group to objects
-    /// @param pObjs targets
-    /// @param pGroup group
-    SILLY_API_DLL void addGroup(cocos2d::CCArray* pObjs, int pGroup);
-    /// remove group from object
-    /// @param pObj targets
-    /// @param pGroup group
-    SILLY_API_DLL void removeGroup(GameObject* pObj, int pGroup);
-    /// remove group from objects
-    /// @param pObjs targets
-    /// @param pGroup group
-    SILLY_API_DLL void removeGroup(std::span<GameObject* const> pObjs, int pGroup);
-    /// remove group from objects
-    /// @param pObjs targets
-    /// @param pGroup group
-    SILLY_API_DLL void removeGroup(cocos2d::CCArray* pObjs, int pGroup);
-
-    /// deletes object
-    SILLY_API_DLL void remove(GameObject* pObj, bool pUndo = false);
-    /// deletes objects
-    SILLY_API_DLL void remove(std::span<GameObject* const> pObjs, bool pUndo = false);
-    /// deletes objects
-    SILLY_API_DLL void remove(cocos2d::CCArray* pObjs, bool pUndo = false);
-
     SILLY_API_DLL void move(GameObject* pObj, cocos2d::CCPoint pTo, bool pUndo = false);
     SILLY_API_DLL void move(std::span<GameObject* const> pObjs, cocos2d::CCPoint pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER);
     SILLY_API_DLL void move(cocos2d::CCArray* pObjs, cocos2d::CCPoint pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER);
@@ -236,4 +223,44 @@ namespace nwo5::editor::object {
     SILLY_API_DLL void scaleBy(cocos2d::CCArray* pObjs, float pMod, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
     SILLY_API_DLL void scaleXBy(cocos2d::CCArray* pObjs, float pMod, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
     SILLY_API_DLL void scaleYBy(cocos2d::CCArray* pObjs, float pMod, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
+
+    // these are all getting moved to editor:: and renamed lol
+
+    /// obj count for level
+    /// @returns object
+    SILLY_API_DLL size_t count();
+
+    /// calls callback for every object active in section
+    /// prevter made this iirc
+    /// @param pCallback callback
+    SILLY_API_DLL void forEachInSection(geode::Function<void(GameObject*)> pCallback);
+
+    /// @deprecated use editor::objectArray
+    SILLY_API_DLL cocos2d::CCArray* getAll(bool pCopy = false);
+    /// @deprecated use editor::objectsWithGroup
+    SILLY_API_DLL cocos2d::CCArray* getWithGroup(int pGroup, bool pCopy = false);
+    /// @deprecated use editor::groupParent
+    SILLY_API_DLL GameObject* getParent(int pGroup);
+
+    /// move camera to obj and optionally zoom out
+    /// @param pObj object
+    /// @param pZoomToFit zoom out to fit obj on screen
+    /// @param pZoomBuffer *divide* zoom by this
+    /// @param pMinimumZoom clamps zoom to this
+    /// @param pMaximumZoom clamps zoom to this
+    SILLY_API_DLL void moveTo(GameObject* pObj, bool pZoomToFit = true, float pZoomBuffer = 1.5f, float pMinimumZoom = 0.0f, float pMaximumZoom = editor::zoom());
+    /// move camera to objs and optionally zoom out
+    /// @param pObjs objects (gets center)
+    /// @param pZoomToFit zoom out to fit objs on screen
+    /// @param pZoomBuffer *divide* zoom by this
+    /// @param pMinimumZoom clamps zoom to this
+    /// @param pMaximumZoom clamps zoom to this
+    SILLY_API_DLL void moveTo(std::span<GameObject* const> pObjs, bool pZoomToFit = true, float pZoomBuffer = 1.5f, float pMinimumZoom = 0.0f, float pMaximumZoom = editor::zoom());
+    /// move camera to objs and optionally zoom out
+    /// @param pObjs objects (gets center)
+    /// @param pZoomToFit zoom out to fit objs on screen
+    /// @param pZoomBuffer *divide* zoom by this
+    /// @param pMinimumZoom clamps zoom to this
+    /// @param pMaximumZoom clamps zoom to this
+    SILLY_API_DLL void moveTo(cocos2d::CCArray* pObjs, bool pZoomToFit = true, float pZoomBuffer = 1.5f, float pMinimumZoom = 0.0f, float pMaximumZoom = editor::zoom());
 }

@@ -1,3 +1,8 @@
+## v2.2.0
+**Added**
+
+- more editor object utils
+
 ## v2.1.1
 **Fixed**
 
