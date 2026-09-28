@@ -9,37 +9,79 @@ namespace nwo5::editor::object {
     SILLY_API_DLL std::string string(std::span<GameObject* const> pObjs);
     /// get obj string seperated with ;
     SILLY_API_DLL std::string string(cocos2d::CCArray* pObjs);
+
+    // these are getting namespace impl'd, sry i gotta keep in tho until 2.209
+    
+    /// @deprecated use the templated create function instead
+    SILLY_API_DLL GameObject* createObject(int pID, bool pUndo = false, bool pSetup = true);
+    /// @deprecated use the templated create function instead
+    SILLY_API_DLL GameObject* createObject(int pID, cocos2d::CCPoint pPos, bool pUndo = false, bool pSetup = true);
+    /// @deprecated use the templated create function instead
+    SILLY_API_DLL GameObject* createObject(int pID, geode::ZStringView pArgs, bool pUndo = false);
+    /// @deprecated use the templated create function instead
+    SILLY_API_DLL GameObject* createObject(int pID, cocos2d::CCPoint pPos, geode::ZStringView pArgs, bool pUndo = false);
+    /// @deprecated use the templated create function instead
+    SILLY_API_DLL GameObject* createObject(geode::ZStringView pStr, bool pUndo = false);
+    /// @deprecated use the templated create function instead
+    SILLY_API_DLL cocos2d::CCArray* createObjects(geode::ZStringView pStr, bool pUndo = false);
+
+    // back to actual functions
+
     /// create basic object
     /// @param pID obj id
     /// @param pSetup do the basic object setup (e.g. 0.5 duration default for triggers)
     /// @returns obj created
-    SILLY_API_DLL GameObject* createObject(int pID, bool pUndo = false, bool pSetup = true);
+    template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
+    requires std::derived_from<T, GameObject>
+    GameObject* create(int pID, bool pUndo = false, bool pSetup = true) {
+        return static_cast<T*>(createObject(pID, pUndo, pSetup));
+    }
     /// create basic object
     /// @param pID obj id
     /// @param pPos pos to create obj at
     /// @param pSetup do the basic object setup (e.g. 0.5 duration default for triggers)
     /// @returns obj created
-    SILLY_API_DLL GameObject* createObject(int pID, cocos2d::CCPoint pPos, bool pUndo = false, bool pSetup = true);
+    template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
+    requires std::derived_from<T, GameObject>
+    GameObject* create(int pID, cocos2d::CCPoint pPos, bool pUndo = false, bool pSetup = true) {
+        return static_cast<T*>(createObject(pID, pPos, pUndo, pSetup));
+    }
     /// pretty much fmt::format("1,{},2,0,3,0,{}", pID, pArgs)
     /// @param pID obj id
     /// @param pArgs any additional config for the obj as an obj string, can include leading comma
     /// @returns obj created
-    SILLY_API_DLL GameObject* createObject(int pID, geode::ZStringView pArgs, bool pUndo = false);
+    template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
+    requires std::derived_from<T, GameObject>
+    GameObject* create(int pID, geode::ZStringView pArgs, bool pUndo = false) {
+        return static_cast<T*>(createObject(pID, pArgs, pUndo));
+    }
     /// pretty much fmt::format("1,{},2,{},3,{},{}", pID, pPos.x, pPos.y, pArgs)
     /// @param pID obj id
     /// @param pPos pos to create obj at
     /// @param pArgs any additional config for the obj as an obj string, can include leading comma
     /// @note does *not* do basic obj setup (e.g. 0.5 duration default for triggers)
     /// @returns obj created
-    SILLY_API_DLL GameObject* createObject(int pID, cocos2d::CCPoint pPos, geode::ZStringView pArgs, bool pUndo = false);
+    template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
+    requires std::derived_from<T, GameObject>
+    GameObject* create(int pID, cocos2d::CCPoint pPos, geode::ZStringView pArgs, bool pUndo = false) {
+        return static_cast<T*>(createObject(pID, pPos, pArgs, pUndo));
+    }
     /// create object from string
     /// @param pStr obj string
     /// @returns objscreated
-    SILLY_API_DLL GameObject* createObject(geode::ZStringView pStr, bool pUndo = false);
-    /// create objects from string
+    template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
+    requires std::derived_from<T, GameObject>
+    GameObject* create(geode::ZStringView pStr, bool pUndo = false) {
+        return static_cast<T*>(createObject(pStr, pUndo));
+    }
+    /// create mutliple objects from string
     /// @param pStr obj string
     /// @returns objs created
-    SILLY_API_DLL cocos2d::CCArray* createObjects(geode::ZStringView pStr, bool pUndo = false);
+    template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
+    requires std::derived_from<T, GameObject>
+    inline geode::cocos::CCArrayExt<T> createMulti(geode::ZStringView pStr, bool pUndo = false) {
+        return createObjects(pStr, pUndo);
+    }
 
     /// deletes object
     SILLY_API_DLL void remove(GameObject* pObj, bool pUndo = false);
@@ -111,7 +153,7 @@ namespace nwo5::editor::object {
     /// @note pretty much js a decomp of CustomizeObjectLayer::updateSelected
     SILLY_API_DLL void setDetailColor(GameObject* pObj, int pColor);
     SILLY_API_DLL bool hasColor(GameObject* pObj, int pColor, bool pPrimary);
-
+    
     /// get obj id
     /// @returns obj id
     SILLY_API_DLL int id(GameObject* pObj);
@@ -124,12 +166,35 @@ namespace nwo5::editor::object {
     /// @returns obj ids
     SILLY_API_DLL std::vector<int> ids(cocos2d::CCArray* pObjs, bool pSort = false);
 
+    /// get object editor layer
+    /// @returns editor layer
     SILLY_API_DLL int layer(GameObject* pObj);
+    /// set object editor layer
     SILLY_API_DLL void setLayer(GameObject* pObj, int pLayer);
+    /// set objects editor layer
+    SILLY_API_DLL void setLayer(std::span<GameObject* const> pObjs, int pLayer);
+    /// set objects editor layer
+    SILLY_API_DLL void setLayer(cocos2d::CCArray* pObjs, int pLayer);
+    /// get object secondary editor layer
+    /// @returns secondary editor layer
     SILLY_API_DLL int layer2(GameObject* pObj);
+    /// set object secondary editor layer
     SILLY_API_DLL void setLayer2(GameObject* pObj, int pLayer);
+    /// set objects secondary editor layer
+    SILLY_API_DLL void setLayer2(std::span<GameObject* const> pObjs, int pLayer);
+    /// set objects secondary editor layer
+    SILLY_API_DLL void setLayer2(cocos2d::CCArray* pObjs, int pLayer);
 
     SILLY_API_DLL bool canSelectLayer(GameObject* pObj, bool pIgnoreLocked = false);
+
+    /// get object z order
+    SILLY_API_DLL int zOrder(GameObject* pObj);
+    /// set object z order
+    SILLY_API_DLL void setZOrder(GameObject* pObj, int pOrder);
+    /// set objects z order
+    SILLY_API_DLL void setZOrder(std::span<GameObject* const> pObjs, int pOrder);
+    /// set objects z order
+    SILLY_API_DLL void setZOrder(cocos2d::CCArray* pObjs, int pOrder);
 
     /// get bounds of objects
     /// @param pContentSize use content size of object instead of grid size
@@ -180,9 +245,7 @@ namespace nwo5::editor::object {
     /// get (grid)size of object id
     SILLY_API_DLL float size(int pID);
 
-    /// gets grid snapped pos of object
-    /// @param pGridSize grid size object is snapped to
-    /// @returns pos of object snapped to pGridSize
+    /// @deprecated use the equivalent in editor.hpp
     SILLY_API_DLL cocos2d::CCPoint snappedPos(GameObject* pObj, float pGridSize = 30.0f);
 
     SILLY_API_DLL void move(GameObject* pObj, cocos2d::CCPoint pTo, bool pUndo = false);
@@ -224,7 +287,7 @@ namespace nwo5::editor::object {
     SILLY_API_DLL void scaleXBy(cocos2d::CCArray* pObjs, float pMod, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
     SILLY_API_DLL void scaleYBy(cocos2d::CCArray* pObjs, float pMod, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
 
-    // these are all getting moved to editor:: and renamed lol
+    // these are all getting moved to editor.hpp and renamed lol
 
     /// obj count for level
     /// @returns object

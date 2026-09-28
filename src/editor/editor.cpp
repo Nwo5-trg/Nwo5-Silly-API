@@ -444,7 +444,7 @@ namespace nwo5::editor {
     }
 
     CCArray* objectArray(bool pCopy) {
-        return loaded(LoadedType::Editor) ? (pCopy ? CCArray::createWithArray(layer()->m_objects) : layer()->m_objects) : CCArray::create();
+        return loaded(LoadedType::Editor) ? (pCopy ? utils::array::copy(layer()->m_objects) : layer()->m_objects) : CCArray::create();
     }
     CCArray* objectsWithGroup(int pGroup, bool pCopy) {
         if (notLoaded(LoadedType::Editor)) {
@@ -452,7 +452,7 @@ namespace nwo5::editor {
         }
         
         if (auto ptr = layer()->m_groupDict->objectForKey(pGroup)) {
-            return pCopy ? CCArray::createWithArray(static_cast<CCArray*>(ptr)) : static_cast<CCArray*>(ptr);
+            return pCopy ? utils::array::copy(static_cast<CCArray*>(ptr)) : static_cast<CCArray*>(ptr);
         }
         else {
             return CCArray::create();
@@ -460,6 +460,22 @@ namespace nwo5::editor {
     }
     GameObject* groupParent(int pGroup) {
         return loaded(LoadedType::Editor) ? layer()->getGroupParent(pGroup) : nullptr;
+    }
+
+    cocos2d::CCPoint snappedPos(cocos2d::CCPoint pPos, std::optional<int> pID, float pGridSize) {
+        const auto offset = ui()->offsetForKey(pID.value_or(1));
+        const auto pos = pPos - offset;
+        const auto gridSize = pGridSize * (editor::object::size(pID.value_or(1)) / 30.0f);
+
+        return CCPoint{
+            (std::floor(pos.x / gridSize) + 0.5f) * gridSize,
+            (std::floor(pos.y / gridSize) + 0.5f) * gridSize
+        } + offset;
+    }
+    cocos2d::CCPoint snappedPos(GameObject* pObj, float pGridSize) {
+        return snappedPos(
+            pObj->getRealPosition(), editor::object::id(pObj), pGridSize
+        );
     }
 
     int nextFreeGroup(int pOffset, bool pCheckTargetGroups) {

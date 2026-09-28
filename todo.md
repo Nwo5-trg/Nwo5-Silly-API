@@ -8,6 +8,7 @@
 - make saved setting event final
 - separate query into its own file
 - change createObject functions to just be create
-- make the create object functions templated so it just static casts on construct
 - remove deprecated functions
 - make all the trigger/editor constants inline constexpr
+- rename object_ids to max_object_id
+- finish trigger sprite colors and make a getter specifically for sprite color instead of weirdly mixing color/sprite color

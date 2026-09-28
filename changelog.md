@@ -1,7 +1,12 @@
 ## v2.2.0
 **Added**
 
-- more editor object utils
+- more editor utils
+
+**Fixed**
+
+- some editor util crashes
+- some group stuff (might replace later idk)
 
 ## v2.1.1
 **Fixed**

@@ -109,6 +109,15 @@ namespace nwo5::editor {
     /// @returns group parent or returns nullptr if group has no group parent
     SILLY_API_DLL GameObject* groupParent(int pGroup);
 
+    /// gets grid snapped pos, optionally using an id as an offset
+    /// @param pGridSize grid size
+    /// @returns pos of snapped position
+    SILLY_API_DLL cocos2d::CCPoint snappedPos(cocos2d::CCPoint pPos, std::optional<int> pID = std::nullopt, float pGridSize = 30.0f);
+    /// gets grid snapped pos of object
+    /// @param pGridSize grid size object is snapped to
+    /// @returns pos of object snapped to pGridSize
+    SILLY_API_DLL cocos2d::CCPoint snappedPos(GameObject* pObj, float pGridSize = 30.0f);
+
     /// get next free group
     /// @param pOffset search starts from this gid, clamped from 1-9999
     /// @note only accounts for target gid and center gid rn, ill do like sequence/advrand checks and stuff l8r

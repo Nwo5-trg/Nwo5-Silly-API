@@ -1,4 +1,5 @@
 #include <editor/include.hpp>
+#include <utils/include.hpp>
 #include <ranges>
 
 using namespace geode::prelude;
@@ -13,11 +14,14 @@ namespace nwo5::editor::object {
         }
 
         return string::join(
-            std::ranges::to<std::vector>( // fuck pipe operator all my homies hate pipe operator
-                std::views::transform(pObjs, [] (GameObject* pObj) {
+            // fuck pipe operator all my homies hate pipe operator
+            /// girl stfu stop trying to make the code uglier cuz u wanna b special
+            pObjs 
+                | std::views::transform([] (GameObject* pObj) {
                     return std::string(pObj->getSaveString(editor::layer()));
                 })
-            ), ";"
+                | std::ranges::to<std::vector>(),
+            ";"
         );
     }
     std::string string(CCArray* pObjs) {
@@ -28,11 +32,12 @@ namespace nwo5::editor::object {
         auto ext = CCArrayExt<GameObject*>(pObjs);
 
         return string::join(
-            std::ranges::to<std::vector>( // fuck pipe operator all my homies hate pipe operator
-                std::views::transform(ext, [] (GameObject* pObj) {
+            ext
+                | std::views::transform([] (GameObject* pObj) {
                     return std::string(pObj->getSaveString(editor::layer()));
                 })
-            ), ";"
+                | std::ranges::to<std::vector>(),
+                ";"
         );
     }
     GameObject* createObject(int pID, bool pUndo, bool pSetup) {
@@ -281,32 +286,46 @@ namespace nwo5::editor::object {
 
     void addGroup(GameObject* pObj, int pGroup) {
         if (loaded(LoadedType::Editor)) {
-            pObj->addToGroup(pGroup);
+            const auto res = pObj->addToGroup(pGroup);
+
+            if (res == 1) {
+                editor::layer()->addToGroup(pObj, pGroup, false);
+            }
         }
     }
     void addGroup(std::span<GameObject* const> pObjs, int pGroup) {
         if (loaded(LoadedType::Editor)) {
             for (auto obj : pObjs) {
-                obj->addToGroup(pGroup);
+                const auto res = obj->addToGroup(pGroup);
+
+                if (res == 1) {
+                    editor::layer()->addToGroup(obj, pGroup, false);
+                }
             }
         }
     }
     void addGroup(CCArray* pObjs, int pGroup) {
         if (loaded(LoadedType::Editor)) {
             for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
-                obj->addToGroup(pGroup);
+                const auto res = obj->addToGroup(pGroup);
+
+                if (res == 1) {
+                    editor::layer()->addToGroup(obj, pGroup, false);
+                }
             }
         }
     }
     void removeGroup(GameObject* pObj, int pGroup) {
         if (loaded(LoadedType::Editor)) {
             pObj->removeFromGroup(pGroup);
+            editor::layer()->removeFromGroup(pObj, pGroup);
         }
     }
     void removeGroup(std::span<GameObject* const> pObjs, int pGroup) {
         if (loaded(LoadedType::Editor)) {
             for (auto obj : pObjs) {
                 obj->removeFromGroup(pGroup);
+                editor::layer()->removeFromGroup(obj, pGroup);
             }
         }
     }
@@ -314,6 +333,7 @@ namespace nwo5::editor::object {
         if (loaded(LoadedType::Editor)) {
             for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
                 obj->removeFromGroup(pGroup);
+                editor::layer()->removeFromGroup(obj, pGroup);
             }
         }
     }
@@ -450,6 +470,20 @@ namespace nwo5::editor::object {
             pObj->m_editorLayer = pLayer;
         }
     }
+    void setLayer(std::span<GameObject* const> pObjs, int pLayer) {
+        if (pLayer >= 0 && pLayer <= editor::constants::MAX_LAYERS) {
+            for (auto obj : pObjs) {
+                obj->m_editorLayer = pLayer;
+            }
+        }
+    }
+    void setLayer(CCArray* pObjs, int pLayer) {
+        if (pLayer >= 0 && pLayer <= editor::constants::MAX_LAYERS) {
+            for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
+                obj->m_editorLayer = pLayer;
+            }
+        }
+    }
     int layer2(GameObject* pObj) {
         return pObj->m_editorLayer2;
     }
@@ -458,9 +492,43 @@ namespace nwo5::editor::object {
             pObj->m_editorLayer2 = pLayer;
         }
     }
+    void setLayer2(std::span<GameObject* const> pObjs, int pLayer) {
+        if (pLayer >= 0 && pLayer <= editor::constants::MAX_LAYERS) {
+            for (auto obj : pObjs) {
+                obj->m_editorLayer2 = pLayer;
+            }
+        }
+    }
+    void setLayer2(CCArray* pObjs, int pLayer) {
+        if (pLayer >= 0 && pLayer <= editor::constants::MAX_LAYERS) {
+            for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
+                obj->m_editorLayer2 = pLayer;
+            }
+        }
+    }
 
     bool canSelectLayer(GameObject* pObj, bool pIgnoreLocked) {
         return editor::layerSelectable(pObj->m_editorLayer, pIgnoreLocked) || editor::layerSelectable(pObj->m_editorLayer2, pIgnoreLocked);
+    }
+
+    int zOrder(GameObject* pObj) {
+        return pObj->m_zOrder;
+    }
+    void setZOrder(GameObject* pObj, int pOrder) {
+        pObj->m_zOrder = pOrder;
+        pObj->m_updateParents = true;
+    }
+    void setZOrder(std::span<GameObject* const> pObjs, int pOrder) {
+        for (auto obj : pObjs) {
+            obj->m_zOrder = pOrder;
+            obj->m_updateParents = true;
+        }
+    }
+    void setZOrder(CCArray* pObjs, int pOrder) {
+        for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
+            obj->m_zOrder = pOrder;
+            obj->m_updateParents = true;
+        }
     }
 
     CCRect bounds(GameObject* pObj, bool pContentSize) {
@@ -1122,7 +1190,7 @@ namespace nwo5::editor::object {
     }
 
     CCArray* getAll(bool pCopy) {
-        return loaded(LoadedType::Editor) ? (pCopy ? CCArray::createWithArray(editor::layer()->m_objects) : editor::layer()->m_objects) : CCArray::create();
+        return loaded(LoadedType::Editor) ? (pCopy ? utils::array::copy(editor::layer()->m_objects) : editor::layer()->m_objects) : CCArray::create();
     }
     CCArray* getWithGroup(int pGroup, bool pCopy) {
         if (notLoaded(LoadedType::Editor)) {
@@ -1130,7 +1198,7 @@ namespace nwo5::editor::object {
         }
         
         if (auto ptr = editor::layer()->m_groupDict->objectForKey(pGroup)) {
-            return pCopy ? CCArray::createWithArray(static_cast<CCArray*>(ptr)) : static_cast<CCArray*>(ptr);
+            return pCopy ? utils::array::copy(static_cast<CCArray*>(ptr)) : static_cast<CCArray*>(ptr);
         }
         else {
             return CCArray::create();
