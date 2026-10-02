@@ -79,7 +79,7 @@ namespace nwo5::editor::object {
     /// @returns objs created
     template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
     requires std::derived_from<T, GameObject>
-    inline geode::cocos::CCArrayExt<T> createMulti(geode::ZStringView pStr, bool pUndo = false) {
+    geode::cocos::CCArrayExt<T> createMulti(geode::ZStringView pStr, bool pUndo = false) {
         return createObjects(pStr, pUndo);
     }
 

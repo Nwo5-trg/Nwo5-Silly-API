@@ -262,8 +262,6 @@ namespace nwo5::utils {
             toVert(pCenter), color_cast<ccColor4B>(fill), {}
         };
 
-        pOutlineThickness /= 2;
-
         const CCSize inner = pRadius - pOutlineThickness;
         // i love cocos operators :3
         const CCSize outer = pRadius - (-pOutlineThickness);
@@ -381,31 +379,31 @@ namespace nwo5::utils {
             const auto outlineColor = color_cast<ccColor4B>(pOutlineColor);
 
             ptr[i++] = {
-                {v0, outlineColor, {}}, {v1, outlineColor, {}}, {{v1.x, v1.y + pOutlineThickness}, outlineColor, {}}
+                {{v0.x - pOutlineThickness, v0.y - pOutlineThickness}, outlineColor, {}}, {{v1.x + pOutlineThickness, v1.y - pOutlineThickness}, outlineColor, {}}, {{v1.x + pOutlineThickness, v1.y + pOutlineThickness}, outlineColor, {}}
             };
             ptr[i++] = {
-                {v0, outlineColor, {}}, {{v1.x, v1.y + pOutlineThickness}, outlineColor, {}}, {{v0.x, v0.y + pOutlineThickness}, outlineColor, {}}
-            };
-
-            ptr[i++] = {
-                {{v2.x, v2.y - pOutlineThickness}, outlineColor, {}}, {{v3.x, v3.y - pOutlineThickness}, outlineColor, {}}, {v3, outlineColor, {}}
-            };
-            ptr[i++] = {
-                {{v2.x, v2.y - pOutlineThickness}, outlineColor, {}}, {v3, outlineColor, {}}, {v2, outlineColor, {}}
+                {{v0.x - pOutlineThickness, v0.y - pOutlineThickness}, outlineColor, {}}, {{v1.x + pOutlineThickness, v1.y + pOutlineThickness}, outlineColor, {}}, {{v0.x - pOutlineThickness, v0.y + pOutlineThickness}, outlineColor, {}}
             };
 
             ptr[i++] = {
-                {{v0.x, v0.y + pOutlineThickness}, outlineColor, {}}, {{v0.x + pOutlineThickness, v0.y + pOutlineThickness}, outlineColor, {}}, {{v2.x + pOutlineThickness, v2.y - pOutlineThickness}, outlineColor, {}}
+                {{v2.x - pOutlineThickness, v2.y - pOutlineThickness}, outlineColor, {}}, {{v3.x + pOutlineThickness, v3.y - pOutlineThickness}, outlineColor, {}}, {{v3.x + pOutlineThickness, v3.y + pOutlineThickness}, outlineColor, {}}
             };
             ptr[i++] = {
-                {{v0.x, v0.y + pOutlineThickness}, outlineColor, {}}, {{v2.x + pOutlineThickness, v2.y - pOutlineThickness}, outlineColor, {}}, {{v2.x, v2.y - pOutlineThickness}, outlineColor, {}}
+                {{v2.x - pOutlineThickness, v2.y - pOutlineThickness}, outlineColor, {}}, {{v3.x + pOutlineThickness, v3.y + pOutlineThickness}, outlineColor, {}}, {{v2.x - pOutlineThickness, v2.y + pOutlineThickness}, outlineColor, {}}
             };
 
             ptr[i++] = {
-                {{v1.x - pOutlineThickness, v1.y + pOutlineThickness}, outlineColor, {}}, {{v1.x, v1.y + pOutlineThickness}, outlineColor, {}}, {{v3.x, v3.y - pOutlineThickness}, outlineColor, {}}
+                {{v0.x - pOutlineThickness, v0.y - pOutlineThickness}, outlineColor, {}}, {{v0.x + pOutlineThickness, v0.y - pOutlineThickness}, outlineColor, {}}, {{v2.x + pOutlineThickness, v2.y + pOutlineThickness}, outlineColor, {}}
             };
             ptr[i++] = {
-                {{v1.x - pOutlineThickness, v1.y + pOutlineThickness}, outlineColor, {}}, {{v3.x, v3.y - pOutlineThickness}, outlineColor, {}}, {{v3.x - pOutlineThickness, v3.y - pOutlineThickness}, outlineColor, {}}
+                {{v0.x - pOutlineThickness, v0.y - pOutlineThickness}, outlineColor, {}}, {{v2.x + pOutlineThickness, v2.y + pOutlineThickness}, outlineColor, {}}, {{v2.x - pOutlineThickness, v2.y + pOutlineThickness}, outlineColor, {}}
+            };
+
+            ptr[i++] = {
+                {{v1.x - pOutlineThickness, v1.y - pOutlineThickness}, outlineColor, {}}, {{v1.x + pOutlineThickness, v1.y - pOutlineThickness}, outlineColor, {}}, {{v3.x + pOutlineThickness, v3.y + pOutlineThickness}, outlineColor, {}}
+            };
+            ptr[i++] = {
+                {{v1.x - pOutlineThickness, v1.y - pOutlineThickness}, outlineColor, {}}, {{v3.x + pOutlineThickness, v3.y + pOutlineThickness}, outlineColor, {}}, {{v3.x - pOutlineThickness, v3.y + pOutlineThickness}, outlineColor, {}}
             };
         }
 

@@ -644,9 +644,11 @@ namespace nwo5::editor::object {
         map.clear();
 
         for (auto obj : pObjs) {
-            if (map.contains(obj)) continue;
+            if (map.contains(obj)) {
+                continue;
+            }
 
-            int currentClusterIndex = pOut.size();
+            const int currentClusterIndex = pOut.size();
             pOut.emplace_back();
             auto& currentCluster = pOut.back();
 
@@ -655,17 +657,19 @@ namespace nwo5::editor::object {
             map[obj] = currentClusterIndex;
 
             while (!queue.empty()) {
-                auto obj = queue.back();
-                auto pos = obj->getRealPosition();
+                auto currentObj = queue.back();
+                const auto pos = currentObj->getRealPosition();
                 queue.pop_back();
-                currentCluster.push_back(obj);
+                currentCluster.push_back(currentObj);
 
                 for (auto neighbour : pObjs) {
-                    if (map.contains(neighbour)) continue;
+                    if (map.find(neighbour) != map.end()) {
+                        continue;
+                    }
 
-                    auto neighbourPos = neighbour->getRealPosition();
+                    const auto neighbourPos = neighbour->getRealPosition();
 
-                    if (std::fabs(pos.x - neighbourPos.x) <= pClusterSize && std::fabs(pos.y - neighbourPos.y) <= pClusterSize) {
+                    if (std::abs(pos.x - neighbourPos.x) <= pClusterSize && std::abs(pos.y - neighbourPos.y) <= pClusterSize) {
                         map[neighbour] = currentClusterIndex;
                         queue.push_back(neighbour);
                     }
@@ -683,9 +687,11 @@ namespace nwo5::editor::object {
         auto ext = pObjs->asExt<GameObject*>();
 
         for (auto obj : ext) {
-            if (map.contains(obj)) continue;
+            if (map.contains(obj)) {
+                continue;
+            }
 
-            int currentClusterIndex = pOut.size();
+            const int currentClusterIndex = pOut.size();
             pOut.emplace_back();
             auto& currentCluster = pOut.back();
 
@@ -694,17 +700,19 @@ namespace nwo5::editor::object {
             map[obj] = currentClusterIndex;
 
             while (!queue.empty()) {
-                auto obj = queue.back();
-                auto pos = obj->getRealPosition();
+                auto currentObj = queue.back();
+                const auto pos = currentObj->getRealPosition();
                 queue.pop_back();
-                currentCluster.push_back(obj);
+                currentCluster.push_back(currentObj);
 
                 for (auto neighbour : ext) {
-                    if (map.contains(neighbour)) continue;
+                    if (map.find(neighbour) != map.end()) {
+                        continue;
+                    }
 
-                    auto neighbourPos = neighbour->getRealPosition();
+                    const auto neighbourPos = neighbour->getRealPosition();
 
-                    if (std::fabs(pos.x - neighbourPos.x) <= pClusterSize && std::fabs(pos.y - neighbourPos.y) <= pClusterSize) {
+                    if (std::abs(pos.x - neighbourPos.x) <= pClusterSize && std::abs(pos.y - neighbourPos.y) <= pClusterSize) {
                         map[neighbour] = currentClusterIndex;
                         queue.push_back(neighbour);
                     }

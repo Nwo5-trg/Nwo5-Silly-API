@@ -202,7 +202,7 @@ namespace nwo5::ui {
         this->updateText(m_label->getText());
     }
     float Tooltip::getMaxWidth() const {
-        return m_label->getMaxWidth();
+        return m_label->getMaxWidth() + m_padding;
     }
 
     void Tooltip::setFollowMouse(bool pOn) {
@@ -242,6 +242,7 @@ namespace nwo5::ui {
     }
 
     void Tooltip::setPadding(float pPadding) {
+        m_label->setMaxWidth((m_label->getMaxWidth() + m_padding) - pPadding);
         m_padding = pPadding;
     }
     float Tooltip::getPadding() const {

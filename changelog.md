@@ -1,3 +1,10 @@
+## v2.2.1
+**Fixed**
+
+- editor utils prolly
+- tooltip getmaxwidth
+- drawnode drawellipse/circle thickness
+
 ## v2.2.0
 **Added**
 

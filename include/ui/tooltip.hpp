@@ -4,7 +4,7 @@
 
 namespace nwo5::ui {
     /// basic tooltip class 
-    // just create and add as child to ur popup (or to whatever node is the parent to all the nodes thatll have tooltip)
+    /// just create and add as child to ur popup (or to whatever node is the parent to all the nodes thatll have tooltip)
     /// for automatic mode (which is default) add a TooltipInfo userobject with id "nwo5.silly-api/tooltip" to a node and those nodes will show tooltips !
     /// if you want to do all the logic yourself you can just set an updatefunc
     /// @note automatic mode does not pay attention to z order soooo gl with that might make that toggleable later cuz it would b slower
@@ -40,26 +40,26 @@ namespace nwo5::ui {
 
         /// set background opacity
         void setOpacity(uint8_t pOpacity);
-        /// get opacity
+        /// get opacity (default is 127)
         /// @returns background opacity
         uint8_t getOpacity() const;
 
         /// set max width of tooltip
         void setMaxWidth(float pWidth);
-        /// get max width
+        /// get max width (default is 300)
         /// @returns max width
         float getMaxWidth() const;
 
         /// set if tooltip should go to mouse pos
         void setFollowMouse(bool pOn);
-        /// get follow mouse enabled
+        /// get follow mouse enabled (default is true)
         /// @returns tooltip is following mouse
         bool getFollowMouse() const;
 
         /// set if tooltip should show/hide automatically (hides tooltip when disabled)
         /// @note only works with follow mouse enabled
         void setAutomatic(bool pOn);
-        /// get automatic mode enabled
+        /// get automatic mode enabled (default is true)
         /// @returns tooltip is automatic
         bool isAutomatic() const;
 
@@ -67,7 +67,7 @@ namespace nwo5::ui {
         /// you can force an anchor update with Tooltip::updateAnchor
         /// @note only works with follow mouse enabled
         void setDynamicAnchor(bool pOn);
-        /// get dynamic anchor enabled
+        /// get dynamic anchor enabled (default is true)
         /// @returns dynamic anchor enabled
         bool isDynamicAnchor() const;
         /// set default anchor of tooltip and sets current anchor
@@ -76,9 +76,9 @@ namespace nwo5::ui {
         /// @returns default anchor
         cocos2d::CCPoint getDefaultAnchor() const;
 
-        /// set padding (total space between background and label)
+        /// set padding (*total* space between background and label, distance between backround edge and label on either side will be this number / 2)
         void setPadding(float pPadding);
-        /// get padding
+        /// get padding (default is 5)
         /// @returns padding
         float getPadding() const;
 
@@ -87,7 +87,7 @@ namespace nwo5::ui {
 
         /// create tooltip
         /// @param pFont label font
-        /// @param pFollowMouse if tooltip should follow mouse or be static (ie ur responsible for moving it)
+        /// @param pFollowMouse if tooltip should follow mouse (and dynamic anchor) or be static (ie ur responsible for moving it)
         /// @param pAutomatic if follow mouse is true, do you want the tooltip to automatically show/hide on objects with tooltips
         static Tooltip* create(geode::ZStringView pFont, bool pFollowMouse = true, bool pAutomatic = true);
     };

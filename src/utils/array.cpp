@@ -56,7 +56,7 @@ namespace nwo5::utils::array {
         const auto find = pArray->indexOfObject(pObj);
 
         if (find == UINT_MAX) {
-            return CCArray::createWithArray(pArray);
+            return copy(pArray);
         }
 
         const auto pos = pInclusive ? find : find - 1;
@@ -75,7 +75,7 @@ namespace nwo5::utils::array {
     }
     CCArray* before(CCArray* pArray, unsigned int pIndex, bool pInclusive) {
         if (pIndex >= pArray->count()) {
-            return CCArray::createWithArray(pArray);
+            return copy(pArray);
         }
 
         const auto pos = pInclusive ? pIndex : pIndex - 1;
@@ -96,7 +96,7 @@ namespace nwo5::utils::array {
         const auto find = pArray->indexOfObject(pObj);
 
         if (find == UINT_MAX) {
-            return CCArray::createWithArray(pArray);
+            return copy(pArray);
         }
 
         const auto pos = pInclusive ? find : find + 1;
