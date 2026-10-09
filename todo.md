@@ -16,3 +16,5 @@
 - make custom nodes their own namespace (tooltip, drawnode, etc...) and also m_impl all of the old ones
 - rename drawnode use tint to getUseTint
 - rename tooltip isdynamicanchor to getUseDynamicAnchor
+- make the selection get ccarray overloads check for m_selectedObject/m_selectedObjects instead of trusting robtop function cuz it doesnt work for orange teleportals !
+- make geode prefixed functions in ui node to make all the circle buttons

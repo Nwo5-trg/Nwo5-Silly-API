@@ -404,7 +404,7 @@ namespace nwo5::editor {
         return layer()->m_currentLayer;
     }
     bool layerSelectable(int pLayer, bool pIgnoreLocked) {
-        if (notLoaded(LoadedType::EditorValid) || pLayer > editor::constants::MAX_LAYERS || (!pIgnoreLocked && layerLocked(pLayer))) {
+        if (notLoaded(LoadedType::EditorValid) || pLayer > editor::constants::MAX_LAYERS || pLayer < 0 || (!pIgnoreLocked && layerLocked(pLayer))) {
             return false;
         }
         
@@ -413,7 +413,11 @@ namespace nwo5::editor {
         return layer == editor::constants::ALL_LAYERS || layer == pLayer;
     }
     bool layerLocked(int pLayer) {
-        return loaded(LoadedType::EditorValid) && layer()->isLayerLocked(pLayer);
+        if (notLoaded(LoadedType::EditorValid) || pLayer > editor::constants::MAX_LAYERS || pLayer < 0) {
+            return false;
+        }
+
+        return layer()->isLayerLocked(pLayer);
     }
     void setLayer(int pLayer) {
         if (notLoaded(LoadedType::UI) || pLayer > editor::constants::MAX_LAYERS || pLayer < editor::constants::ALL_LAYERS) {

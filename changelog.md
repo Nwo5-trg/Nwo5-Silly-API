@@ -1,3 +1,9 @@
+## v2.2.2
+**Fixed**
+
+- can select layer
+- a crash in layer locked ???
+
 ## v2.2.1
 **Fixed**
 

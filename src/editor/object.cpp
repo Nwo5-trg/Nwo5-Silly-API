@@ -508,7 +508,7 @@ namespace nwo5::editor::object {
     }
 
     bool canSelectLayer(GameObject* pObj, bool pIgnoreLocked) {
-        return editor::layerSelectable(pObj->m_editorLayer, pIgnoreLocked) || editor::layerSelectable(pObj->m_editorLayer2, pIgnoreLocked);
+        return editor::layerSelectable(pObj->m_editorLayer, pIgnoreLocked) || (pObj->m_editorLayer2 && editor::layerSelectable(pObj->m_editorLayer2, pIgnoreLocked));
     }
 
     int zOrder(GameObject* pObj) {
