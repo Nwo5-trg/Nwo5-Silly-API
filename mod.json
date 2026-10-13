@@ -6,9 +6,9 @@
 		"mac": "2.2081",
 		"ios": "2.2081"
 	},
-	"id": "nwo5.silly-api",
+	"id": "nwo5.silly-api.test",
 	"name": "Silly API",
-	"version": "v2.2.3",
+	"version": "v3.0.0",
 	"developer": "Nwo5",
 	"description": "silly editor and general util api :3",
 	"tags": ["developer", "api"],
