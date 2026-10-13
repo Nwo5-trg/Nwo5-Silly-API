@@ -113,9 +113,10 @@ namespace nwo5::ui {
     }
 
     Setup<TextInput> input(CCSize pSize, std::optional<std::string> pPlaceholder, TextInputCallback pCallback) {
+        const std::string str = pPlaceholder.value_or("");
         const float scale = pSize.height / DEFAULT_TEXT_INPUT_HEIGHT;
 
-        auto textInput = TextInput::create(pSize.width / scale, pPlaceholder.value_or(""));
+        auto textInput = TextInput::create(pSize.width / scale, str);
         textInput->setCallback(std::move(pCallback));
         textInput->setScale(scale);
 
@@ -125,7 +126,9 @@ namespace nwo5::ui {
         return input({pWidth, pHeight}, std::move(pPlaceholder), std::move(pCallback));
     }
     Setup<TextInput> input(float pWidth, std::optional<std::string> pPlaceholder, TextInputCallback pCallback) {
-        auto textInput = TextInput::create(pWidth, pPlaceholder.value());
+        const std::string str = pPlaceholder.value_or("");
+
+        auto textInput = TextInput::create(pWidth, str);
         textInput->setCallback(std::move(pCallback));
 
         return textInput;

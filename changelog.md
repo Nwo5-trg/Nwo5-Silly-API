@@ -1,3 +1,12 @@
+## v2.2.3
+**Added**
+
+- more setup functions whats new
+
+**Fixed**
+
+- ui::input
+
 ## v2.2.2
 **Fixed**
 

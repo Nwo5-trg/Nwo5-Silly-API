@@ -570,6 +570,15 @@ namespace nwo5::ui {
 
 
 
+        Setup scaleMultiplier(float pMultiplier) requires std::derived_from<Node, geode::NineSlice> {
+            m_node->setScaleMultiplier(pMultiplier);
+            return m_node;
+        }
+
+
+
+
+
         Setup blendFunc(cocos2d::ccBlendFunc pFunc) requires std::derived_from<Node, cocos2d::CCBlendProtocol> {
             m_node->setBlendFunc(pFunc);
             return m_node;

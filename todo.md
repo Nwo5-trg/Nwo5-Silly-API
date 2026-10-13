@@ -1,5 +1,6 @@
 # stuff i can (should) do whenever
 - fix next free group id or just remove it
+- add warning in about to include all settings wherever you do settingsmanager::get()->load
 
 # changes to make in 2.209
 - rewrite edit button tab api (prolly make it its own namespace)
@@ -17,4 +18,7 @@
 - rename drawnode use tint to getUseTint
 - rename tooltip isdynamicanchor to getUseDynamicAnchor
 - make the selection get ccarray overloads check for m_selectedObject/m_selectedObjects instead of trusting robtop function cuz it doesnt work for orange teleportals !
-- make geode prefixed functions in ui node to make all the circle buttons
+- make all the ui button functions use geode button 
+- remove shorthands for scale/anchor
+- change the layout param nineslice takes to an optional size param (why does it take a layout)
+- make all the setting:: getters be prefixed with get and not just the member name
