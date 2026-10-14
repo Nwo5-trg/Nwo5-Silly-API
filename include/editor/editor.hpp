@@ -54,6 +54,27 @@ namespace nwo5::editor {
     
     /// move editor to position (objectlayer position)
     SILLY_API_DLL void move(cocos2d::CCPoint pPos);
+    /// move camera to obj and optionally zoom out
+    /// @param pObj object
+    /// @param pZoomToFit zoom out to fit obj on screen
+    /// @param pZoomBuffer *divide* zoom by this
+    /// @param pMinimumZoom clamps zoom to this
+    /// @param pMaximumZoom clamps zoom to this
+    SILLY_API_DLL void moveTo(GameObject* pObj, bool pZoomToFit = true, float pZoomBuffer = 1.5f, float pMinimumZoom = 0.0f, float pMaximumZoom = editor::zoom());
+    /// move camera to objs and optionally zoom out
+    /// @param pObjs objects (gets center)
+    /// @param pZoomToFit zoom out to fit objs on screen
+    /// @param pZoomBuffer *divide* zoom by this
+    /// @param pMinimumZoom clamps zoom to this
+    /// @param pMaximumZoom clamps zoom to this
+    SILLY_API_DLL void moveTo(std::span<GameObject* const> pObjs, bool pZoomToFit = true, float pZoomBuffer = 1.5f, float pMinimumZoom = 0.0f, float pMaximumZoom = editor::zoom());
+    /// move camera to objs and optionally zoom out
+    /// @param pObjs objects (gets center)
+    /// @param pZoomToFit zoom out to fit objs on screen
+    /// @param pZoomBuffer *divide* zoom by this
+    /// @param pMinimumZoom clamps zoom to this
+    /// @param pMaximumZoom clamps zoom to this
+    SILLY_API_DLL void moveTo(cocos2d::CCArray* pObjs, bool pZoomToFit = true, float pZoomBuffer = 1.5f, float pMinimumZoom = 0.0f, float pMaximumZoom = editor::zoom());
     /// set editor zoom
     SILLY_API_DLL void setZoom(float pZoom);
 
@@ -117,12 +138,6 @@ namespace nwo5::editor {
     /// @param pGridSize grid size object is snapped to
     /// @returns pos of object snapped to pGridSize
     SILLY_API_DLL cocos2d::CCPoint snappedPos(GameObject* pObj, float pGridSize = 30.0f);
-
-    /// get next free group
-    /// @param pOffset search starts from this gid, clamped from 1-9999
-    /// @note only accounts for target gid and center gid rn, ill do like sequence/advrand checks and stuff l8r
-    /// @returns next free gid or 0 if all 9999 groups are used
-    SILLY_API_DLL int nextFreeGroup(int pOffset = 1, bool pCheckTargetGroups = false);
 
     /// saves current level
     /// @note does nothing if playtesting

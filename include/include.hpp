@@ -4,6 +4,7 @@
 #include "editor/include.hpp"
 #include "utils/include.hpp"
 #include "ui/include.hpp"
+#include "nodes/include.hpp"
 
 namespace nwo5 {
     namespace prelude {
@@ -11,5 +12,6 @@ namespace nwo5 {
         using namespace nwo5::editor::prelude;
         using namespace nwo5::utils::prelude;
         using namespace nwo5::ui::prelude;
+        using namespace nwo5::nodes::prelude;
     }
 };

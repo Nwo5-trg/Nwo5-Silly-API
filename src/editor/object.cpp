@@ -5,6 +5,40 @@
 using namespace geode::prelude;
 
 namespace nwo5::editor::object {
+    namespace impl {
+        GameObject* createObject(int pID, CCPoint pPos, bool pUndo, bool pSetup) {
+            if (notLoaded(LoadedType::EditorValid)) {
+                return nullptr;
+            }
+            
+            if (pSetup) {
+                return editor::layer()->createObject(pID, pPos, !pUndo);
+            }
+            else {
+                auto arr = editor::layer()->createObjectsFromString(fmt::format("1,{},2,{},3,{}", pID, pPos.x, pPos.y), !pUndo, true);
+
+                return arr ? static_cast<GameObject*>(arr->firstObject()) : nullptr;
+            }
+        }
+        GameObject* createObject(int pID, CCPoint pPos, geode::ZStringView pArgs, bool pUndo) {
+            auto arr = editor::layer()->createObjectsFromString(
+                fmt::format(
+                    "1,{},2,{},3,{},{}", pID, pPos.x, pPos.y, pArgs.view().starts_with(',') ? pArgs.view().substr(1) : pArgs.view()
+                ), !pUndo, true
+            );
+
+            return arr ? static_cast<GameObject*>(arr->firstObject()) : nullptr;
+        }
+        GameObject* createObject(geode::ZStringView pStr, bool pUndo) {
+            auto arr = editor::layer()->createObjectsFromString(pStr, !pUndo, true);
+
+            return arr ? static_cast<GameObject*>(arr->firstObject()) : nullptr;
+        }
+        CCArray* createObjects(geode::ZStringView pStr, bool pUndo) {
+            return editor::layer()->createObjectsFromString(pStr, !pUndo, true);
+        }
+    }
+
     std::string string(GameObject* pObj) {
         return loaded(LoadedType::EditorValid) ? std::string(pObj->getSaveString(editor::layer())) : "";
     }
@@ -39,64 +73,6 @@ namespace nwo5::editor::object {
                 | std::ranges::to<std::vector>(),
                 ";"
         );
-    }
-    GameObject* createObject(int pID, bool pUndo, bool pSetup) {
-        if (notLoaded(LoadedType::EditorValid)) {
-            return nullptr;
-        }
-        
-        if (pSetup) {
-            return editor::layer()->createObject(pID, CCPointZero, !pUndo);
-        }
-        else {
-            auto arr = editor::layer()->createObjectsFromString(fmt::format("1,{},2,0,3,0", pID), !pUndo, true);
-
-            return arr ? static_cast<GameObject*>(arr->firstObject()) : nullptr;
-        }
-    }
-    GameObject* createObject(int pID, CCPoint pPos, bool pUndo, bool pSetup) {
-        if (notLoaded(LoadedType::EditorValid)) {
-            return nullptr;
-        }
-        
-        if (pSetup) {
-            return editor::layer()->createObject(pID, pPos, !pUndo);
-        }
-        else {
-            auto arr = editor::layer()->createObjectsFromString(fmt::format("1,{},2,{},3,{}", pID, pPos.x, pPos.y), !pUndo, true);
-
-            return arr ? static_cast<GameObject*>(arr->firstObject()) : nullptr;
-        }
-    }
-    GameObject* createObject(int pID, geode::ZStringView pArgs, bool pUndo) {
-        if (notLoaded(LoadedType::EditorValid)) {
-            return nullptr;
-        }
-
-        auto arr = editor::layer()->createObjectsFromString(
-            fmt::format(
-                "1,{},2,0,3,0,{}", pID, pArgs.view().starts_with(',') ? pArgs.view().substr(1) : pArgs.view()
-            ), !pUndo, true
-        );
-
-        return arr ? static_cast<GameObject*>(arr->firstObject()) : nullptr;
-    }
-    GameObject* createObject(int pID, CCPoint pPos, geode::ZStringView pArgs, bool pUndo) {
-        auto arr = editor::layer()->createObjectsFromString(
-            fmt::format(
-                "1,{},2,{},3,{},{}", pID, pPos.x, pPos.y, pArgs.view().starts_with(',') ? pArgs.view().substr(1) : pArgs.view()
-            ), !pUndo, true
-        );
-
-        return arr ? static_cast<GameObject*>(arr->firstObject()) : nullptr;
-    }
-    GameObject* createObject(geode::ZStringView pStr, bool pUndo) {
-        auto arr = editor::layer()->createObjectsFromString(pStr, !pUndo, true);
-
-        return arr ? static_cast<GameObject*>(arr->firstObject()) : nullptr;
-    }
-    CCArray* createObjects(geode::ZStringView pStr, bool pUndo) {
-        return editor::layer()->createObjectsFromString(pStr, !pUndo, true);
     }
 
     void remove(GameObject* pObj, bool pUndo) {
@@ -339,10 +315,10 @@ namespace nwo5::editor::object {
     }
 
     bool hasParent(int pGroup) {
-        return getParent(pGroup);
+        return groupParent(pGroup);
     }
     bool hasParent(std::span<GameObject* const> pObjs, int pGroup) {
-        auto parent = getParent(pGroup);
+        auto parent = groupParent(pGroup);
 
         if (!parent) {
             return false;
@@ -351,7 +327,7 @@ namespace nwo5::editor::object {
         return std::ranges::contains(pObjs, parent);
     }
     bool hasParent(CCArray* pObjs, int pGroup) {
-        auto parent = getParent(pGroup);
+        auto parent = groupParent(pGroup);
 
         if (!parent) {
             return false;
@@ -742,18 +718,6 @@ namespace nwo5::editor::object {
         return ObjectToolbox::sharedState()->gridNodeSizeForKey(pID); 
     }
 
-    CCPoint snappedPos(GameObject* pObj, float pGridSize) {
-        const auto id = editor::object::id(pObj);
-        const auto offset = ui()->offsetForKey(id);
-        const auto pos = pObj->getRealPosition() - offset;
-        const auto gridSize = pGridSize * (editor::object::size(pObj) / 30.0f);
-
-        return CCPoint{
-            (std::floor(pos.x / gridSize) + 0.5f) * gridSize,
-            (std::floor(pos.y / gridSize) + 0.5f) * gridSize
-        } + offset;
-    }
-
     void move(GameObject* pObj, CCPoint pTo, bool pUndo) {
         moveBy(pObj, pTo - pObj->getRealPosition());
     }
@@ -830,11 +794,11 @@ namespace nwo5::editor::object {
         }
 
         // i dont wanna rewrite rotate logic so for now the better edit way™ will have to do
-        impl::toggleMoveObject(pMove);
+        editor::impl::toggleMoveObject(pMove);
 
         ui()->rotateObjects(pObjs, pTo, pCenter);
 
-        impl::toggleMoveObject(true);
+        editor::impl::toggleMoveObject(true);
     }
 
     void scale(GameObject* pObj, float pX, float pY, bool pUndo) {
@@ -1153,100 +1117,5 @@ namespace nwo5::editor::object {
 
             obj->updateCustomScaleY(obj->m_scaleY * pMod);
         }
-    }
-
-    size_t count() {
-        return getAll()->count();
-    }
-
-    void forEachInSection(geode::Function<void(GameObject*)> pCallback) {
-        if (notLoaded(LoadedType::Editor)) {
-            return;
-        }
-
-        auto game = editor::layer();
-
-        const int count = game->m_sections.empty() ? -1 : game->m_sections.size();
-
-        for (int i = game->m_leftSectionIndex; i <= game->m_rightSectionIndex && i < count; i++) {
-            auto leftSection = game->m_sections[i];
-            
-            if (!leftSection) {
-                continue;
-            }
-
-            const auto leftSectionSize = leftSection->size();
-
-            for (int j = game->m_bottomSectionIndex; j <= game->m_topSectionIndex && j < leftSectionSize; j++) {
-                auto section = leftSection->at(j);
-
-                if (!section) {
-                    continue;
-                }
-
-                const auto sectionSize = game->m_sectionSizes[i]->at(j);
-
-                for (int k = 0; k < sectionSize; k++) {
-                    auto obj = section->at(k);
-                    
-                    if (obj) {
-                        pCallback(obj);
-                    }
-                }
-            }
-        }
-    }
-
-    CCArray* getAll(bool pCopy) {
-        return loaded(LoadedType::Editor) ? (pCopy ? utils::array::copy(editor::layer()->m_objects) : editor::layer()->m_objects) : CCArray::create();
-    }
-    CCArray* getWithGroup(int pGroup, bool pCopy) {
-        if (notLoaded(LoadedType::Editor)) {
-            return CCArray::create();
-        }
-        
-        if (auto ptr = editor::layer()->m_groupDict->objectForKey(pGroup)) {
-            return pCopy ? utils::array::copy(static_cast<CCArray*>(ptr)) : static_cast<CCArray*>(ptr);
-        }
-        else {
-            return CCArray::create();
-        }
-    }
-    GameObject* getParent(int pGroup) {
-        return loaded(LoadedType::Editor) ? editor::layer()->getGroupParent(pGroup) : nullptr;
-    }
-
-    void moveTo(GameObject* pObj, bool pZoomToFit, float pZoomBuffer, float pMinimumZoom, float pMaximumZoom) {
-        const auto bounds = editor::object::bounds(pObj, true);
-
-        editor::move(bounds.origin + bounds.size / 2);
-        editor::setZoom(
-            std::clamp(
-                (CCDirector::get()->getWinSize().width / bounds.size.width) / 1.5f, 
-                pMinimumZoom, pMaximumZoom
-            )
-        );
-    }
-    void moveTo(std::span<GameObject* const> pObjs, bool pZoomToFit, float pZoomBuffer, float pMinimumZoom, float pMaximumZoom) {
-        const auto bounds = editor::object::bounds(pObjs, true);
-
-        editor::move(bounds.origin + bounds.size / 2);
-        editor::setZoom(
-            std::clamp(
-                (CCDirector::get()->getWinSize().width / bounds.size.width) / 1.5f, 
-                pMinimumZoom, pMaximumZoom
-            )
-        );
-    }
-    void moveTo(CCArray* pObjs, bool pZoomToFit, float pZoomBuffer, float pMinimumZoom, float pMaximumZoom) {
-        const auto bounds = editor::object::bounds(pObjs);
-
-        editor::move(bounds.origin + bounds.size / 2);
-        editor::setZoom(
-            std::clamp(
-                (CCDirector::get()->getWinSize().width / bounds.size.width) / 1.5f, 
-                pMinimumZoom, pMaximumZoom
-            )
-        );
     }
 }

@@ -198,7 +198,7 @@ namespace nwo5::editor::trigger {
 
 // making this collapsable
 namespace nwo5::editor::trigger {
-    constexpr int COLOR_TRIGGER = 899;
+    static constexpr int COLOR_TRIGGER = 899;
     template<> struct impl::Trigger<COLOR_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Color, {InputType::Color, true}, InputType::None, InputType::None, 
@@ -208,7 +208,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = EffectGameObject;
         static constexpr auto note = "target is m_targetColor";
     };
-    constexpr int MOVE_TRIGGER = 901;
+    static constexpr int MOVE_TRIGGER = 901;
     template<> struct impl::Trigger<MOVE_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, {InputType::Group, true}, {InputType::Group, true}, InputType::None, 
@@ -218,7 +218,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = EffectGameObject;
         static constexpr auto note = "center gid is m_targetModCenterID, targetpos gid is center";
     };
-    constexpr int STOP_TRIGGER = 1616;
+    static constexpr int STOP_TRIGGER = 1616;
     template<> struct impl::Trigger<STOP_TRIGGER> {
         static constexpr TriggerInfo info{
             {InputType::Group, InputType::Control}, InputType::None, InputType::None, InputType::None, 
@@ -227,7 +227,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int PULSE_TRIGGER = 1006;
+    static constexpr int PULSE_TRIGGER = 1006;
     template<> struct impl::Trigger<PULSE_TRIGGER> {
         static constexpr TriggerInfo info{
             {InputType::Color, InputType::Group}, {InputType::Color, true}, InputType::None, InputType::None, 
@@ -237,7 +237,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = EffectGameObject;
         static constexpr auto note = "always uses target group regardless of mode, duration uses 3 members in EffectGameObject";
     };
-    constexpr int ALPHA_TRIGGER = 1007;
+    static constexpr int ALPHA_TRIGGER = 1007;
     template<> struct impl::Trigger<ALPHA_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::None, InputType::None, InputType::None, 
@@ -246,7 +246,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int TOGGLE_TRIGGER = 1049;
+    static constexpr int TOGGLE_TRIGGER = 1049;
     template<> struct impl::Trigger<TOGGLE_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::None, InputType::None, InputType::None, 
@@ -256,7 +256,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = EffectGameObject;
         static constexpr auto note = "color can change based on toggle";
     };
-    constexpr int SPAWN_TRIGGER = 1268;
+    static constexpr int SPAWN_TRIGGER = 1268;
     template<> struct impl::Trigger<SPAWN_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, {InputType::GroupArray, true}, InputType::None, InputType::None, 
@@ -265,7 +265,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = SpawnTriggerGameObject;
     };
-    constexpr int ROTATE_TRIGGER = 1346;
+    static constexpr int ROTATE_TRIGGER = 1346;
     template<> struct impl::Trigger<ROTATE_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Group, {InputType::Group, true}, InputType::None, 
@@ -274,7 +274,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int SCALE_TRIGGER = 2067;
+    static constexpr int SCALE_TRIGGER = 2067;
     template<> struct impl::Trigger<SCALE_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Group, InputType::None, InputType::None, 
@@ -283,7 +283,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = TransformTriggerGameObject;
     };
-    constexpr int FOLLOW_TRIGGER = 1347;
+    static constexpr int FOLLOW_TRIGGER = 1347;
     template<> struct impl::Trigger<FOLLOW_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Group, InputType::None, InputType::None, 
@@ -292,7 +292,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int SHAKE_TRIGGER = 1520;
+    static constexpr int SHAKE_TRIGGER = 1520;
     template<> struct impl::Trigger<SHAKE_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -301,7 +301,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int ANIMATION_TRIGGER = 1585;
+    static constexpr int ANIMATION_TRIGGER = 1585;
     template<> struct impl::Trigger<ANIMATION_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Animation, InputType::None, InputType::None, 
@@ -311,7 +311,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = EffectGameObject;
         static constexpr auto note = "animation id is m_animationID";
     };
-    constexpr int KEYFRAME_TRIGGER = 3033;
+    static constexpr int KEYFRAME_TRIGGER = 3033;
     template<> struct impl::Trigger<KEYFRAME_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Group, InputType::Animation, InputType::None, 
@@ -321,7 +321,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = KeyframeAnimTriggerObject;
         static constexpr auto note = "parent gid is center, animation group is m_animationID";
     };
-    constexpr int FOLLOW_PLAYER_Y_TRIGGER = 1814;
+    static constexpr int FOLLOW_PLAYER_Y_TRIGGER = 1814;
     template<> struct impl::Trigger<FOLLOW_PLAYER_Y_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::None, InputType::None, InputType::None, 
@@ -330,7 +330,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int ADVANCED_FOLLOW_TRIGGER = 3016;
+    static constexpr int ADVANCED_FOLLOW_TRIGGER = 3016;
     template<> struct impl::Trigger<ADVANCED_FOLLOW_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Group, InputType::None, InputType::None, 
@@ -340,7 +340,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = EffectGameObject;
         static constexpr auto note = "follow gid is center";
     };
-    constexpr int EDIT_ADVANCED_FOLLOW_TRIGGER = 3660;
+    static constexpr int EDIT_ADVANCED_FOLLOW_TRIGGER = 3660;
     template<> struct impl::Trigger<EDIT_ADVANCED_FOLLOW_TRIGGER> {
         static constexpr TriggerInfo info{
             {InputType::Group, InputType::Control}, InputType::None, InputType::None, InputType::None, 
@@ -349,7 +349,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int RETARGET_ADVANCED_FOLLOW_TRIGGER = 3661;
+    static constexpr int RETARGET_ADVANCED_FOLLOW_TRIGGER = 3661;
     template<> struct impl::Trigger<RETARGET_ADVANCED_FOLLOW_TRIGGER> {
         static constexpr TriggerInfo info{
             {InputType::Group, InputType::Control}, InputType::Group, InputType::None, InputType::None, 
@@ -359,7 +359,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = EffectGameObject;
         static constexpr auto note = "follow gid is center";
     };
-    constexpr int AREA_MOVE_TRIGGER = 3006;
+    static constexpr int AREA_MOVE_TRIGGER = 3006;
     template<> struct impl::Trigger<AREA_MOVE_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Group, InputType::Effect, InputType::None, 
@@ -369,7 +369,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = EnterEffectObject;
         static constexpr auto note = "easing has 2 types stored in EnterEffectObject, effect id is m_effectID, when m_special target isnt 0, its prioritized over center group";
     };
-    constexpr int AREA_ROTATE_TRIGGER = 3007;
+    static constexpr int AREA_ROTATE_TRIGGER = 3007;
     template<> struct impl::Trigger<AREA_ROTATE_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Group, InputType::Effect, InputType::None, 
@@ -379,7 +379,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = EnterEffectObject;
         static constexpr auto note = "easing has 2 types stored in EnterEffectObject, effect id is m_effectID, when m_special target isnt 0, its prioritized over center group";
     };
-    constexpr int AREA_SCALE_TRIGGER = 3008;
+    static constexpr int AREA_SCALE_TRIGGER = 3008;
     template<> struct impl::Trigger<AREA_SCALE_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Group, InputType::Effect, InputType::None, 
@@ -389,7 +389,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = EnterEffectObject;
         static constexpr auto note = "easing has 2 types stored in EnterEffectObject, effect id is m_effectID, when m_special target isnt 0, its prioritized over center group";
     };
-    constexpr int AREA_FADE_TRIGGER = 3009;
+    static constexpr int AREA_FADE_TRIGGER = 3009;
     template<> struct impl::Trigger<AREA_FADE_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Group, InputType::Effect, InputType::None, 
@@ -399,7 +399,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = EnterEffectObject;
         static constexpr auto note = "easing has 2 types stored in EnterEffectObject, effect id is m_effectID, when m_special target isnt 0, its prioritized over center group";
     };
-    constexpr int AREA_TINT_TRIGGER = 3010;
+    static constexpr int AREA_TINT_TRIGGER = 3010;
     template<> struct impl::Trigger<AREA_TINT_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Group, InputType::Effect, InputType::Color, 
@@ -409,7 +409,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = EnterEffectObject;
         static constexpr auto note = "easing has 2 types stored in EnterEffectObject, effect id is m_effectID, color reference channel is m_tintChannelID, when m_special target isnt 0, its prioritized over center group";
     };
-    constexpr int EDIT_AREA_MOVE_TRIGGER = 3011;
+    static constexpr int EDIT_AREA_MOVE_TRIGGER = 3011;
     template<> struct impl::Trigger<EDIT_AREA_MOVE_TRIGGER> {
         static constexpr TriggerInfo info{
             {InputType::Group, InputType::Effect}, InputType::None, InputType::None, InputType::None, 
@@ -418,7 +418,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
-    constexpr int EDIT_AREA_ROTATE_TRIGGER = 3012;
+    static constexpr int EDIT_AREA_ROTATE_TRIGGER = 3012;
     template<> struct impl::Trigger<EDIT_AREA_ROTATE_TRIGGER> {
         static constexpr TriggerInfo info{
             {InputType::Group, InputType::Effect}, InputType::None, InputType::None, InputType::None, 
@@ -427,7 +427,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
-    constexpr int EDIT_AREA_SCALE_TRIGGER = 3013;
+    static constexpr int EDIT_AREA_SCALE_TRIGGER = 3013;
     template<> struct impl::Trigger<EDIT_AREA_SCALE_TRIGGER> {
         static constexpr TriggerInfo info{
             {InputType::Group, InputType::Effect}, InputType::None, InputType::None, InputType::None, 
@@ -436,7 +436,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
-    constexpr int EDIT_AREA_FADE_TRIGGER = 3014;
+    static constexpr int EDIT_AREA_FADE_TRIGGER = 3014;
     template<> struct impl::Trigger<EDIT_AREA_FADE_TRIGGER> {
         static constexpr TriggerInfo info{
             {InputType::Group, InputType::Effect}, InputType::None, InputType::None, InputType::None, 
@@ -445,7 +445,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
-    constexpr int EDIT_AREA_TINT_TRIGGER = 3015;
+    static constexpr int EDIT_AREA_TINT_TRIGGER = 3015;
     template<> struct impl::Trigger<EDIT_AREA_TINT_TRIGGER> {
         static constexpr TriggerInfo info{
             {InputType::Group, InputType::Effect}, InputType::None, InputType::None, InputType::None, 
@@ -454,7 +454,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
-    constexpr int AREA_STOP_TRIGGER = 3024;
+    static constexpr int AREA_STOP_TRIGGER = 3024;
     template<> struct impl::Trigger<AREA_STOP_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Effect, InputType::None, InputType::None, InputType::None, 
@@ -464,7 +464,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = EffectGameObject;
         static constexpr auto note = "effect id is target";
     };
-    constexpr int BG_TRIGGER = 3029;
+    static constexpr int BG_TRIGGER = 3029;
     template<> struct impl::Trigger<BG_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -473,7 +473,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = ArtTriggerGameObject;
     };
-    constexpr int GROUND_TRIGGER = 3030;
+    static constexpr int GROUND_TRIGGER = 3030;
     template<> struct impl::Trigger<GROUND_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -482,7 +482,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = ArtTriggerGameObject;
     };
-    constexpr int MG_TRIGGER = 3031;
+    static constexpr int MG_TRIGGER = 3031;
     template<> struct impl::Trigger<MG_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -491,7 +491,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = ArtTriggerGameObject;
     };
-    constexpr int TOUCH_TRIGGER = 1595;
+    static constexpr int TOUCH_TRIGGER = 1595;
     template<> struct impl::Trigger<TOUCH_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::None, InputType::None, InputType::None, 
@@ -500,7 +500,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int COUNT_TRIGGER = 1611;
+    static constexpr int COUNT_TRIGGER = 1611;
     template<> struct impl::Trigger<COUNT_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Item, InputType::None, InputType::None, 
@@ -509,7 +509,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = CountTriggerGameObject;
     };
-    constexpr int INSTANT_COUNT_TRIGGER = 1811;
+    static constexpr int INSTANT_COUNT_TRIGGER = 1811;
     template<> struct impl::Trigger<INSTANT_COUNT_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Item, InputType::None, InputType::None, 
@@ -518,7 +518,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = CountTriggerGameObject;
     };
-    constexpr int PICKUP_TRIGGER = 1817;
+    static constexpr int PICKUP_TRIGGER = 1817;
     template<> struct impl::Trigger<PICKUP_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Item, InputType::None, InputType::None, InputType::None, 
@@ -527,7 +527,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = CountTriggerGameObject;
     };
-    constexpr int TIME_TRIGGER = 3614;
+    static constexpr int TIME_TRIGGER = 3614;
     template<> struct impl::Trigger<TIME_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Item, InputType::None, InputType::None, 
@@ -536,7 +536,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = TimerTriggerGameObject;
     };
-    constexpr int TIME_EVENT_TRIGGER = 3615;
+    static constexpr int TIME_EVENT_TRIGGER = 3615;
     template<> struct impl::Trigger<TIME_EVENT_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Item, InputType::None, InputType::None, 
@@ -545,7 +545,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = TimerTriggerGameObject;
     };
-    constexpr int TIME_CONTROL_TRIGGER = 3617;
+    static constexpr int TIME_CONTROL_TRIGGER = 3617;
     template<> struct impl::Trigger<TIME_CONTROL_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Item, InputType::None, InputType::None, InputType::None, 
@@ -554,7 +554,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = TimerTriggerGameObject;
     };
-    constexpr int ITEM_EDIT_TRIGGER = 3619;
+    static constexpr int ITEM_EDIT_TRIGGER = 3619;
     template<> struct impl::Trigger<ITEM_EDIT_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Item, InputType::None, InputType::Item, InputType::Item, 
@@ -564,7 +564,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = ItemTriggerGameObject;
         static constexpr auto note = "target item id is target";
     };
-    constexpr int ITEM_COMP_TRIGGER = 3620;
+    static constexpr int ITEM_COMP_TRIGGER = 3620;
     template<> struct impl::Trigger<ITEM_COMP_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Group, InputType::Item, InputType::Item, 
@@ -574,7 +574,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = ItemTriggerGameObject;
         static constexpr auto note = "true gid is target, false gid is center";
     };
-    constexpr int ITEM_PERSIST_TRIGGER = 3641;
+    static constexpr int ITEM_PERSIST_TRIGGER = 3641;
     template<> struct impl::Trigger<ITEM_PERSIST_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Item, InputType::None, InputType::None, InputType::None, 
@@ -583,7 +583,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int RANDOM_TRIGGER = 1912;
+    static constexpr int RANDOM_TRIGGER = 1912;
     template<> struct impl::Trigger<RANDOM_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Group, InputType::None, InputType::None, 
@@ -593,7 +593,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = EffectGameObject;
         static constexpr auto note = "chance is m_duration (\?\?\?)";
     };
-    constexpr int ADVANCED_RANDOM_TRIGGER = 2068;
+    static constexpr int ADVANCED_RANDOM_TRIGGER = 2068;
     template<> struct impl::Trigger<ADVANCED_RANDOM_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::GroupArray, InputType::None, InputType::None, InputType::None, 
@@ -602,7 +602,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = RandTriggerGameObject;
     };
-    constexpr int SEQUENCE_TRIGGER = 3607;
+    static constexpr int SEQUENCE_TRIGGER = 3607;
     template<> struct impl::Trigger<SEQUENCE_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::GroupArray, InputType::None, InputType::None, InputType::None, 
@@ -611,7 +611,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = SequenceTriggerGameObject;
     };
-    constexpr int SPAWN_PARTICLE_TRIGGER = 3608;
+    static constexpr int SPAWN_PARTICLE_TRIGGER = 3608;
     template<> struct impl::Trigger<SPAWN_PARTICLE_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Group, InputType::None, InputType::None, 
@@ -621,7 +621,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = SpawnParticleGameObject;
         static constexpr auto note = "particle group is target, position group is center";
     };
-    constexpr int RESET_TRIGGER = 3618;
+    static constexpr int RESET_TRIGGER = 3618;
     template<> struct impl::Trigger<RESET_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::None, InputType::None, InputType::None, 
@@ -630,7 +630,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int ZOOM_TRIGGER = 1913;
+    static constexpr int ZOOM_TRIGGER = 1913;
     template<> struct impl::Trigger<ZOOM_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -639,7 +639,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int STATIC_CAMERA_TRIGGER = 1914;
+    static constexpr int STATIC_CAMERA_TRIGGER = 1914;
     template<> struct impl::Trigger<STATIC_CAMERA_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::None, InputType::None, InputType::None, 
@@ -649,7 +649,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = CameraTriggerGameObject;
         static constexpr auto note = "target id is center (\?\?\?)";
     };
-    constexpr int OFFSET_CAMERA_TRIGGER = 1916;
+    static constexpr int OFFSET_CAMERA_TRIGGER = 1916;
     template<> struct impl::Trigger<OFFSET_CAMERA_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -658,7 +658,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = CameraTriggerGameObject;
     };
-    constexpr int GP_OFFSET_TRIGGER = 2901;
+    static constexpr int GP_OFFSET_TRIGGER = 2901;
     template<> struct impl::Trigger<GP_OFFSET_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -667,7 +667,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int ROTATE_CAMERA_TRIGGER = 2015;
+    static constexpr int ROTATE_CAMERA_TRIGGER = 2015;
     template<> struct impl::Trigger<ROTATE_CAMERA_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -676,7 +676,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = CameraTriggerGameObject;
     };
-    constexpr int CAMERA_EDGE_TRIGGER = 2062;
+    static constexpr int CAMERA_EDGE_TRIGGER = 2062;
     template<> struct impl::Trigger<CAMERA_EDGE_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::None, InputType::None, InputType::None, 
@@ -685,7 +685,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = CameraTriggerGameObject;
     };
-    constexpr int CAMERA_MODE_TRIGGER = 2925;
+    static constexpr int CAMERA_MODE_TRIGGER = 2925;
     template<> struct impl::Trigger<CAMERA_MODE_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -694,7 +694,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = CameraTriggerGameObject;
     };
-    constexpr int OLD_REVERSE_TRIGGER = 1917;
+    static constexpr int OLD_REVERSE_TRIGGER = 1917;
     template<> struct impl::Trigger<OLD_REVERSE_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -703,7 +703,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int GAMEPLAY_ROTATE_TRIGGER = 2900;
+    static constexpr int GAMEPLAY_ROTATE_TRIGGER = 2900;
     template<> struct impl::Trigger<GAMEPLAY_ROTATE_TRIGGER> {
         static constexpr TriggerInfo info{
             {InputType::Channel, true}, InputType::None, InputType::None, InputType::None, 
@@ -712,7 +712,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = RotateGameplayGameObject;
     };
-    constexpr int SONG_TRIGGER = 1934;
+    static constexpr int SONG_TRIGGER = 1934;
     template<> struct impl::Trigger<SONG_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::SongChannel, InputType::None, InputType::None, InputType::None, 
@@ -721,7 +721,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = SongTriggerGameObject;
     };
-    constexpr int EDIT_SONG_TRIGGER = 3605;
+    static constexpr int EDIT_SONG_TRIGGER = 3605;
     template<> struct impl::Trigger<EDIT_SONG_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::SongChannel, InputType::None, InputType::Group, InputType::Group, 
@@ -731,7 +731,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = SongTriggerGameObject;
         static constexpr auto note = "gid 1 is target, gid 2 is center";
     };
-    constexpr int SFX_TRIGGER = 3602;
+    static constexpr int SFX_TRIGGER = 3602;
     template<> struct impl::Trigger<SFX_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Group, InputType::SFXUnique, InputType::SFX, 
@@ -741,7 +741,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = SFXTriggerGameObject;
         static constexpr auto note = "gid 1 is target, gid 2 is center, unique id and sfxgroup are in SFXTriggerGameObject";
     };
-    constexpr int EDIT_SFX_TRIGGER = 3603;
+    static constexpr int EDIT_SFX_TRIGGER = 3603;
     template<> struct impl::Trigger<EDIT_SFX_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::SFXUnique, InputType::SFX, InputType::Group, InputType::Group, 
@@ -751,7 +751,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = SFXTriggerGameObject;
         static constexpr auto note = "gid 1 is target, gid 2 is center, unique id, group id, and sfxgroup are in SFXTriggerGameObject";
     };
-    constexpr int EVENT_TRIGGER = 3604;
+    static constexpr int EVENT_TRIGGER = 3604;
     template<> struct impl::Trigger<EVENT_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::None, InputType::None, InputType::None, 
@@ -760,7 +760,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EventLinkTrigger;
     };
-    constexpr int TIMEWARP_TRIGGER = 1935;
+    static constexpr int TIMEWARP_TRIGGER = 1935;
     template<> struct impl::Trigger<TIMEWARP_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -769,7 +769,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int EDIT_MG_TRIGGER = 2999;
+    static constexpr int EDIT_MG_TRIGGER = 2999;
     template<> struct impl::Trigger<EDIT_MG_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -778,7 +778,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int BG_SPEED_TRIGGER = 3606;
+    static constexpr int BG_SPEED_TRIGGER = 3606;
     template<> struct impl::Trigger<BG_SPEED_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -787,7 +787,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int MG_SPEED_TRIGGER = 3612;
+    static constexpr int MG_SPEED_TRIGGER = 3612;
     template<> struct impl::Trigger<MG_SPEED_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -796,7 +796,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int COUNTER_LABEL = 1615;
+    static constexpr int COUNTER_LABEL = 1615;
     template<> struct impl::Trigger<COUNTER_LABEL> {
         static constexpr TriggerInfo info{
             InputType::Item, InputType::None, InputType::None, InputType::None, 
@@ -806,7 +806,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int UI_TRIGGER = 3613;
+    static constexpr int UI_TRIGGER = 3613;
     template<> struct impl::Trigger<UI_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Group, InputType::None, InputType::None, 
@@ -816,7 +816,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = UISettingsGameObject;
         static constexpr auto note = "gid is target, ui target is center";
     };
-    constexpr int LINK_VISIBLE_TRIGGER = 3662;
+    static constexpr int LINK_VISIBLE_TRIGGER = 3662;
     template<> struct impl::Trigger<LINK_VISIBLE_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::None, InputType::None, InputType::None, 
@@ -825,7 +825,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int COLLISION_TRIGGER = 1815;
+    static constexpr int COLLISION_TRIGGER = 1815;
     template<> struct impl::Trigger<COLLISION_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::None, InputType::Collision, InputType::Collision, 
@@ -835,7 +835,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = EffectGameObject;
         static constexpr auto note = "block a is itemid, lock b is itemid2";
     };
-    constexpr int INSTANT_COLLISION_TRIGGER = 3609;
+    static constexpr int INSTANT_COLLISION_TRIGGER = 3609;
     template<> struct impl::Trigger<INSTANT_COLLISION_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Group, InputType::Collision, InputType::Collision, 
@@ -845,7 +845,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = EffectGameObject;
         static constexpr auto note = "block a is itemid, lock b is itemid2, true gid is target, false gid is center";
     };
-    constexpr int COLLISION_STATE_BLOCK = 3640;
+    static constexpr int COLLISION_STATE_BLOCK = 3640;
     template<> struct impl::Trigger<COLLISION_STATE_BLOCK> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Group, InputType::None, InputType::None, 
@@ -855,7 +855,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int COLLISION_BLOCK = 1816;
+    static constexpr int COLLISION_BLOCK = 1816;
     template<> struct impl::Trigger<COLLISION_BLOCK> {
         static constexpr TriggerInfo info{
             InputType::Collision, InputType::None, InputType::None, InputType::None, 
@@ -866,7 +866,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = EffectGameObject;
         static constexpr auto note = "block id is itemid";
     };
-    constexpr int TOGGLE_BLOCK = 3643;
+    static constexpr int TOGGLE_BLOCK = 3643;
     template<> struct impl::Trigger<TOGGLE_BLOCK> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::None, InputType::None, InputType::None, 
@@ -876,7 +876,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int ON_DEATH_TRIGGER = 1812;
+    static constexpr int ON_DEATH_TRIGGER = 1812;
     template<> struct impl::Trigger<ON_DEATH_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::None, InputType::None, InputType::None, 
@@ -885,7 +885,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int DISABLE_TRAIL_TRIGGER = 33;
+    static constexpr int DISABLE_TRAIL_TRIGGER = 33;
     template<> struct impl::Trigger<DISABLE_TRAIL_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -894,7 +894,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int ENABLE_TRAIL_TRIGGER = 32;
+    static constexpr int ENABLE_TRAIL_TRIGGER = 32;
     template<> struct impl::Trigger<ENABLE_TRAIL_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -903,7 +903,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int SHOW_PLAYER_TRIGGER = 1613;
+    static constexpr int SHOW_PLAYER_TRIGGER = 1613;
     template<> struct impl::Trigger<SHOW_PLAYER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -912,7 +912,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int HIDE_PLAYER_TRIGGER = 1612;
+    static constexpr int HIDE_PLAYER_TRIGGER = 1612;
     template<> struct impl::Trigger<HIDE_PLAYER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -921,7 +921,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int BG_EFFECT_ON_TRIGGER = 1818;
+    static constexpr int BG_EFFECT_ON_TRIGGER = 1818;
     template<> struct impl::Trigger<BG_EFFECT_ON_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -930,7 +930,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int BG_EFFECT_OFF_TRIGGER = 1819;
+    static constexpr int BG_EFFECT_OFF_TRIGGER = 1819;
     template<> struct impl::Trigger<BG_EFFECT_OFF_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -939,7 +939,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int END_TRIGGER = 3600;
+    static constexpr int END_TRIGGER = 3600;
     template<> struct impl::Trigger<END_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Group, InputType::None, InputType::None, 
@@ -949,7 +949,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = EndTriggerGameObject;
         static constexpr auto note = "spawn id is target, target pos is center";
     };
-    constexpr int PLAYER_CONTROL_TRIGGER = 1932;
+    static constexpr int PLAYER_CONTROL_TRIGGER = 1932;
     template<> struct impl::Trigger<PLAYER_CONTROL_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -958,7 +958,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = PlayerControlGameObject;
     };
-    constexpr int OPTIONS_TRIGGER = 2899;
+    static constexpr int OPTIONS_TRIGGER = 2899;
     template<> struct impl::Trigger<OPTIONS_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -967,7 +967,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = GameOptionsTrigger;
     };
-    constexpr int GRADIENT_TRIGGER = 2903;
+    static constexpr int GRADIENT_TRIGGER = 2903;
     template<> struct impl::Trigger<GRADIENT_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::Gradient, InputType::None, 
@@ -976,7 +976,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = GradientTriggerObject;
     };
-    constexpr int GRAVITY_TRIGGER = 2066;
+    static constexpr int GRAVITY_TRIGGER = 2066;
     template<> struct impl::Trigger<GRAVITY_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -985,7 +985,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EffectGameObject;
     };
-    constexpr int TELEPORT_TRIGGER = 3022;
+    static constexpr int TELEPORT_TRIGGER = 3022;
     template<> struct impl::Trigger<TELEPORT_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::None, InputType::None, InputType::None, 
@@ -994,7 +994,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = TeleportPortalObject;
     };
-    constexpr int SHADER_TRIGGER = 2904;
+    static constexpr int SHADER_TRIGGER = 2904;
     template<> struct impl::Trigger<SHADER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -1003,7 +1003,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = ShaderGameObject;
     };
-    constexpr int SHOCK_WAVE_SHADER_TRIGGER = 2905;
+    static constexpr int SHOCK_WAVE_SHADER_TRIGGER = 2905;
     template<> struct impl::Trigger<SHOCK_WAVE_SHADER_TRIGGER> {
         static constexpr TriggerInfo info{
             {InputType::Group, true}, InputType::None, InputType::None, InputType::None, 
@@ -1013,7 +1013,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "center id (which btw appears when u click target) is target, fadetime is ShaderGameObject fade in";
     };
-    constexpr int SHOCK_LINE_SHADER_TRIGGER = 2907;
+    static constexpr int SHOCK_LINE_SHADER_TRIGGER = 2907;
     template<> struct impl::Trigger<SHOCK_LINE_SHADER_TRIGGER> {
         static constexpr TriggerInfo info{
             {InputType::Group, true}, InputType::None, InputType::None, InputType::None, 
@@ -1023,7 +1023,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "center id (which btw appears when u click target) is target, fadetime is ShaderGameObject fade in";
     };
-    constexpr int GLITCH_SHADER_TRIGGER = 2909;
+    static constexpr int GLITCH_SHADER_TRIGGER = 2909;
     template<> struct impl::Trigger<GLITCH_SHADER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -1033,7 +1033,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "fadetime is ShaderGameObject fade in";
     };
-    constexpr int CHROMATIC_SHADER_TRIGGER = 2910;
+    static constexpr int CHROMATIC_SHADER_TRIGGER = 2910;
     template<> struct impl::Trigger<CHROMATIC_SHADER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -1043,7 +1043,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "fadetime is ShaderGameObject fade in";
     };
-    constexpr int CHROMATIC_GLITCH_SHADER_TRIGGER = 2911;
+    static constexpr int CHROMATIC_GLITCH_SHADER_TRIGGER = 2911;
     template<> struct impl::Trigger<CHROMATIC_GLITCH_SHADER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -1053,7 +1053,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "fadetime is ShaderGameObject fade in";
     };
-    constexpr int PIXELATE_SHADER_TRIGGER = 2912;
+    static constexpr int PIXELATE_SHADER_TRIGGER = 2912;
     template<> struct impl::Trigger<PIXELATE_SHADER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -1063,7 +1063,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "fadetime is ShaderGameObject fade in";
     };
-    constexpr int LENS_CIRCLE_SHADER_TRIGGER = 2913;
+    static constexpr int LENS_CIRCLE_SHADER_TRIGGER = 2913;
     template<> struct impl::Trigger<LENS_CIRCLE_SHADER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Color, InputType::None, InputType::None, 
@@ -1073,7 +1073,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "center id is target, fadetime is ShaderGameObject fade in";
     };
-    constexpr int RADIAL_BLUR_SHADER_TRIGGER = 2914;
+    static constexpr int RADIAL_BLUR_SHADER_TRIGGER = 2914;
     template<> struct impl::Trigger<RADIAL_BLUR_SHADER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Color, InputType::None, InputType::None, 
@@ -1083,7 +1083,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "center id (which btw appears when u click target) is target, fadetime is ShaderGameObject fade in";
     };
-    constexpr int MOTION_BLUR_SHADER_TRIGGER = 2915;
+    static constexpr int MOTION_BLUR_SHADER_TRIGGER = 2915;
     template<> struct impl::Trigger<MOTION_BLUR_SHADER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Group, InputType::Color, InputType::None, InputType::None, 
@@ -1093,7 +1093,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "fadetime is ShaderGameObject fade in";
     };
-    constexpr int BULGE_SHADER_TRIGGER = 2916;
+    static constexpr int BULGE_SHADER_TRIGGER = 2916;
     template<> struct impl::Trigger<BULGE_SHADER_TRIGGER> {
         static constexpr TriggerInfo info{
             {InputType::Group, true}, InputType::None, InputType::None, InputType::None, 
@@ -1103,7 +1103,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "center id (which btw appears when u click target) is target, fadetime is ShaderGameObject fade in";
     };
-    constexpr int PINCH_SHADER_TRIGGER = 2917;
+    static constexpr int PINCH_SHADER_TRIGGER = 2917;
     template<> struct impl::Trigger<PINCH_SHADER_TRIGGER> {
         static constexpr TriggerInfo info{
             {InputType::Group, true}, InputType::None, InputType::None, InputType::None, 
@@ -1113,7 +1113,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "center id (which btw appears when u click target) is target, fadetime is ShaderGameObject fade in";
     };
-    constexpr int GRAY_SCALE_SHADER_TRIGGER = 2919;
+    static constexpr int GRAY_SCALE_SHADER_TRIGGER = 2919;
     template<> struct impl::Trigger<GRAY_SCALE_SHADER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::Color, InputType::None, InputType::None, InputType::None, 
@@ -1123,7 +1123,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "fadetime is ShaderGameObject fade in";
     };
-    constexpr int SEPIA_SHADER_TRIGGER = 2920;
+    static constexpr int SEPIA_SHADER_TRIGGER = 2920;
     template<> struct impl::Trigger<SEPIA_SHADER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -1133,7 +1133,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "fadetime is ShaderGameObject fade in";
     };
-    constexpr int INVERT_COLOR_SHADER_TRIGGER = 2921;
+    static constexpr int INVERT_COLOR_SHADER_TRIGGER = 2921;
     template<> struct impl::Trigger<INVERT_COLOR_SHADER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -1143,7 +1143,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "fadetime is ShaderGameObject fade in";
     };
-    constexpr int HUE_SHADER_TRIGGER = 2922;
+    static constexpr int HUE_SHADER_TRIGGER = 2922;
     template<> struct impl::Trigger<HUE_SHADER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -1153,7 +1153,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "fadetime is ShaderGameObject fade in";
     };
-    constexpr int EDIT_COLOR_SHADER_TRIGGER = 2923;
+    static constexpr int EDIT_COLOR_SHADER_TRIGGER = 2923;
     template<> struct impl::Trigger<EDIT_COLOR_SHADER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -1163,7 +1163,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "fadetime is ShaderGameObject fade in";
     };
-    constexpr int SPLIT_SCREEN_SHADER_TRIGGER = 2924;
+    static constexpr int SPLIT_SCREEN_SHADER_TRIGGER = 2924;
     template<> struct impl::Trigger<SPLIT_SCREEN_SHADER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::None, InputType::None, InputType::None, InputType::None, 
@@ -1173,7 +1173,7 @@ namespace nwo5::editor::trigger {
         using TriggerType = ShaderGameObject;
         static constexpr auto note = "fadetime is ShaderGameObject fade in";
     };
-    constexpr int OLD_NO_ENTER_EFFECT_TRIGGER = 22;
+    static constexpr int OLD_NO_ENTER_EFFECT_TRIGGER = 22;
     template<> struct impl::Trigger<OLD_NO_ENTER_EFFECT_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
@@ -1182,7 +1182,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
-    constexpr int FADE_TOP_ENTER_EFFECT_TRIGGER = 24;
+    static constexpr int FADE_TOP_ENTER_EFFECT_TRIGGER = 24;
     template<> struct impl::Trigger<FADE_TOP_ENTER_EFFECT_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
@@ -1191,7 +1191,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
-    constexpr int FADE_BOTTOM_ENTER_EFFECT_TRIGGER = 23;
+    static constexpr int FADE_BOTTOM_ENTER_EFFECT_TRIGGER = 23;
     template<> struct impl::Trigger<FADE_BOTTOM_ENTER_EFFECT_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
@@ -1200,7 +1200,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
-    constexpr int FADE_LEFT_ENTER_EFFECT_TRIGGER = 25;
+    static constexpr int FADE_LEFT_ENTER_EFFECT_TRIGGER = 25;
     template<> struct impl::Trigger<FADE_LEFT_ENTER_EFFECT_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
@@ -1209,7 +1209,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
-    constexpr int FADE_RIGHT_ENTER_EFFECT_TRIGGER = 26;
+    static constexpr int FADE_RIGHT_ENTER_EFFECT_TRIGGER = 26;
     template<> struct impl::Trigger<FADE_RIGHT_ENTER_EFFECT_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
@@ -1218,7 +1218,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
-    constexpr int SMALL_TO_BIG_ENTER_EFFECT_TRIGGER = 27;
+    static constexpr int SMALL_TO_BIG_ENTER_EFFECT_TRIGGER = 27;
     template<> struct impl::Trigger<SMALL_TO_BIG_ENTER_EFFECT_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
@@ -1227,7 +1227,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
-    constexpr int BIG_TO_SMALL_ENTER_EFFECT_TRIGGER = 28;
+    static constexpr int BIG_TO_SMALL_ENTER_EFFECT_TRIGGER = 28;
     template<> struct impl::Trigger<BIG_TO_SMALL_ENTER_EFFECT_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
@@ -1236,7 +1236,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
-    constexpr int CHAOTIC_ENTER_EFFECT_TRIGGER = 55;
+    static constexpr int CHAOTIC_ENTER_EFFECT_TRIGGER = 55;
     template<> struct impl::Trigger<CHAOTIC_ENTER_EFFECT_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
@@ -1245,7 +1245,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
-    constexpr int HALVE_LEFT_ENTER_EFFECT_TRIGGER = 56;
+    static constexpr int HALVE_LEFT_ENTER_EFFECT_TRIGGER = 56;
     template<> struct impl::Trigger<HALVE_LEFT_ENTER_EFFECT_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
@@ -1254,7 +1254,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
-    constexpr int HALVE_RIGHT_ENTER_EFFECT_TRIGGER = 57;
+    static constexpr int HALVE_RIGHT_ENTER_EFFECT_TRIGGER = 57;
     template<> struct impl::Trigger<HALVE_RIGHT_ENTER_EFFECT_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
@@ -1263,7 +1263,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
-    constexpr int HALVE_ENTER_EFFECT_TRIGGER = 58;
+    static constexpr int HALVE_ENTER_EFFECT_TRIGGER = 58;
     template<> struct impl::Trigger<HALVE_ENTER_EFFECT_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
@@ -1272,7 +1272,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
-    constexpr int INVERSE_HALVE_ENTER_EFFECT_TRIGGER = 59;
+    static constexpr int INVERSE_HALVE_ENTER_EFFECT_TRIGGER = 59;
     template<> struct impl::Trigger<INVERSE_HALVE_ENTER_EFFECT_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
@@ -1281,7 +1281,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
-    constexpr int NO_ENTER_EFFECT_TRIGGER = 1915;
+    static constexpr int NO_ENTER_EFFECT_TRIGGER = 1915;
     template<> struct impl::Trigger<NO_ENTER_EFFECT_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::None, InputType::None, 
@@ -1290,7 +1290,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };  
-    constexpr int MOVE_ENTER_TRIGGER = 3017;
+    static constexpr int MOVE_ENTER_TRIGGER = 3017;
     template<> struct impl::Trigger<MOVE_ENTER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::Effect, InputType::None, 
@@ -1299,7 +1299,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
-    constexpr int ROTATE_ENTER_TRIGGER = 3018;
+    static constexpr int ROTATE_ENTER_TRIGGER = 3018;
     template<> struct impl::Trigger<ROTATE_ENTER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::Effect, InputType::None, 
@@ -1308,7 +1308,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
-    constexpr int SCALE_ENTER_TRIGGER = 3019;
+    static constexpr int SCALE_ENTER_TRIGGER = 3019;
     template<> struct impl::Trigger<SCALE_ENTER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::Effect, InputType::None, 
@@ -1317,7 +1317,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
-    constexpr int FADE_ENTER_TRIGGER = 3020;
+    static constexpr int FADE_ENTER_TRIGGER = 3020;
     template<> struct impl::Trigger<FADE_ENTER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::Effect, InputType::None, 
@@ -1326,7 +1326,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
-    constexpr int TINT_ENTER_TRIGGER = 3021;
+    static constexpr int TINT_ENTER_TRIGGER = 3021;
     template<> struct impl::Trigger<TINT_ENTER_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::None, InputType::Effect, InputType::None, 
@@ -1335,7 +1335,7 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
-    constexpr int ENTER_STOP_TRIGGER = 3023;
+    static constexpr int ENTER_STOP_TRIGGER = 3023;
     template<> struct impl::Trigger<ENTER_STOP_TRIGGER> {
         static constexpr TriggerInfo info{
             InputType::EnterChannel, InputType::Effect, InputType::None, InputType::None, 

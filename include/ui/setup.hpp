@@ -4,7 +4,6 @@
 #include <Geode/ui/LazySprite.hpp>
 #include <Geode/ui/SliderNode.hpp>
 #include "constants.hpp"
-#include "utils.hpp"
 
 namespace nwo5::ui {
     template<typename ImplNode, typename Node = std::remove_pointer_t<ImplNode>>
@@ -651,6 +650,7 @@ namespace nwo5::ui {
         }
         Setup text(geode::ZStringView pString) requires (!std::derived_from<Node, geode::Label>) && requires { m_node->setString(""); } {
             m_node->setString(pString.c_str());
+            
             return m_node;
         }
         Setup string(geode::ZStringView pString, bool pValidate = true) requires std::derived_from<Node, geode::Label> {
@@ -664,6 +664,7 @@ namespace nwo5::ui {
         } 
         Setup string(geode::ZStringView pString) requires (!std::derived_from<Node, geode::Label>) && requires { m_node->setString(""); } {
             m_node->setString(pString.c_str());
+
             return m_node;
         }
 

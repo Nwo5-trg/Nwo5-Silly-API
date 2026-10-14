@@ -3,6 +3,7 @@
 #include "../include/settings/include.hpp"
 #include "../include/editor/include.hpp"
 #include "../include/ui/include.hpp"
+#include "../include/nodes/include.hpp"
 
 using namespace nwo5::utils;
 using namespace nwo5::settings;

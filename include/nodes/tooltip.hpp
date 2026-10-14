@@ -2,7 +2,7 @@
 
 #include "../export.hpp"
 
-namespace nwo5::ui {
+namespace nwo5::nodes {
     /// basic tooltip class 
     /// just create and add as child to ur popup (or to whatever node is the parent to all the nodes thatll have tooltip)
     /// for automatic mode (which is default) add a TooltipInfo userobject with id "nwo5.silly-api/tooltip" to a node and those nodes will show tooltips !
@@ -61,7 +61,7 @@ namespace nwo5::ui {
         void setAutomatic(bool pOn);
         /// get automatic mode enabled (default is true)
         /// @returns tooltip is automatic
-        bool isAutomatic() const;
+        bool getAutomatic() const;
 
         /// set if tooltip should dynamically set anchor based on position
         /// you can force an anchor update with Tooltip::updateAnchor
@@ -69,7 +69,7 @@ namespace nwo5::ui {
         void setDynamicAnchor(bool pOn);
         /// get dynamic anchor enabled (default is true)
         /// @returns dynamic anchor enabled
-        bool isDynamicAnchor() const;
+        bool getDynamicAnchor() const;
         /// set default anchor of tooltip and sets current anchor
         void setDefaultAnchor(cocos2d::CCPoint pAnchor);
         /// get default anchor

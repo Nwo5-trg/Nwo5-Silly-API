@@ -1,12 +1,11 @@
 #pragma once
 
-#include "nodes.hpp"
+#include "query.hpp"
 #include "misc.hpp"
 #include "color.hpp"
 #include "color-type.hpp"
 #include "easings.hpp"
 #include "array.hpp"
-#include "drawnode.hpp"
 
 #include <ranges>
 
@@ -23,11 +22,7 @@ namespace nwo5::utils::prelude {
 
     using misc::EasingFunction;
 
-    using misc::SillyDrawNode;
-
     using misc::SillyHSV;
-
-    using misc::CLEAR_COLOR;
 
     using misc::Query;
 

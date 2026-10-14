@@ -1,8 +1,10 @@
+#include <nodes/include.hpp>
 #include <utils/include.hpp>
 
+using namespace nwo5::utils::prelude;
 using namespace geode::prelude;
 
-namespace nwo5::utils {
+namespace nwo5::nodes {
     CCGLProgram* getShaderPositionColorUColor() {
         auto cache = CCShaderCache::sharedShaderCache();
 
@@ -430,7 +432,7 @@ namespace nwo5::utils {
 
         m_bDirty = true;
     }
-    bool SillyDrawNode::useTint() const {
+    bool SillyDrawNode::getUseTint() const {
         return m_useTint;
     }
 

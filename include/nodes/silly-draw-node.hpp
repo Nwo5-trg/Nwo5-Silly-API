@@ -3,7 +3,7 @@
 #include "../export.hpp"
 #include <Geode/cocos/draw_nodes/CCDrawNode.h>
 
-namespace nwo5::utils {
+namespace nwo5::nodes {
     constexpr cocos2d::ccVertex2F toVert(cocos2d::CCPoint pPoint) {
         return {pPoint.x, pPoint.y};
     }
@@ -11,7 +11,9 @@ namespace nwo5::utils {
         return {pX, pY};
     }
 
-    constexpr cocos2d::ccColor4F CLEAR_COLOR{0.0f, 0.0f, 0.0f, 0.0f};
+    namespace impl {
+        static constexpr cocos2d::ccColor4F CLEAR_COLOR{0.0f, 0.0f, 0.0f, 0.0f};
+    }
 
     /// fuck cocos
     SILLY_API_DLL cocos2d::CCGLProgram* getShaderPositionColorUColor();
@@ -56,11 +58,11 @@ namespace nwo5::utils {
         /// draw a circle at pCenter with radius pRadius
         /// @param pSegments how many triangle "slices" the circle is made up of
         /// @note does nothing if segments < 3
-        bool drawCircle(const cocos2d::CCPoint& pCenter, float pRadius, const cocos2d::ccColor4F& pColor, unsigned int pSegments, float pOutlineThickness = 0.0f, const cocos2d::ccColor4F& pOutlineColor = CLEAR_COLOR);
+        bool drawCircle(const cocos2d::CCPoint& pCenter, float pRadius, const cocos2d::ccColor4F& pColor, unsigned int pSegments, float pOutlineThickness = 0.0f, const cocos2d::ccColor4F& pOutlineColor = impl::CLEAR_COLOR);
         /// draw an ellipse at pCenter with radius pRadius
         /// @param pSegments how many triangle "slices" the circle is made up of
         /// @note does nothing if segments < 3
-        bool drawEllipse(const cocos2d::CCPoint& pCenter, cocos2d::CCSize pRadius, const cocos2d::ccColor4F& pColor, unsigned int pSegments, float pOutlineThickness = 0.0f, const cocos2d::ccColor4F& pOutlineColor = CLEAR_COLOR);
+        bool drawEllipse(const cocos2d::CCPoint& pCenter, cocos2d::CCSize pRadius, const cocos2d::ccColor4F& pColor, unsigned int pSegments, float pOutlineThickness = 0.0f, const cocos2d::ccColor4F& pOutlineColor = impl::CLEAR_COLOR);
 
         /// draw a polygon with points pPoints
         /// @param pPoints ptr to a c array of ccpoints
@@ -68,22 +70,22 @@ namespace nwo5::utils {
         /// @note does nothing if segments
         /// @note border alignment not impl
         /// @note calls ccdrawnode::drawPolygon internally
-        bool drawPolygon(const cocos2d::CCPoint* pPoints, unsigned int pSize, const cocos2d::ccColor4F& pColor, float pOutlineThickness = 0.0f, const cocos2d::ccColor4F& pOutlineColor = CLEAR_COLOR, cocos2d::BorderAlignment = {});
+        bool drawPolygon(const cocos2d::CCPoint* pPoints, unsigned int pSize, const cocos2d::ccColor4F& pColor, float pOutlineThickness = 0.0f, const cocos2d::ccColor4F& pOutlineColor = impl::CLEAR_COLOR, cocos2d::BorderAlignment = {});
         /// draw a polygon with points pPoints
         /// @note does nothing if segments
         /// @note border alignment not impl
         /// @note calls ccdrawnode::drawPolygon internally
-        bool drawPolygon(std::span<const cocos2d::CCPoint> pPoints, const cocos2d::ccColor4F& pColor, float pOutlineThickness = 0.0f, const cocos2d::ccColor4F& pOutlineColor = CLEAR_COLOR, cocos2d::BorderAlignment = {});
+        bool drawPolygon(std::span<const cocos2d::CCPoint> pPoints, const cocos2d::ccColor4F& pColor, float pOutlineThickness = 0.0f, const cocos2d::ccColor4F& pOutlineColor = impl::CLEAR_COLOR, cocos2d::BorderAlignment = {});
 
         /// draw a square with radius pRadius
         bool drawDot(const cocos2d::CCPoint& pCenter, float pRadius, const cocos2d::ccColor4F& pColor);
 
         /// draw a rect from pRect
         /// @note border alignment not impl
-        bool drawRect(const cocos2d::CCRect& pRect, const cocos2d::ccColor4F& pColor, float pOutlineThickness = 0.0f, const cocos2d::ccColor4F& = CLEAR_COLOR, cocos2d::BorderAlignment = {});
+        bool drawRect(const cocos2d::CCRect& pRect, const cocos2d::ccColor4F& pColor, float pOutlineThickness = 0.0f, const cocos2d::ccColor4F& = impl::CLEAR_COLOR, cocos2d::BorderAlignment = {});
         /// draw a rect from pStart to pEnd
         /// @note border alignment not impl
-        bool drawRect(const cocos2d::CCPoint& pStart, const cocos2d::CCPoint& pEnd, const cocos2d::ccColor4F& pColor, float pOutlineThickness = 0.0f, const cocos2d::ccColor4F& = CLEAR_COLOR, cocos2d::BorderAlignment = {});
+        bool drawRect(const cocos2d::CCPoint& pStart, const cocos2d::CCPoint& pEnd, const cocos2d::ccColor4F& pColor, float pOutlineThickness = 0.0f, const cocos2d::ccColor4F& pOutlineColor = impl::CLEAR_COLOR, cocos2d::BorderAlignment = {});
 
         /// set tint color for everything drawn
         void setTint(const cocos2d::ccColor4F& pColor);
@@ -91,7 +93,7 @@ namespace nwo5::utils {
 
         /// set if tint color is used
         void setUseTint(bool pTint);
-        bool useTint() const;
+        bool getUseTint() const;
 
         /// std::vector::reserve
         void reserve(unsigned int pSize);

@@ -3,29 +3,19 @@
 #include "editor.hpp"
 
 namespace nwo5::editor::object {
+    namespace impl {
+        SILLY_API_DLL GameObject* createObject(int pID, cocos2d::CCPoint pPos, bool pUndo = false, bool pSetup = true);
+        SILLY_API_DLL GameObject* createObject(int pID, cocos2d::CCPoint pPos, geode::ZStringView pArgs, bool pUndo = false);
+        SILLY_API_DLL GameObject* createObject(geode::ZStringView pStr, bool pUndo = false);
+        SILLY_API_DLL cocos2d::CCArray* createObjects(geode::ZStringView pStr, bool pUndo = false);
+    }
+    
     /// get obj string
     SILLY_API_DLL std::string string(GameObject* pObj);
     /// get obj string seperated with ;
     SILLY_API_DLL std::string string(std::span<GameObject* const> pObjs);
     /// get obj string seperated with ;
     SILLY_API_DLL std::string string(cocos2d::CCArray* pObjs);
-
-    // these are getting namespace impl'd, sry i gotta keep in tho until 2.209
-    
-    /// @deprecated use the templated create function instead
-    SILLY_API_DLL GameObject* createObject(int pID, bool pUndo = false, bool pSetup = true);
-    /// @deprecated use the templated create function instead
-    SILLY_API_DLL GameObject* createObject(int pID, cocos2d::CCPoint pPos, bool pUndo = false, bool pSetup = true);
-    /// @deprecated use the templated create function instead
-    SILLY_API_DLL GameObject* createObject(int pID, geode::ZStringView pArgs, bool pUndo = false);
-    /// @deprecated use the templated create function instead
-    SILLY_API_DLL GameObject* createObject(int pID, cocos2d::CCPoint pPos, geode::ZStringView pArgs, bool pUndo = false);
-    /// @deprecated use the templated create function instead
-    SILLY_API_DLL GameObject* createObject(geode::ZStringView pStr, bool pUndo = false);
-    /// @deprecated use the templated create function instead
-    SILLY_API_DLL cocos2d::CCArray* createObjects(geode::ZStringView pStr, bool pUndo = false);
-
-    // back to actual functions
 
     /// create basic object
     /// @param pID obj id
@@ -34,7 +24,7 @@ namespace nwo5::editor::object {
     template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
     requires std::derived_from<T, GameObject>
     GameObject* create(int pID, bool pUndo = false, bool pSetup = true) {
-        return static_cast<T*>(createObject(pID, pUndo, pSetup));
+        return static_cast<T*>(impl::createObject(pID, cocos2d::CCPointZero, pUndo, pSetup));
     }
     /// create basic object
     /// @param pID obj id
@@ -44,7 +34,7 @@ namespace nwo5::editor::object {
     template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
     requires std::derived_from<T, GameObject>
     GameObject* create(int pID, cocos2d::CCPoint pPos, bool pUndo = false, bool pSetup = true) {
-        return static_cast<T*>(createObject(pID, pPos, pUndo, pSetup));
+        return static_cast<T*>(impl::createObject(pID, pPos, pUndo, pSetup));
     }
     /// pretty much fmt::format("1,{},2,0,3,0,{}", pID, pArgs)
     /// @param pID obj id
@@ -53,7 +43,7 @@ namespace nwo5::editor::object {
     template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
     requires std::derived_from<T, GameObject>
     GameObject* create(int pID, geode::ZStringView pArgs, bool pUndo = false) {
-        return static_cast<T*>(createObject(pID, pArgs, pUndo));
+        return static_cast<T*>(impl::createObject(pID, cocos2d::CCPointZero, pArgs, pUndo));
     }
     /// pretty much fmt::format("1,{},2,{},3,{},{}", pID, pPos.x, pPos.y, pArgs)
     /// @param pID obj id
@@ -64,7 +54,7 @@ namespace nwo5::editor::object {
     template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
     requires std::derived_from<T, GameObject>
     GameObject* create(int pID, cocos2d::CCPoint pPos, geode::ZStringView pArgs, bool pUndo = false) {
-        return static_cast<T*>(createObject(pID, pPos, pArgs, pUndo));
+        return static_cast<T*>(impl::createObject(pID, pPos, pArgs, pUndo));
     }
     /// create object from string
     /// @param pStr obj string
@@ -72,7 +62,7 @@ namespace nwo5::editor::object {
     template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
     requires std::derived_from<T, GameObject>
     GameObject* create(geode::ZStringView pStr, bool pUndo = false) {
-        return static_cast<T*>(createObject(pStr, pUndo));
+        return static_cast<T*>(impl::createObject(pStr, pUndo));
     }
     /// create mutliple objects from string
     /// @param pStr obj string
@@ -80,7 +70,7 @@ namespace nwo5::editor::object {
     template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
     requires std::derived_from<T, GameObject>
     geode::cocos::CCArrayExt<T> createMulti(geode::ZStringView pStr, bool pUndo = false) {
-        return createObjects(pStr, pUndo);
+        return impl::createObjects(pStr, pUndo);
     }
 
     /// deletes object
@@ -244,10 +234,7 @@ namespace nwo5::editor::object {
     SILLY_API_DLL float size(GameObject* pObj);
     /// get (grid)size of object id
     SILLY_API_DLL float size(int pID);
-
-    /// @deprecated use the equivalent in editor.hpp
-    SILLY_API_DLL cocos2d::CCPoint snappedPos(GameObject* pObj, float pGridSize = 30.0f);
-
+    
     SILLY_API_DLL void move(GameObject* pObj, cocos2d::CCPoint pTo, bool pUndo = false);
     SILLY_API_DLL void move(std::span<GameObject* const> pObjs, cocos2d::CCPoint pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER);
     SILLY_API_DLL void move(cocos2d::CCArray* pObjs, cocos2d::CCPoint pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER);
@@ -286,44 +273,4 @@ namespace nwo5::editor::object {
     SILLY_API_DLL void scaleBy(cocos2d::CCArray* pObjs, float pMod, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
     SILLY_API_DLL void scaleXBy(cocos2d::CCArray* pObjs, float pMod, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
     SILLY_API_DLL void scaleYBy(cocos2d::CCArray* pObjs, float pMod, bool pUndo = false, cocos2d::CCPoint pCenter = editor::AUTO_CENTER, bool pMove = true);
-
-    // these are all getting moved to editor.hpp and renamed lol
-
-    /// obj count for level
-    /// @returns object
-    SILLY_API_DLL size_t count();
-
-    /// calls callback for every object active in section
-    /// prevter made this iirc
-    /// @param pCallback callback
-    SILLY_API_DLL void forEachInSection(geode::Function<void(GameObject*)> pCallback);
-
-    /// @deprecated use editor::objectArray
-    SILLY_API_DLL cocos2d::CCArray* getAll(bool pCopy = false);
-    /// @deprecated use editor::objectsWithGroup
-    SILLY_API_DLL cocos2d::CCArray* getWithGroup(int pGroup, bool pCopy = false);
-    /// @deprecated use editor::groupParent
-    SILLY_API_DLL GameObject* getParent(int pGroup);
-
-    /// move camera to obj and optionally zoom out
-    /// @param pObj object
-    /// @param pZoomToFit zoom out to fit obj on screen
-    /// @param pZoomBuffer *divide* zoom by this
-    /// @param pMinimumZoom clamps zoom to this
-    /// @param pMaximumZoom clamps zoom to this
-    SILLY_API_DLL void moveTo(GameObject* pObj, bool pZoomToFit = true, float pZoomBuffer = 1.5f, float pMinimumZoom = 0.0f, float pMaximumZoom = editor::zoom());
-    /// move camera to objs and optionally zoom out
-    /// @param pObjs objects (gets center)
-    /// @param pZoomToFit zoom out to fit objs on screen
-    /// @param pZoomBuffer *divide* zoom by this
-    /// @param pMinimumZoom clamps zoom to this
-    /// @param pMaximumZoom clamps zoom to this
-    SILLY_API_DLL void moveTo(std::span<GameObject* const> pObjs, bool pZoomToFit = true, float pZoomBuffer = 1.5f, float pMinimumZoom = 0.0f, float pMaximumZoom = editor::zoom());
-    /// move camera to objs and optionally zoom out
-    /// @param pObjs objects (gets center)
-    /// @param pZoomToFit zoom out to fit objs on screen
-    /// @param pZoomBuffer *divide* zoom by this
-    /// @param pMinimumZoom clamps zoom to this
-    /// @param pMaximumZoom clamps zoom to this
-    SILLY_API_DLL void moveTo(cocos2d::CCArray* pObjs, bool pZoomToFit = true, float pZoomBuffer = 1.5f, float pMinimumZoom = 0.0f, float pMaximumZoom = editor::zoom());
 }

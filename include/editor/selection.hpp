@@ -20,7 +20,22 @@ namespace nwo5::editor::selection {
     template<typename ImplT = cocos2d::CCArray, typename T = std::remove_pointer_t<ImplT>>
     requires std::same_as<T, cocos2d::CCArray>
     T* get() {
-        return loaded() ? ui()->getSelectedObjects() : cocos2d::CCArray::create();
+        if (notLoaded()) {
+            return cocos2d::CCArray::create();
+        }
+
+        if (ui()->m_selectedObject) {
+            return cocos2d::CCArray::createWithObject(ui()->m_selectedObject);
+        }
+        else {
+            auto out = cocos2d::CCArray::createWithCapacity(ui()->m_selectedObjects->capacity());
+
+            for (auto obj : geode::cocos::CCArrayExt(ui()->m_selectedObjects)) {
+                out->addObject(obj);
+            }
+
+            return out;
+        }
     }
     template<typename T = GameObject*>
     auto getExt() {

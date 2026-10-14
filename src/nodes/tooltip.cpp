@@ -1,8 +1,10 @@
+#include <nodes/include.hpp>
 #include <ui/include.hpp>
 
+using namespace nwo5::ui::prelude;
 using namespace geode::prelude;
 
-namespace nwo5::ui {
+namespace nwo5::nodes {
     void Tooltip::updateText(geode::ZStringView pText) {
         m_label->setText(pText);
 
@@ -76,7 +78,7 @@ namespace nwo5::ui {
         m_dynamicAnchor = pFollowMouse;
         m_automatic = pAutomatic;
 
-        m_background = ui::nineSlice(ui::sprite::SQUARE)
+        m_background = ui::nineSlice(resources::sprite::SQUARE)
             .id("background"_spr)
             .pos(CCPointZero)
             .opacity(127)
@@ -95,7 +97,7 @@ namespace nwo5::ui {
 
         this->updateText("");
 
-        this->addEventListener(MouseMoveEvent(), [this] (int32_t, int32_t) {
+        this->addEventListener(MouseMoveEvent(), [this] (auto, auto) {
             if (!this->getParent()) {
                 return;
             }
@@ -219,14 +221,14 @@ namespace nwo5::ui {
             this->hide();
         }
     }
-    bool Tooltip::isAutomatic() const {
+    bool Tooltip::getAutomatic() const {
         return m_automatic;
     }
 
     void Tooltip::setDynamicAnchor(bool pOn) {
         m_dynamicAnchor = pOn;
     }
-    bool Tooltip::isDynamicAnchor() const {
+    bool Tooltip::getDynamicAnchor() const {
         return m_dynamicAnchor;
     }
     void Tooltip::setDefaultAnchor(CCPoint pAnchor) {

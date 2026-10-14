@@ -307,6 +307,39 @@ namespace nwo5::editor {
             -pPos * scale + CCDirector::get()->getWinSize() / 2 - currentPos
         );
     }
+    void moveTo(GameObject* pObj, bool pZoomToFit, float pZoomBuffer, float pMinimumZoom, float pMaximumZoom) {
+        const auto bounds = editor::object::bounds(pObj, true);
+
+        editor::move(bounds.origin + bounds.size / 2);
+        editor::setZoom(
+            std::clamp(
+                (CCDirector::get()->getWinSize().width / bounds.size.width) / 1.5f, 
+                pMinimumZoom, pMaximumZoom
+            )
+        );
+    }
+    void moveTo(std::span<GameObject* const> pObjs, bool pZoomToFit, float pZoomBuffer, float pMinimumZoom, float pMaximumZoom) {
+        const auto bounds = editor::object::bounds(pObjs, true);
+
+        editor::move(bounds.origin + bounds.size / 2);
+        editor::setZoom(
+            std::clamp(
+                (CCDirector::get()->getWinSize().width / bounds.size.width) / 1.5f, 
+                pMinimumZoom, pMaximumZoom
+            )
+        );
+    }
+    void moveTo(CCArray* pObjs, bool pZoomToFit, float pZoomBuffer, float pMinimumZoom, float pMaximumZoom) {
+        const auto bounds = editor::object::bounds(pObjs);
+
+        editor::move(bounds.origin + bounds.size / 2);
+        editor::setZoom(
+            std::clamp(
+                (CCDirector::get()->getWinSize().width / bounds.size.width) / 1.5f, 
+                pMinimumZoom, pMaximumZoom
+            )
+        );
+    }
     void setZoom(float pZoom) {
         if (notLoaded(LoadedType::UIValid)) {
             return;

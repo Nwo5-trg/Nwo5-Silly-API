@@ -1,28 +1,35 @@
 #pragma once
 
 #include "../export.hpp"
+#include "setup.hpp"
 
 namespace nwo5::ui {
+    /// @returns content size of node
+    SILLY_API_DLL cocos2d::CCPoint pos(cocos2d::CCNode* pNode);
+    /// @returns x position of node
+    SILLY_API_DLL float x(cocos2d::CCNode* pNode);
+    /// @returns y position of node
+    SILLY_API_DLL float y(cocos2d::CCNode* pNode);
+
+    /// @returns content size of node
+    SILLY_API_DLL cocos2d::CCSize size(cocos2d::CCNode* pNode);
+    /// @returns content width of node
+    SILLY_API_DLL float w(cocos2d::CCNode* pNode);
+    /// @returns content height of node
+    SILLY_API_DLL float h(cocos2d::CCNode* pNode);
+    /// @returns scaled content size of node
+    SILLY_API_DLL cocos2d::CCSize ssize(cocos2d::CCNode* pNode);
+    /// @returns scaled content width of node
+    SILLY_API_DLL float sw(cocos2d::CCNode* pNode);
+    /// @returns scaled content height of node
+    SILLY_API_DLL float sh(cocos2d::CCNode* pNode);
+
     SILLY_API_DLL cocos2d::CCSize winSize();
     SILLY_API_DLL float winWidth();
     SILLY_API_DLL float winHeight();
 
-    // /// @returns pNode->boundingBox();
-    // SILLY_API_DLL cocos2d::CCRect bounds(cocos2d::CCNode* pNode);
-    // /// @returns pNode->boundingBox() but min/max for all the nodes
-    // SILLY_API_DLL cocos2d::CCRect bounds(cocos2d::CCArray* pNodes);
-    // /// @returns pNode->boundingBox() but min/max for all the nodes
-    // SILLY_API_DLL cocos2d::CCRect bounds(std::span<const cocos2d::CCNode*> pNodes);
-    // /// (try to) find a nodes bounds recursively
-    // /// @param pExclude if a child node is in this span, exclude it
-    // /// @returns bounds in node space
-    // SILLY_API_DLL cocos2d::CCRect realBounds(cocos2d::CCNode* pNode, std::span<const cocos2d::CCNode*> pExclude = {});
-    // /// (try to) find node(s) bounds recursively
-    // /// @param pExclude if a child node is in this span, exclude it
-    // /// @returns bounds in node space
-    // SILLY_API_DLL cocos2d::CCRect realBounds(cocos2d::CCArray* pNodes, std::span<const cocos2d::CCNode*> pExclude = {});
-    // /// (try to) find node(s) bounds recursively
-    // /// @param pExclude if a child node is in this span, exclude it
-    // /// @returns bounds in node space
-    // SILLY_API_DLL cocos2d::CCRect realBounds(std::span<const cocos2d::CCNode*> pNodes, std::span<const cocos2d::CCNode*> pExclude = {});
+    template<typename T>
+    auto node(Setup<T> pSetup) {
+        return pSetup.get();
+    }
 }

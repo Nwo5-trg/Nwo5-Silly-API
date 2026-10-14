@@ -34,7 +34,7 @@ namespace nwo5::settings {
         }
     }
 
-    class SavedSettingChangedEvent : public geode::GlobalEvent<SavedSettingChangedEvent, bool(std::string_view pMod, std::string_view pKey, GenericSetting* pSetting), bool(GenericSetting* pSetting), std::string, std::string> {
+    class SavedSettingChangedEvent final : public geode::GlobalEvent<SavedSettingChangedEvent, bool(std::string_view pMod, std::string_view pKey, GenericSetting* pSetting), bool(GenericSetting* pSetting), std::string, std::string> {
     public:
         using GlobalEvent::GlobalEvent;
         SavedSettingChangedEvent(geode::Mod* pMod, std::string pKey)
