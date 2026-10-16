@@ -24,7 +24,7 @@ def find_settings_namespace(start: str) -> str | None:
     if i == -1:
         i = start.find("namespace Settings {")
 
-    return i + len("namespace Settings {") if i != -1 else None
+    return i + len("namespace settings {") if i != -1 else None
 
 DUMB_STUPID_GLOBAL_MAP_BECAUSE_PYTHON_DOESNT_HAVE_STATIC_VARIABLES = {
     "string": "std::string",
@@ -77,11 +77,11 @@ def main():
     out = reference.read_text() if IS_REFERENCING else """\
 #pragma once
 
-#include <nwo5.silly-api/include/settings/include.hpp>
+#include <nwo5.silly-api/include/cache/include.hpp>
 
-using namespace nwo5::settings::prelude;
+using namespace nwo5::cache::prelude;
 
-namespace Settings {
+namespace settings {
 }
 """
 
@@ -122,7 +122,7 @@ namespace Settings {
             continue
 
         SETTING_NAME = key[:1].lower() + (key.title().replace("-", ""))[1:]
-        SETTING_STRING = f"\n    inline Setting<{SETTING_TYPE}> {SETTING_NAME}{{\"{key}\"}};"
+        SETTING_STRING = f"\n    inline SettingCache<{SETTING_TYPE}> {SETTING_NAME}{{\"{key}\"}};"
 
         out = out[:i] + SETTING_STRING + out[i:]
         i += len(SETTING_STRING)

@@ -1349,7 +1349,7 @@ namespace nwo5::editor::trigger {
 namespace nwo5::editor::trigger {
     namespace impl {
         constexpr auto createTriggerInfoArray() {
-            std::array<TriggerInfo, nwo5::editor::constants::OBJECT_IDS + 1> arr;
+            std::array<TriggerInfo, nwo5::editor::constants::MAX_OBJECT_ID + 1> arr;
 
             arr[COLOR_TRIGGER] = Info<COLOR_TRIGGER>; 
             arr[MOVE_TRIGGER] = Info<MOVE_TRIGGER>; 

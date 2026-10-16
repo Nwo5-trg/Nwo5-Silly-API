@@ -1,3 +1,29 @@
+## v3.0.0
+**Added**
+
+- nodes namespace (moved tooltip and sillydrawnode)
+- all ui button functions return geode::Button now
+- reworked nwo5::settings (now nwo5::cache)
+- cached settings automatically load
+- cached settings work more like normal raii objs now so they dont have to strictly be static initialized
+- saved value cache
+- moved ui::sprite/frame to ui::resources::sprite/frame
+- renamed ui::spr/sprFrame to ui::sprite/frame
+
+**Removed**
+
+- deprecated obj functions
+- some ui syntax functions which were js unnecessary verbosity
+- saved settings, setting categories, and settings manager
+
+**Fixed**
+
+- selection get ccarray specialization
+
+**Internal**
+
+- reorganized utils and ui namespaces
+
 ## v2.2.3
 **Added**
 
