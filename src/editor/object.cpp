@@ -722,10 +722,10 @@ namespace nwo5::editor::object {
         moveBy(pObj, pTo - pObj->getRealPosition());
     }
     void move(std::span<GameObject* const> pObjs, CCPoint pTo, bool pUndo, CCPoint pCenter) {
-        moveBy(pObjs, pTo - (pCenter == editor::AUTO_CENTER ? center(pObjs) : pCenter));
+        moveBy(pObjs, pTo - (pCenter == editor::constants::AUTO_CENTER ? center(pObjs) : pCenter));
     }
     void move(CCArray* pObjs, CCPoint pTo, bool pUndo, CCPoint pCenter) {
-        moveBy(pObjs, pTo - (pCenter == editor::AUTO_CENTER ? center(pObjs) : pCenter));
+        moveBy(pObjs, pTo - (pCenter == editor::constants::AUTO_CENTER ? center(pObjs) : pCenter));
     }
     void moveBy(GameObject* pObj, CCPoint pOff, bool pUndo) {
         if (notLoaded(LoadedType::Editor)) {
@@ -785,7 +785,7 @@ namespace nwo5::editor::object {
             return;
         }
 
-        if (pCenter == editor::AUTO_CENTER) {
+        if (pCenter == editor::constants::AUTO_CENTER) {
             pCenter = center(pObjs);
         }
 
@@ -981,7 +981,7 @@ namespace nwo5::editor::object {
             return;
         }
 
-        if (pCenter == editor::AUTO_CENTER) {
+        if (pCenter == editor::constants::AUTO_CENTER) {
             pCenter = center(pObjs);
         }
 
@@ -1010,7 +1010,7 @@ namespace nwo5::editor::object {
             return;
         }
 
-        if (pCenter == editor::AUTO_CENTER) {
+        if (pCenter == editor::constants::AUTO_CENTER) {
             pCenter = center(pObjs);
         }
 
@@ -1031,7 +1031,7 @@ namespace nwo5::editor::object {
             return;
         }
 
-        if (pCenter == editor::AUTO_CENTER) {
+        if (pCenter == editor::constants::AUTO_CENTER) {
             pCenter = center(pObjs);
         }
 
@@ -1052,7 +1052,7 @@ namespace nwo5::editor::object {
             return;
         }
         
-        if (pCenter == editor::AUTO_CENTER) {
+        if (pCenter == editor::constants::AUTO_CENTER) {
             pCenter = center(pObjs);
         }
 
@@ -1081,7 +1081,7 @@ namespace nwo5::editor::object {
             return;
         }
         
-        if (pCenter == editor::AUTO_CENTER) {
+        if (pCenter == editor::constants::AUTO_CENTER) {
             pCenter = center(pObjs);
         }
 
@@ -1102,7 +1102,7 @@ namespace nwo5::editor::object {
             return;
         }
         
-        if (pCenter == editor::AUTO_CENTER) {
+        if (pCenter == editor::constants::AUTO_CENTER) {
             pCenter = center(pObjs);
         }
 

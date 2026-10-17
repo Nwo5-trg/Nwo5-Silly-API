@@ -21,6 +21,7 @@ namespace nwo5::editor {
     };
     /// object deleted
     /// @note unlike other events, this one is triggered *before* the object is actually removed so u can do stuff with the ptr
+    /// @note pObjects is guaranteed not to be empty
     struct ObjectsDeletedEvent final : public geode::Event<ObjectsDeletedEvent, bool(cocos2d::CCArray* pObjects)> {
         using Event::Event;
     };

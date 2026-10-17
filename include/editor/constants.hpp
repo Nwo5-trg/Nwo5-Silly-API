@@ -54,6 +54,8 @@ namespace nwo5::editor::constants {
     static constexpr int CENTER_RIGHT_AREA_SPECIAL_TARGET = -10;
     static constexpr int TOP_RIGHT_AREA_SPECIAL_TARGET = -11;
 
+    static constexpr cocos2d::CCPoint AUTO_CENTER{std::numeric_limits<float>::max() - 1.0f, std::numeric_limits<float>::max() - 1.0f};
+
     /// convert speed enum to units per seccond
     /// @returns units per second for speed
     constexpr float toSpeed(Speed pSpeed) {

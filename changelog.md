@@ -5,7 +5,7 @@
 - all ui button functions return geode::Button now
 - reworked nwo5::settings (now nwo5::cache)
 - cached settings automatically load
-- cached settings work more like normal raii objs now so they dont have to strictly be static initialized
+- cached settings are now memory managed a bit more sanely so now they dont have to strictly be static initialized
 - saved value cache
 - moved ui::sprite/frame to ui::resources::sprite/frame
 - renamed ui::spr/sprFrame to ui::sprite/frame
@@ -13,6 +13,7 @@
 **Removed**
 
 - deprecated obj functions
+- dumb edit button api \<\/3
 - some ui syntax functions which were js unnecessary verbosity
 - saved settings, setting categories, and settings manager
 

@@ -6,7 +6,7 @@
 		"mac": "2.2081",
 		"ios": "2.2081"
 	},
-	"id": "nwo5.silly-api.test",
+	"id": "nwo5.silly-api",
 	"name": "Silly API",
 	"version": "v3.0.0",
 	"developer": "Nwo5",
