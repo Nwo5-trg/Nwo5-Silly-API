@@ -16,9 +16,6 @@
 		"source": "https://github.com/Nwo5-trg/Nwo5-Silly-API",
 		"community": "https://discord.gg/AeFeYWGUxZ"
 	},
-	"dependencies": {
-		"geode.node-ids": ">=1.23.0"
-	},
 	"api": {
         "include": [
 			"include/*.hpp",
