@@ -85,7 +85,7 @@ namespace nwo5::cache {
         }
 
         /// get underlying setting
-        auto& data() const {
+        auto data() const {
             return m_setting.get();
         }
 
