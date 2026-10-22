@@ -20,7 +20,8 @@
         "include": [
 			"include/*.hpp",
 			"include/editor/*.hpp",
-			"include/settings/*.hpp",
+			"include/cache/*.hpp",
+			"include/nodes/*.hpp",
 			"include/utils/*.hpp",
 			"include/ui/*.hpp"
 		]
