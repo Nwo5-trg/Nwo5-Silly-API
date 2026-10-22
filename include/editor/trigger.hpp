@@ -57,12 +57,12 @@ namespace nwo5::editor::trigger {
     public:
         constexpr Input()
             = default;
-        constexpr Input(InputType pType)
-            : m_type(pType) {}
-        constexpr Input(InputType pType, InputType pSecondaryType)
-            : m_type(pType), m_secondaryType(pSecondaryType) {}
-        constexpr Input(InputType pType, bool pConditional)
-            : m_type(pType), m_conditional(pConditional) {}
+        constexpr Input(InputType type)
+            : m_type(type) {}
+        constexpr Input(InputType type, InputType secondaryType)
+            : m_type(type), m_secondaryType(secondaryType) {}
+        constexpr Input(InputType type, bool conditional)
+            : m_type(type), m_conditional(conditional) {}
 
         InputType type() const {
             return m_type;
@@ -102,22 +102,22 @@ namespace nwo5::editor::trigger {
         constexpr TriggerInfo() 
             = default;
         constexpr TriggerInfo(
-            Input pPrimaryTarget,
-            Input pSecondaryTarget,
-            Input pPrimaryInput,
-            Input pSecondaryInput,
-            bool pDuration,
-            bool pEasing,
-            LabelType pLabelType,
-            cocos2d::ccColor3B pColor,
-            Category pCategory,
+            Input primaryTarget,
+            Input secondaryTarget,
+            Input primaryInput,
+            Input secondaryInput,
+            bool duration,
+            bool easing,
+            LabelType labelType,
+            cocos2d::ccColor3B color,
+            Category category,
             ObjectType type = ObjectType::Trigger
         )
             : m_type(type),
-              m_primaryTarget(pPrimaryTarget), m_secondaryTarget(pSecondaryTarget),
-              m_primaryInput(pPrimaryInput), m_secondaryInput(pSecondaryInput),
-              m_duration(pDuration), m_easing(pEasing), m_labelType(pLabelType),
-              m_color(pColor), m_category(pCategory) {}
+              m_primaryTarget(primaryTarget), m_secondaryTarget(secondaryTarget),
+              m_primaryInput(primaryInput), m_secondaryInput(secondaryInput),
+              m_duration(duration), m_easing(easing), m_labelType(labelType),
+              m_color(color), m_category(category) {}
 
               ObjectType type() const {
             return m_type;
@@ -1344,6 +1344,15 @@ namespace nwo5::editor::trigger {
         };
         using TriggerType = EnterEffectObject;
     };
+    static constexpr int PLATFORMER_PERCENT_TRIGGER = 3663;
+    template<> struct impl::Trigger<PLATFORMER_PERCENT_TRIGGER> {
+        static constexpr TriggerInfo info{
+            InputType::Item, InputType::None, InputType::None, InputType::None, 
+            false, false, LabelType::None,
+            {255, 255, 255}, Category::Other
+        };
+        using TriggerType = EnterEffectObject;
+    };
 }
 
 namespace nwo5::editor::trigger {
@@ -1473,6 +1482,7 @@ namespace nwo5::editor::trigger {
             arr[FADE_ENTER_TRIGGER] = Info<FADE_ENTER_TRIGGER>;
             arr[TINT_ENTER_TRIGGER] = Info<TINT_ENTER_TRIGGER>;
             arr[ENTER_STOP_TRIGGER] = Info<ENTER_STOP_TRIGGER>;
+            arr[PLATFORMER_PERCENT_TRIGGER] = Info<PLATFORMER_PERCENT_TRIGGER>;
 
             return arr;
         }
@@ -1480,93 +1490,93 @@ namespace nwo5::editor::trigger {
 
     /// check if object is trigger
     /// @returns if object is trigger
-    SILLY_API_DLL bool is(int pID);
+    SILLY_API_DLL bool is(int id);
     /// check if object is trigger
     /// @returns if object is trigger
-    SILLY_API_DLL bool is(GameObject* pObj);
-    SILLY_API_DLL ObjectType type(int pID);
-    SILLY_API_DLL ObjectType type(GameObject* pObj);
+    SILLY_API_DLL bool is(GameObject* obj);
+    SILLY_API_DLL ObjectType type(int id);
+    SILLY_API_DLL ObjectType type(GameObject* obj);
 
     /// get trigger info for object
-    SILLY_API_DLL const TriggerInfo& get(int pID);
+    SILLY_API_DLL const TriggerInfo& get(int id);
     /// get trigger info for object
-    SILLY_API_DLL const TriggerInfo& get(GameObject* pObj);
+    SILLY_API_DLL const TriggerInfo& get(GameObject* obj);
 
     /// value of primary target
-    SILLY_API_DLL int primaryTarget(GameObject* pObj);
+    SILLY_API_DLL int primaryTarget(GameObject* obj);
     /// runtime type of primary target e.g. type for pulse trigger would change when use group id is selected
-    SILLY_API_DLL InputType primaryTargetType(GameObject* pObj);
-    SILLY_API_DLL void setPrimaryTarget(GameObject* pObj, int pVal);
+    SILLY_API_DLL InputType primaryTargetType(GameObject* obj);
+    SILLY_API_DLL void setPrimaryTarget(GameObject* obj, int val);
     /// same as primary target
-    SILLY_API_DLL int target(GameObject* pObj);
+    SILLY_API_DLL int target(GameObject* obj);
     /// same as primary target
-    SILLY_API_DLL InputType targetType(GameObject* pObj);
+    SILLY_API_DLL InputType targetType(GameObject* obj);
     /// same as primary target
-    SILLY_API_DLL void setTarget(GameObject* pObj, int pVal);
+    SILLY_API_DLL void setTarget(GameObject* obj, int val);
 
     /// value of secondary target
-    SILLY_API_DLL int secondaryTarget(GameObject* pObj);
+    SILLY_API_DLL int secondaryTarget(GameObject* obj);
     /// runtime type of secondary target
-    SILLY_API_DLL InputType secondaryTargetType(GameObject* pObj);
-    SILLY_API_DLL void setSecondaryTarget(GameObject* pObj, int pVal);
+    SILLY_API_DLL InputType secondaryTargetType(GameObject* obj);
+    SILLY_API_DLL void setSecondaryTarget(GameObject* obj, int val);
     /// same as secondary target
-    SILLY_API_DLL int center(GameObject* pObj);
+    SILLY_API_DLL int center(GameObject* obj);
     /// same as secondary target
-    SILLY_API_DLL InputType centerType(GameObject* pObj);
+    SILLY_API_DLL InputType centerType(GameObject* obj);
     /// same as secondary target
-    SILLY_API_DLL void setCenter(GameObject* pObj, int pVal);
+    SILLY_API_DLL void setCenter(GameObject* obj, int val);
 
     /// value of primary input
-    SILLY_API_DLL int primaryInput(GameObject* pObj);
+    SILLY_API_DLL int primaryInput(GameObject* obj);
     /// runtime type of primary input
-    SILLY_API_DLL InputType primaryInputType(GameObject* pObj);
-    SILLY_API_DLL void setPrimaryInput(GameObject* pObj, int pVal);
+    SILLY_API_DLL InputType primaryInputType(GameObject* obj);
+    SILLY_API_DLL void setPrimaryInput(GameObject* obj, int val);
     /// same as primary input
-    SILLY_API_DLL int identifier(GameObject* pObj);
+    SILLY_API_DLL int identifier(GameObject* obj);
     /// same as primary input
-    SILLY_API_DLL InputType identifierType(GameObject* pObj);
+    SILLY_API_DLL InputType identifierType(GameObject* obj);
     /// same as primary input
-    SILLY_API_DLL void setIdentifier(GameObject* pObj, int pVal);
+    SILLY_API_DLL void setIdentifier(GameObject* obj, int val);
 
     /// value of secondary input
-    SILLY_API_DLL int secondaryInput(GameObject* pObj);
+    SILLY_API_DLL int secondaryInput(GameObject* obj);
     /// runtime type of secondary input
-    SILLY_API_DLL InputType secondaryInputType(GameObject* pObj);
-    SILLY_API_DLL void setSecondaryInput(GameObject* pObj, int pVal);
+    SILLY_API_DLL InputType secondaryInputType(GameObject* obj);
+    SILLY_API_DLL void setSecondaryInput(GameObject* obj, int val);
 
-    SILLY_API_DLL bool hasDuration(int pID);
-    SILLY_API_DLL bool hasDuration(GameObject* pObj);
-    SILLY_API_DLL float duration(GameObject* pObj);
-    SILLY_API_DLL void setDuration(GameObject* pObj, float pDuration);
-    SILLY_API_DLL bool hasEasing(int pID);
-    SILLY_API_DLL bool hasEasing(GameObject* pObj);
-    SILLY_API_DLL EasingType easing(GameObject* pObj);
-    SILLY_API_DLL void setEasing(GameObject* pObj, EasingType pEasing);
+    SILLY_API_DLL bool hasDuration(int id);
+    SILLY_API_DLL bool hasDuration(GameObject* obj);
+    SILLY_API_DLL float duration(GameObject* obj);
+    SILLY_API_DLL void setDuration(GameObject* obj, float duration);
+    SILLY_API_DLL bool hasEasing(int id);
+    SILLY_API_DLL bool hasEasing(GameObject* obj);
+    SILLY_API_DLL EasingType easing(GameObject* obj);
+    SILLY_API_DLL void setEasing(GameObject* obj, EasingType easing);
 
-    SILLY_API_DLL bool hasLabel(int pID);
-    SILLY_API_DLL bool hasLabel(GameObject* pObj);
-    SILLY_API_DLL LabelType labelType(int pID);
-    SILLY_API_DLL LabelType labelType(GameObject* pObj);
+    SILLY_API_DLL bool hasLabel(int id);
+    SILLY_API_DLL bool hasLabel(GameObject* obj);
+    SILLY_API_DLL LabelType labelType(int id);
+    SILLY_API_DLL LabelType labelType(GameObject* obj);
 
-    SILLY_API_DLL Category category(int pID);
-    SILLY_API_DLL Category category(GameObject* pObj);
+    SILLY_API_DLL Category category(int id);
+    SILLY_API_DLL Category category(GameObject* obj);
 
     /// color of trigger sprite
-    /// @returns static trigger color (unfinished)
-    SILLY_API_DLL cocos2d::ccColor3B color(int pID);
+    /// @returns trigger color (unfinished)
+    SILLY_API_DLL cocos2d::ccColor3B spriteColor(int id);
     /// color of trigger sprite
-    /// @returns static trigger color or target color for color trigger/pulse so that might be useful :3
-    SILLY_API_DLL cocos2d::ccColor3B color(GameObject* pObj);
+    /// @returns trigger color (unfinished)
+    SILLY_API_DLL cocos2d::ccColor3B spriteColor(GameObject* obj);
 
     /// check if activate group enabled, e.g. toggle 
     /// @note touch trigger always reutrns false
     /// @returns false if trigger doesnt support option, activate group enabled otherwise
-    SILLY_API_DLL bool activateGroup(GameObject* pObj);
+    SILLY_API_DLL bool activateGroup(GameObject* obj);
     /// check if target mode enabled
     /// - target option in some shaders
     /// - follow object in static camera trigger
     /// - target/direction mode in move trigger
     /// - aim/follow mode in rotation trigger
     /// @returns false if trigger doesnt support option, target mode enabled otherwise
-    SILLY_API_DLL bool targetModeEnabled(GameObject* pObj);
+    SILLY_API_DLL bool targetModeEnabled(GameObject* obj);
 }

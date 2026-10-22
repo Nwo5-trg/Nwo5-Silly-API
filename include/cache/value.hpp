@@ -28,8 +28,8 @@ namespace nwo5::cache {
     public:
         using Type = T;
 
-        ValueCache(std::string pKey, T pDefault = T{}, geode::Mod* pMod = geode::Mod::get())
-            : m_default(pDefault), m_key(pKey), m_mod(pMod)
+        ValueCache(std::string key, T defaultValue = T{}, geode::Mod* mod = geode::Mod::get())
+            : m_default(defaultValue), m_key(key), m_mod(mod)
         {
             if (m_mod && m_mod->isLoaded()) {
                 this->load();
@@ -47,24 +47,24 @@ namespace nwo5::cache {
         operator const T&() const {
             return m_value;
         }
-        auto operator==(const T& pVal) {
-            return m_value == pVal;
+        auto operator==(const T& val) {
+            return m_value == val;
         }
-        auto operator<=>(const T& pVal) const requires std::three_way_comparable<T> {
-            return m_value <=> pVal;
+        auto operator<=>(const T& val) const requires std::three_way_comparable<T> {
+            return m_value <=> val;
         }
-        auto& operator=(const T& pVal) {
-            this->set(pVal);
+        auto& operator=(const T& val) {
+            this->set(val);
 
             return *this;
         }
 
         /// set value and sync
         /// @returns old value
-        T set(T pVal) {
+        T set(T val) {
             const auto ret = m_value;
 
-            m_value = pVal;
+            m_value = val;
             this->sync();
 
             return ret;

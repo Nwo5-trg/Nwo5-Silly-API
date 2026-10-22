@@ -15,8 +15,8 @@ namespace nwo5::ui {
     public:
         using Type = Node;
 
-        Setup(Node* pNode) 
-            : m_node(pNode) {}
+        Setup(Node* node) 
+            : m_node(node) {}
 
         operator Node*() const {
             return m_node;
@@ -40,27 +40,27 @@ namespace nwo5::ui {
 
 
 
-        Setup parent(cocos2d::CCNode* pNode) requires std::derived_from<Node, cocos2d::CCNode> {
-            pNode->addChild(m_node);
-            pNode->updateLayout();
+        Setup parent(cocos2d::CCNode* node) requires std::derived_from<Node, cocos2d::CCNode> {
+            node->addChild(m_node);
+            node->updateLayout();
 
             return m_node;
         }
         template<typename... Args>
-        Setup children(Args... pChildren) requires std::derived_from<Node, cocos2d::CCNode> {
-            (m_node->addChild(pChildren), ...);
+        Setup children(Args... children) requires std::derived_from<Node, cocos2d::CCNode> {
+            (m_node->addChild(children), ...);
 
             m_node->updateLayout();
 
             return m_node;
         }
 
-        Setup order(int pOrder) requires std::derived_from<Node, cocos2d::CCNode> {
-            m_node->setZOrder(pOrder);
+        Setup order(int order) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->setZOrder(order);
             return m_node;
         }
-        Setup order(cocos2d::CCNode* pCopy) requires std::derived_from<Node, cocos2d::CCNode> {
-            m_node->setZOrder(pCopy->getZOrder());
+        Setup order(cocos2d::CCNode* copy) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->setZOrder(copy->getZOrder());
             return m_node;
         }
 
@@ -68,42 +68,42 @@ namespace nwo5::ui {
 
 
 
-        Setup pos(cocos2d::CCPoint pPos) requires std::derived_from<Node, cocos2d::CCNode> {
-            m_node->setPosition(pPos);
+        Setup pos(cocos2d::CCPoint pos) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->setPosition(pos);
             return m_node;
         }
-        Setup pos(float pX, float pY) requires std::derived_from<Node, cocos2d::CCNode> {
-            return pos({pX, pY});
+        Setup pos(float x, float y) requires std::derived_from<Node, cocos2d::CCNode> {
+            return pos({x, y});
         }
-        Setup pos(cocos2d::CCNode* pCopy) requires std::derived_from<Node, cocos2d::CCNode> {
-            return pos(pCopy->getPosition());
+        Setup pos(cocos2d::CCNode* copy) requires std::derived_from<Node, cocos2d::CCNode> {
+            return pos(copy->getPosition());
         }
-        Setup posX(float pX) requires std::derived_from<Node, cocos2d::CCNode> {
-            m_node->setPositionX(pX);
+        Setup posX(float x) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->setPositionX(x);
             return m_node;
         }
-        Setup posX(cocos2d::CCNode* pCopy) requires std::derived_from<Node, cocos2d::CCNode> {
-            return posX(pCopy->getPositionX());
+        Setup posX(cocos2d::CCNode* copy) requires std::derived_from<Node, cocos2d::CCNode> {
+            return posX(copy->getPositionX());
         }
-        Setup posY(float pY) requires std::derived_from<Node, cocos2d::CCNode> {
-            m_node->setPositionY(pY);
+        Setup posY(float y) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->setPositionY(y);
             return m_node;
         }
-        Setup posY(cocos2d::CCNode* pCopy) requires std::derived_from<Node, cocos2d::CCNode> {
-            return posY(pCopy->getPositionY());
+        Setup posY(cocos2d::CCNode* copy) requires std::derived_from<Node, cocos2d::CCNode> {
+            return posY(copy->getPositionY());
         }
 
-        Setup move(cocos2d::CCPoint pOffset) requires std::derived_from<Node, cocos2d::CCNode> {
-            return pos(m_node->getPosition() + pOffset);
+        Setup move(cocos2d::CCPoint offset) requires std::derived_from<Node, cocos2d::CCNode> {
+            return pos(m_node->getPosition() + offset);
         }
-        Setup move(float pX, float pY) requires std::derived_from<Node, cocos2d::CCNode> {
-            return move({pX, pY});
+        Setup move(float x, float y) requires std::derived_from<Node, cocos2d::CCNode> {
+            return move({x, y});
         }
-        Setup moveX(float pX) requires std::derived_from<Node, cocos2d::CCNode> {
-            return posX(m_node->getPositionX() + pX);
+        Setup moveX(float x) requires std::derived_from<Node, cocos2d::CCNode> {
+            return posX(m_node->getPositionX() + x);
         }
-        Setup moveY(float pY) requires std::derived_from<Node, cocos2d::CCNode> {
-            return posY(m_node->getPositionY() + pY);
+        Setup moveY(float y) requires std::derived_from<Node, cocos2d::CCNode> {
+            return posY(m_node->getPositionY() + y);
         }
 
         Setup center() {
@@ -119,47 +119,7 @@ namespace nwo5::ui {
 
 
         
-        Setup anchor(cocos2d::CCPoint pAnchor) requires std::derived_from<Node, cocos2d::CCNode> {
-            m_node->setAnchorPoint(pAnchor);
-
-            if constexpr (std::derived_from<Node, cocos2d::CCLayer> || std::derived_from<Node, cocos2d::CCMenu>) {
-                m_node->ignoreAnchorPointForPosition(false);
-            }
-
-            return m_node;
-        }
-        Setup anchor(float pX, float pY) requires std::derived_from<Node, cocos2d::CCNode> {
-            return anchor({pX, pY});
-        }
-        Setup anchor(geode::Anchor pAnchor) requires std::derived_from<Node, cocos2d::CCNode> {
-            auto anchor = CENTER_ANCHOR;
-            switch (pAnchor) {
-                case geode::Anchor::TopLeft: {
-                    anchor = TOP_LEFT_ANCHOR;
-                break; }
-                case geode::Anchor::Top: {
-                    anchor = TOP_CENTER_ANCHOR;
-                break; }
-                case geode::Anchor::TopRight: {
-                    anchor = TOP_RIGHT_ANCHOR;
-                break; }
-                case geode::Anchor::Right: {
-                    anchor = RIGHT_CENTER_ANCHOR;
-                break; }
-                case geode::Anchor::BottomRight: {
-                    anchor = BOTTOM_RIGHT_ANCHOR;
-                break; }
-                case geode::Anchor::Bottom: {
-                    anchor = BOTTOM_CENTER_ANCHOR;
-                break; }
-                case geode::Anchor::BottomLeft: {
-                    anchor = BOTTOM_LEFT_ANCHOR;
-                break; }
-                case geode::Anchor::Left: {
-                    anchor = LEFT_CENTER_ANCHOR;
-                break; }
-                default: {};
-            }
+        Setup anchor(cocos2d::CCPoint anchor) requires std::derived_from<Node, cocos2d::CCNode> {
             m_node->setAnchorPoint(anchor);
 
             if constexpr (std::derived_from<Node, cocos2d::CCLayer> || std::derived_from<Node, cocos2d::CCMenu>) {
@@ -168,12 +128,52 @@ namespace nwo5::ui {
 
             return m_node;
         }
-        Setup anchor(cocos2d::CCNode* pCopy) requires std::derived_from<Node, cocos2d::CCNode> {
-            return anchor(pCopy->getAnchorPoint());
+        Setup anchor(float x, float y) requires std::derived_from<Node, cocos2d::CCNode> {
+            return anchor({x, y});
+        }
+        Setup anchor(geode::Anchor anchor) requires std::derived_from<Node, cocos2d::CCNode> {
+            auto out = CENTER_ANCHOR;
+            switch (anchor) {
+                case geode::Anchor::TopLeft: {
+                    out = TOP_LEFT_ANCHOR;
+                break; }
+                case geode::Anchor::Top: {
+                    out = TOP_CENTER_ANCHOR;
+                break; }
+                case geode::Anchor::TopRight: {
+                    out = TOP_RIGHT_ANCHOR;
+                break; }
+                case geode::Anchor::Right: {
+                    out = RIGHT_CENTER_ANCHOR;
+                break; }
+                case geode::Anchor::BottomRight: {
+                    out = BOTTOM_RIGHT_ANCHOR;
+                break; }
+                case geode::Anchor::Bottom: {
+                    out = BOTTOM_CENTER_ANCHOR;
+                break; }
+                case geode::Anchor::BottomLeft: {
+                    out = BOTTOM_LEFT_ANCHOR;
+                break; }
+                case geode::Anchor::Left: {
+                    out = LEFT_CENTER_ANCHOR;
+                break; }
+                default: {};
+            }
+            m_node->setAnchorPoint(out);
+
+            if constexpr (std::derived_from<Node, cocos2d::CCLayer> || std::derived_from<Node, cocos2d::CCMenu>) {
+                m_node->ignoreAnchorPointForPosition(false);
+            }
+
+            return m_node;
+        }
+        Setup anchor(cocos2d::CCNode* copy) requires std::derived_from<Node, cocos2d::CCNode> {
+            return anchor(copy->getAnchorPoint());
         }
 
-        Setup ignoreAnchorForPos(bool pIgnore) requires std::derived_from<Node, cocos2d::CCNode> {
-            m_node->ignoreAnchorPointForPosition(pIgnore);
+        Setup ignoreAnchorForPos(bool ignore) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->ignoreAnchorPointForPosition(ignore);
             return m_node;
         }
 
@@ -181,153 +181,153 @@ namespace nwo5::ui {
 
 
 
-        Setup rotation(float pRotation) requires std::derived_from<Node, cocos2d::CCNode> {
-            m_node->setRotation(pRotation);
+        Setup rotation(float rotation) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->setRotation(rotation);
             return m_node;
         }
-        Setup rotation(cocos2d::CCNode* pCopy) requires std::derived_from<Node, cocos2d::CCNode> {
-            return rotation(pCopy->getRotation());
+        Setup rotation(cocos2d::CCNode* copy) requires std::derived_from<Node, cocos2d::CCNode> {
+            return rotation(copy->getRotation());
         }
 
 
 
 
 
-        Setup scale(float pScale) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup scale(float scale) requires std::derived_from<Node, cocos2d::CCNode> {
             if constexpr (std::derived_from<Node, CCMenuItemSpriteExtra>) {
-                m_node->getNormalImage()->setScale(pScale);
+                m_node->getNormalImage()->setScale(scale);
                 m_node->updateSprite();
             }
             else {
-                m_node->setScale(pScale);
+                m_node->setScale(scale);
             }
             return m_node;
         }
-        Setup scale(cocos2d::CCNode* pCopy) requires std::derived_from<Node, cocos2d::CCNode> {
-            return scale(pCopy->getScale());
+        Setup scale(cocos2d::CCNode* copy) requires std::derived_from<Node, cocos2d::CCNode> {
+            return scale(copy->getScale());
         }
-        Setup scale(float pX, float pY) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup scale(float x, float y) requires std::derived_from<Node, cocos2d::CCNode> {
             if constexpr (std::derived_from<Node, CCMenuItemSpriteExtra>) {
                 auto image = m_node->getNormalImage();
-                image->setScaleX(pX);
-                image->setScaleY(pY);
+                image->setScaleX(x);
+                image->setScaleY(y);
                 m_node->updateSprite();
             }
             else {
-                m_node->setScaleX(pX);
-                m_node->setScaleY(pY);
+                m_node->setScaleX(x);
+                m_node->setScaleY(y);
             }
             return m_node;
         }
-        Setup scaleX(float pX) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup scaleX(float x) requires std::derived_from<Node, cocos2d::CCNode> {
             if constexpr (std::derived_from<Node, CCMenuItemSpriteExtra>) {
-                m_node->getNormalImage()->setScaleX(pX);
+                m_node->getNormalImage()->setScaleX(x);
                 m_node->updateSprite();
             }
             else {
-                m_node->setScaleX(pX);
+                m_node->setScaleX(x);
             }
             return m_node;
         }
-        Setup scaleX(cocos2d::CCNode* pCopy) requires std::derived_from<Node, cocos2d::CCNode> {
-            return scaleX(pCopy->getScaleX());
+        Setup scaleX(cocos2d::CCNode* copy) requires std::derived_from<Node, cocos2d::CCNode> {
+            return scaleX(copy->getScaleX());
         }
-        Setup scaleY(float pY) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup scaleY(float y) requires std::derived_from<Node, cocos2d::CCNode> {
             if constexpr (std::derived_from<Node, CCMenuItemSpriteExtra>) {
-                m_node->getNormalImage()->setScaleY(pY);
+                m_node->getNormalImage()->setScaleY(y);
                 m_node->updateSprite();
             }
             else {
-                m_node->setScaleY(pY);
+                m_node->setScaleY(y);
             }
             return m_node;
         }
-        Setup scaleY(cocos2d::CCNode* pCopy) requires std::derived_from<Node, cocos2d::CCNode> {
-            return scaleY(pCopy->getScaleY());
+        Setup scaleY(cocos2d::CCNode* copy) requires std::derived_from<Node, cocos2d::CCNode> {
+            return scaleY(copy->getScaleY());
         }
 
-        Setup scaleToFit(float pSize) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup scaleToFit(float size) requires std::derived_from<Node, cocos2d::CCNode> {
             if (const auto origSize = std::max(m_node->getContentWidth(), m_node->getContentHeight())) {
-                return scale(pSize / origSize);
+                return scale(size / origSize);
             }
             else {
                 return m_node;
             }
         }
-        Setup scaleWidthToFit(float pSize) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup scaleWidthToFit(float size) requires std::derived_from<Node, cocos2d::CCNode> {
             if (const auto origSize = m_node->getContentWidth()) {
-                return scale(pSize / origSize);
+                return scale(size / origSize);
             }
             else {
                 return m_node;
             }
         }
-        Setup scaleHeightToFit(float pSize) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup scaleHeightToFit(float size) requires std::derived_from<Node, cocos2d::CCNode> {
             if (const auto origSize = m_node->getContentHeight()) {
-                return scale(pSize / origSize);
+                return scale(size / origSize);
             }
             else {
                 return m_node;
             }
         }
 
-        Setup limitScaleToFit(float pSize) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup limitScaleToFit(float size) requires std::derived_from<Node, cocos2d::CCNode> {
             const auto origSize = std::max(m_node->getContentWidth(), m_node->getContentHeight());
             const auto origScale = std::max(m_node->getScaleX(), m_node->getScaleY());
 
-            if (origSize && origScale && origSize * origScale > pSize) {
-                return scale(pSize / origSize);
+            if (origSize && origScale && origSize * origScale > size) {
+                return scale(size / origSize);
             }
             else {
                 return m_node;
             }
         }
-        Setup limitScaleWidthToFit(float pSize) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup limitScaleWidthToFit(float size) requires std::derived_from<Node, cocos2d::CCNode> {
             const auto origSize = m_node->getContentWidth();
             const auto origScale = m_node->getScaleX();
 
-            if (origSize && origScale && origSize * origScale > pSize) {
-                return scale(pSize / origSize);
+            if (origSize && origScale && origSize * origScale > size) {
+                return scale(size / origSize);
             }
             else {
                 return m_node;
             }
         }
-        Setup limitScaleHeightToFit(float pSize) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup limitScaleHeightToFit(float size) requires std::derived_from<Node, cocos2d::CCNode> {
             const auto origSize = m_node->getContentHeight();
             const auto origScale = m_node->getScaleY();
 
-            if (origSize && origScale && origSize * origScale > pSize) {
-                return scale(pSize / origSize);
+            if (origSize && origScale && origSize * origScale > size) {
+                return scale(size / origSize);
             }
             else {
                 return m_node;
             }
         }
 
-        Setup stretchToFit(cocos2d::CCSize pSize) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup stretchToFit(cocos2d::CCSize size) requires std::derived_from<Node, cocos2d::CCNode> {
             const auto origSize = m_node->getContentSize();
 
             if (origSize.width && origSize.height) {
-                return scale(pSize.width / origSize.width, pSize.height / origSize.height);
+                return scale(size.width / origSize.width, size.height / origSize.height);
             }
             return m_node;
         }
-        Setup stretchToFit(float pX, float pY) requires std::derived_from<Node, cocos2d::CCNode> {
-            return stretchToFit({pX, pY});
+        Setup stretchToFit(float x, float y) requires std::derived_from<Node, cocos2d::CCNode> {
+            return stretchToFit({x, y});
         }
-        Setup stretchToFit(float pSize) requires std::derived_from<Node, cocos2d::CCNode> {
-            return stretchToFit(pSize, pSize);
+        Setup stretchToFit(float size) requires std::derived_from<Node, cocos2d::CCNode> {
+            return stretchToFit(size, size);
         }
-        Setup stretchWidthToFit(float pX) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup stretchWidthToFit(float x) requires std::derived_from<Node, cocos2d::CCNode> {
             if (const auto orig = m_node->getContentWidth()) {
-                return scaleX(pX / orig);
+                return scaleX(x / orig);
             }
             return m_node;
         }
-        Setup stretchHeightToFit(float pY) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup stretchHeightToFit(float y) requires std::derived_from<Node, cocos2d::CCNode> {
             if (const auto orig = m_node->getContentHeight()) {
-                return scaleY(pY / orig);
+                return scaleY(y / orig);
             }
             return m_node;
         }
@@ -336,59 +336,59 @@ namespace nwo5::ui {
 
 
 
-        Setup size(cocos2d::CCSize pSize) requires std::derived_from<Node, cocos2d::CCNode> {
-            m_node->setContentSize(pSize);
+        Setup size(cocos2d::CCSize size) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->setContentSize(size);
             return m_node;
         }
-        Setup size(float pWidth, float pHeight) requires std::derived_from<Node, cocos2d::CCNode> {
-            m_node->setContentSize({pWidth, pHeight});
+        Setup size(float width, float height) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->setContentSize({width, height});
             return m_node;
         }
-        Setup size(cocos2d::CCNode* pCopy) requires std::derived_from<Node, cocos2d::CCNode> {
-            return size(pCopy->getContentSize());
+        Setup size(cocos2d::CCNode* copy) requires std::derived_from<Node, cocos2d::CCNode> {
+            return size(copy->getContentSize());
         }
 
-        Setup width(float pWidth) requires std::derived_from<Node, cocos2d::CCNode> {
-            m_node->setContentWidth(pWidth);
+        Setup width(float width) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->setContentWidth(width);
             return m_node;
         }
-        Setup width(cocos2d::CCNode* pCopy) requires std::derived_from<Node, cocos2d::CCNode> {
-            return width(pCopy->getContentWidth());
+        Setup width(cocos2d::CCNode* copy) requires std::derived_from<Node, cocos2d::CCNode> {
+            return width(copy->getContentWidth());
         }
-        Setup height(float pHeight) requires std::derived_from<Node, cocos2d::CCNode> {
-            m_node->setContentHeight(pHeight);
+        Setup height(float height) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->setContentHeight(height);
             return m_node;
         }
-        Setup height(cocos2d::CCNode* pCopy) requires std::derived_from<Node, cocos2d::CCNode> {
-            return height(pCopy->getContentHeight());
+        Setup height(cocos2d::CCNode* copy) requires std::derived_from<Node, cocos2d::CCNode> {
+            return height(copy->getContentHeight());
         }
 
 
 
 
 
-        Setup tag(int pTag) requires std::derived_from<Node, cocos2d::CCNode> {
-            m_node->setTag(pTag);
+        Setup tag(int tag) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->setTag(tag);
             return m_node;
         }
 
         template<typename T>
-        Setup id(T pID) requires std::derived_from<Node, cocos2d::CCNode> {
-            m_node->setID(std::string{pID});
+        Setup id(T id) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->setID(std::string{id});
             return m_node;
         }
         template <typename T, typename... Args>
-        Setup id(fmt::format_string<T, Args...> pFormat, T&& pArg, Args&&... pArgs) requires std::derived_from<Node, cocos2d::CCNode> {
-            m_node->setID(fmt::format(pFormat, std::forward<T>(pArg), std::forward<Args>(pArgs)...));
+        Setup id(fmt::format_string<T, Args...> format, T&& arg, Args&&... args) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->setID(fmt::format(format, std::forward<T>(arg), std::forward<Args>(args)...));
             return m_node;
         }
 
-        Setup userObject(geode::ZStringView pID, cocos2d::CCObject* pObj) requires std::derived_from<Node, cocos2d::CCNode> {
-            m_node->setUserObject(pID, pObj);
+        Setup userObject(geode::ZStringView id, cocos2d::CCObject* obj) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->setUserObject(id, obj);
             return m_node;
         }
-        Setup userFlag(geode::ZStringView pID, bool pOn = true) requires std::derived_from<Node, cocos2d::CCNode> {
-            m_node->setUserFlag(pID, pOn);
+        Setup userFlag(geode::ZStringView id, bool on = true) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->setUserFlag(id, on);
             return m_node;
         }
 
@@ -396,12 +396,12 @@ namespace nwo5::ui {
 
 
 
-        Setup visible(bool pVisible) requires std::derived_from<Node, cocos2d::CCNode> {
-            m_node->setVisible(pVisible);
+        Setup visible(bool visible) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->setVisible(visible);
             return m_node;
         }
-        Setup visible(cocos2d::CCNode* pCopy) requires std::derived_from<Node, cocos2d::CCNode> {
-            return visible(pCopy->isVisible());
+        Setup visible(cocos2d::CCNode* copy) requires std::derived_from<Node, cocos2d::CCNode> {
+            return visible(copy->isVisible());
         }
         Setup hide() requires std::derived_from<Node, cocos2d::CCNode> {
             m_node->setVisible(false);
@@ -412,21 +412,21 @@ namespace nwo5::ui {
 
 
 
-        Setup flipX(bool pFlip = true) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup flipX(bool flip = true) requires std::derived_from<Node, cocos2d::CCNode> {
             if constexpr (std::derived_from<Node, cocos2d::CCSprite>) {
-                m_node->setFlipX(pFlip);
+                m_node->setFlipX(flip);
             }
             else {
-                m_node->setRotationY(pFlip ? 180.0f : 0.0f);
+                m_node->setRotationY(flip ? 180.0f : 0.0f);
             }
             return m_node;
         }
-        Setup flipY(bool pFlip = true) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup flipY(bool flip = true) requires std::derived_from<Node, cocos2d::CCNode> {
             if constexpr (std::derived_from<Node, cocos2d::CCSprite>) {
-                m_node->setFlipY(pFlip);
+                m_node->setFlipY(flip);
             }
             else {
-                m_node->setRotationX(pFlip ? 180.0f : 0.0f);
+                m_node->setRotationX(flip ? 180.0f : 0.0f);
             }
             return m_node;
         }
@@ -435,8 +435,8 @@ namespace nwo5::ui {
 
 
 
-        Setup layout(geode::Layout* pLayout) requires std::derived_from<Node, cocos2d::CCNode> {
-            m_node->setLayout(pLayout);
+        Setup layout(geode::Layout* layout) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->setLayout(layout);
             return m_node;
         }
         Setup updateLayout() requires std::derived_from<Node, cocos2d::CCNode> {
@@ -448,90 +448,90 @@ namespace nwo5::ui {
 
 
         
-        Setup options(geode::LayoutOptions* pLayout) requires std::derived_from<Node, cocos2d::CCNode> {
-            m_node->setLayoutOptions(pLayout);
+        Setup options(geode::LayoutOptions* layout) requires std::derived_from<Node, cocos2d::CCNode> {
+            m_node->setLayoutOptions(layout);
             return m_node;
         }
 
-        Setup layoutBreakLine(bool pOn = true) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup layoutBreakLine(bool on = true) requires std::derived_from<Node, cocos2d::CCNode> {
             if (auto options = geode::cast::typeinfo_cast<geode::AxisLayoutOptions*>(m_node->getLayoutOptions())) {
-                options->setBreakLine(pOn);
+                options->setBreakLine(on);
             }
             else {
-                m_node->setLayoutOptions(geode::AxisLayoutOptions::create()->setBreakLine(pOn));
+                m_node->setLayoutOptions(geode::AxisLayoutOptions::create()->setBreakLine(on));
             }
             return m_node;
         }
-        Setup layoutSameLine(bool pOn = true) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup layoutSameLine(bool on = true) requires std::derived_from<Node, cocos2d::CCNode> {
             if (auto options = geode::cast::typeinfo_cast<geode::AxisLayoutOptions*>(m_node->getLayoutOptions())) {
-                options->setSameLine(pOn);
+                options->setSameLine(on);
             }
             else {
-                m_node->setLayoutOptions(geode::AxisLayoutOptions::create()->setSameLine(pOn));
+                m_node->setLayoutOptions(geode::AxisLayoutOptions::create()->setSameLine(on));
             }
             return m_node;
         }
-        Setup layoutPrevGap(float pGap) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup layoutPrevGap(float gap) requires std::derived_from<Node, cocos2d::CCNode> {
             if (auto options = geode::cast::typeinfo_cast<geode::AxisLayoutOptions*>(m_node->getLayoutOptions())) {
-                options->setPrevGap(pGap);
+                options->setPrevGap(gap);
             }
             else {
-                m_node->setLayoutOptions(geode::AxisLayoutOptions::create()->setPrevGap(pGap));
+                m_node->setLayoutOptions(geode::AxisLayoutOptions::create()->setPrevGap(gap));
             }
             return m_node;
         }
-        Setup layoutNextGap(float pGap) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup layoutNextGap(float gap) requires std::derived_from<Node, cocos2d::CCNode> {
             if (auto options = geode::cast::typeinfo_cast<geode::AxisLayoutOptions*>(m_node->getLayoutOptions())) {
-                options->setNextGap(pGap);
+                options->setNextGap(gap);
             }
             else {
-                m_node->setLayoutOptions(geode::AxisLayoutOptions::create()->setNextGap(pGap));
+                m_node->setLayoutOptions(geode::AxisLayoutOptions::create()->setNextGap(gap));
             }
             return m_node;
         }
 
-        Setup layoutAnchor(geode::Anchor pAnchor, bool pSetOwnAnchor = true) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup layoutAnchor(geode::Anchor anchor, bool setOwnAnchor = true) requires std::derived_from<Node, cocos2d::CCNode> {
             if (auto options = geode::cast::typeinfo_cast<geode::AnchorLayoutOptions*>(m_node->getLayoutOptions())) {
-                options->setAnchor(pAnchor);
+                options->setAnchor(anchor);
             }
             else {
-                m_node->setLayoutOptions(geode::AnchorLayoutOptions::create()->setAnchor(pAnchor));
+                m_node->setLayoutOptions(geode::AnchorLayoutOptions::create()->setAnchor(anchor));
             }
-            return pSetOwnAnchor ? anchor(pAnchor) : Setup{m_node};
+            return setOwnAnchor ? Setup::anchor(anchor) : Setup{m_node};
         }
-        Setup layoutAnchorOffset(cocos2d::CCPoint pOff) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup layoutAnchorOffset(cocos2d::CCPoint off) requires std::derived_from<Node, cocos2d::CCNode> {
             if (auto options = geode::cast::typeinfo_cast<geode::AnchorLayoutOptions*>(m_node->getLayoutOptions())) {
-                options->setOffset(pOff);
+                options->setOffset(off);
             }
             else {
-                m_node->setLayoutOptions(geode::AnchorLayoutOptions::create()->setOffset(pOff));
+                m_node->setLayoutOptions(geode::AnchorLayoutOptions::create()->setOffset(off));
             }
             return m_node;
         }
-        Setup layoutAnchorOffset(float pX, float pY) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup layoutAnchorOffset(float x, float y) requires std::derived_from<Node, cocos2d::CCNode> {
             if (auto options = geode::cast::typeinfo_cast<geode::AnchorLayoutOptions*>(m_node->getLayoutOptions())) {
-                options->setOffset({pX, pY});
+                options->setOffset({x, y});
             }
             else {
-                m_node->setLayoutOptions(geode::AnchorLayoutOptions::create()->setOffset({pX, pY}));
+                m_node->setLayoutOptions(geode::AnchorLayoutOptions::create()->setOffset({x, y}));
             }
             return m_node;
         }
-        Setup layoutAnchorOffsetX(float pX) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup layoutAnchorOffsetX(float x) requires std::derived_from<Node, cocos2d::CCNode> {
             if (auto options = geode::cast::typeinfo_cast<geode::AnchorLayoutOptions*>(m_node->getLayoutOptions())) {
-                options->setOffset({pX, options->getOffset().y});
+                options->setOffset({x, options->getOffset().y});
             }
             else {
-                m_node->setLayoutOptions(geode::AnchorLayoutOptions::create()->setOffset({pX, 0.0f}));
+                m_node->setLayoutOptions(geode::AnchorLayoutOptions::create()->setOffset({x, 0.0f}));
             }
             return m_node;
         }
-        Setup layoutAnchorOffsetY(float pY) requires std::derived_from<Node, cocos2d::CCNode> {
+        Setup layoutAnchorOffsetY(float y) requires std::derived_from<Node, cocos2d::CCNode> {
             if (auto options = geode::cast::typeinfo_cast<geode::AnchorLayoutOptions*>(m_node->getLayoutOptions())) {
-                options->setOffset({options->getOffset().x, pY});
+                options->setOffset({options->getOffset().x, y});
             }
             else {
-                m_node->setLayoutOptions(geode::AnchorLayoutOptions::create()->setOffset({0.0f, pY}));
+                m_node->setLayoutOptions(geode::AnchorLayoutOptions::create()->setOffset({0.0f, y}));
             }
             return m_node;
         }
@@ -540,37 +540,28 @@ namespace nwo5::ui {
 
 
 
-        Setup color(cocos2d::ccColor3B const& pColor) requires std::derived_from<Node, cocos2d::CCRGBAProtocol> {
-            m_node->setColor(pColor);
+        Setup color(cocos2d::ccColor3B const& color) requires std::derived_from<Node, cocos2d::CCRGBAProtocol> {
+            m_node->setColor(color);
             return m_node;
         }
-        Setup color(cocos2d::CCRGBAProtocol* pCopy) requires std::derived_from<Node, cocos2d::CCRGBAProtocol> {
-            return color(pCopy->getColor());
+        Setup color(cocos2d::CCRGBAProtocol* copy) requires std::derived_from<Node, cocos2d::CCRGBAProtocol> {
+            return color(copy->getColor());
         }
         template<std::integral T>
-        Setup opacity(T pOpacity) requires std::derived_from<Node, cocos2d::CCRGBAProtocol> {
-            m_node->setOpacity(pOpacity);
+        Setup opacity(T opacity) requires std::derived_from<Node, cocos2d::CCRGBAProtocol> {
+            m_node->setOpacity(opacity);
             return m_node;
         }
-        Setup opacity(cocos2d::CCRGBAProtocol* pCopy) requires std::derived_from<Node, cocos2d::CCRGBAProtocol> {
-            return opacity(pCopy->getOpacity());
+        Setup opacity(cocos2d::CCRGBAProtocol* copy) requires std::derived_from<Node, cocos2d::CCRGBAProtocol> {
+            return opacity(copy->getOpacity());
         }
 
 
 
 
 
-        Setup textureRect(cocos2d::CCRect pRect) requires std::derived_from<Node, cocos2d::CCSprite> {
-            m_node->setTextureRect(pRect);
-            return m_node;
-        }
-
-
-
-
-
-        Setup scaleMultiplier(float pMultiplier) requires std::derived_from<Node, geode::NineSlice> {
-            m_node->setScaleMultiplier(pMultiplier);
+        Setup textureRect(cocos2d::CCRect rect) requires std::derived_from<Node, cocos2d::CCSprite> {
+            m_node->setTextureRect(rect);
             return m_node;
         }
 
@@ -578,8 +569,8 @@ namespace nwo5::ui {
 
 
 
-        Setup blendFunc(cocos2d::ccBlendFunc pFunc) requires std::derived_from<Node, cocos2d::CCBlendProtocol> {
-            m_node->setBlendFunc(pFunc);
+        Setup scaleMultiplier(float multiplier) requires std::derived_from<Node, geode::NineSlice> {
+            m_node->setScaleMultiplier(multiplier);
             return m_node;
         }
 
@@ -587,51 +578,60 @@ namespace nwo5::ui {
 
 
 
-        Setup callback(cocos2d::CCObject* pTarget, cocos2d::SEL_MenuHandler pSelector) requires std::derived_from<Node, cocos2d::CCMenuItem> {
-            m_node->setTarget(pTarget, pSelector);
-            return m_node;
-        }
-        Setup callback(geode::Function<void(Node*)> pCallback) requires std::derived_from<Node, cocos2d::CCMenuItem> {
-            geode::cocos::CCMenuItemExt::assignCallback(m_node, std::move(pCallback));
-            return m_node;
-        }
-        Setup callback(geode::Button::ButtonCallback pCallback) requires std::derived_from<Node, geode::Button> {
-            m_node->setActivateCallback(std::move(pCallback));
-            return m_node;
-        }
-        Setup callback(geode::LazySprite::Callback pCallback) requires std::derived_from<Node, geode::LazySprite> {
-            m_node->setLoadCallback(std::move(pCallback));
-            return m_node;
-        }
-        Setup callback(geode::SliderNode::SliderCallback pCallback) requires std::derived_from<Node, geode::SliderNode> {
-            m_node->setSlideCallback(std::move(pCallback));
-            return m_node;
-        }
-        Setup callback(TextInputCallback pCallback) requires std::derived_from<Node, geode::TextInput> {
-            m_node->setCallback(std::move(pCallback));
+        Setup blendFunc(cocos2d::ccBlendFunc func) requires std::derived_from<Node, cocos2d::CCBlendProtocol> {
+            m_node->setBlendFunc(func);
             return m_node;
         }
 
-        Setup callbackSelect(geode::Button::ButtonCallback pCallback) requires std::derived_from<Node, geode::Button> {
-            m_node->setSelectCallback(std::move(pCallback));
+
+
+
+
+        Setup callback(cocos2d::CCObject* target, cocos2d::SEL_MenuHandler selector) requires std::derived_from<Node, cocos2d::CCMenuItem> {
+            m_node->setTarget(target, selector);
             return m_node;
         }
-        Setup callbackSelect(geode::SliderNode::SliderCallback pCallback) requires std::derived_from<Node, geode::SliderNode> {
-            m_node->setClickCallback(std::move(pCallback));
+        Setup callback(geode::Function<void(Node*)> callback) requires std::derived_from<Node, cocos2d::CCMenuItem> {
+            geode::cocos::CCMenuItemExt::assignCallback(m_node, std::move(callback));
+            return m_node;
+        }
+        Setup callback(geode::Button::ButtonCallback callback) requires std::derived_from<Node, geode::Button> {
+            m_node->setActivateCallback(std::move(callback));
+            return m_node;
+        }
+        Setup callback(geode::LazySprite::Callback callback) requires std::derived_from<Node, geode::LazySprite> {
+            m_node->setLoadCallback(std::move(callback));
+            return m_node;
+        }
+        Setup callback(geode::SliderNode::SliderCallback callback) requires std::derived_from<Node, geode::SliderNode> {
+            m_node->setSlideCallback(std::move(callback));
+            return m_node;
+        }
+        Setup callback(TextInputCallback callback) requires std::derived_from<Node, geode::TextInput> {
+            m_node->setCallback(std::move(callback));
             return m_node;
         }
 
-        Setup callbackUnselect(geode::Button::ButtonCallback pCallback) requires std::derived_from<Node, geode::Button> {
-            m_node->setUnselectCallback(std::move(pCallback));
+        Setup callbackSelect(geode::Button::ButtonCallback callback) requires std::derived_from<Node, geode::Button> {
+            m_node->setSelectCallback(std::move(callback));
             return m_node;
         }
-        Setup callbackUnselect(geode::SliderNode::SliderCallback pCallback) requires std::derived_from<Node, geode::SliderNode> {
-            m_node->setReleaseCallback(std::move(pCallback));
+        Setup callbackSelect(geode::SliderNode::SliderCallback callback) requires std::derived_from<Node, geode::SliderNode> {
+            m_node->setClickCallback(std::move(callback));
             return m_node;
         }
 
-        Setup callback(bool pEnabled) requires std::derived_from<Node, geode::TextInput> {
-            m_node->setCallbackEnabled(std::move(pEnabled));
+        Setup callbackUnselect(geode::Button::ButtonCallback callback) requires std::derived_from<Node, geode::Button> {
+            m_node->setUnselectCallback(std::move(callback));
+            return m_node;
+        }
+        Setup callbackUnselect(geode::SliderNode::SliderCallback callback) requires std::derived_from<Node, geode::SliderNode> {
+            m_node->setReleaseCallback(std::move(callback));
+            return m_node;
+        }
+
+        Setup callback(bool enabled) requires std::derived_from<Node, geode::TextInput> {
+            m_node->setCallbackEnabled(std::move(enabled));
             return m_node;
         }
 
@@ -639,96 +639,96 @@ namespace nwo5::ui {
 
 
         
-        Setup text(geode::ZStringView pString, bool pValidate = true) requires std::derived_from<Node, geode::Label> {
-            m_node->setText(pString);
+        Setup text(geode::ZStringView string, bool validate = true) requires std::derived_from<Node, geode::Label> {
+            m_node->setText(string);
             
-            if (pValidate) {
+            if (validate) {
                 m_node->validate();
             }
 
             return m_node;
         }
-        Setup text(geode::ZStringView pString) requires (!std::derived_from<Node, geode::Label>) && requires { m_node->setString(""); } {
-            m_node->setString(pString.c_str());
+        Setup text(geode::ZStringView string) requires (!std::derived_from<Node, geode::Label>) && requires { m_node->setString(""); } {
+            m_node->setString(string.c_str());
             
             return m_node;
         }
-        Setup string(geode::ZStringView pString, bool pValidate = true) requires std::derived_from<Node, geode::Label> {
-            m_node->setText(pString);
+        Setup string(geode::ZStringView string, bool validate = true) requires std::derived_from<Node, geode::Label> {
+            m_node->setText(string);
 
-            if (pValidate) {
+            if (validate) {
                 m_node->validate();
             }
 
             return m_node;
         } 
-        Setup string(geode::ZStringView pString) requires (!std::derived_from<Node, geode::Label>) && requires { m_node->setString(""); } {
-            m_node->setString(pString.c_str());
+        Setup string(geode::ZStringView string) requires (!std::derived_from<Node, geode::Label>) && requires { m_node->setString(""); } {
+            m_node->setString(string.c_str());
 
             return m_node;
         }
 
-        Setup alignment(geode::Label::Alignment pAlignment, bool pValidate = true) requires std::derived_from<Node, geode::Label> {
-            m_node->setAlignment(pAlignment);
+        Setup alignment(geode::Label::Alignment alignment, bool validate = true) requires std::derived_from<Node, geode::Label> {
+            m_node->setAlignment(alignment);
 
-            if (pValidate) {
+            if (validate) {
                 m_node->validate();
             }
 
             return m_node;
         }
-        Setup alignment(cocos2d::CCTextAlignment pAlignment) requires std::derived_from<Node, cocos2d::CCLabelBMFont> {
-            m_node->setAlignment(pAlignment);
+        Setup alignment(cocos2d::CCTextAlignment alignment) requires std::derived_from<Node, cocos2d::CCLabelBMFont> {
+            m_node->setAlignment(alignment);
             return m_node;
         }
 
-        Setup kerning(float pKerning, bool pValidate = true) requires std::derived_from<Node, geode::Label> {
-            m_node->setExtraKerning(pKerning);
+        Setup kerning(float kerning, bool validate = true) requires std::derived_from<Node, geode::Label> {
+            m_node->setExtraKerning(kerning);
 
-            if (pValidate) {
+            if (validate) {
                 m_node->validate();
             }
 
             return m_node;
         }
-        Setup kerning(float pKerning, bool pValidate = true) requires std::derived_from<Node, cocos2d::CCLabelBMFont> {
-            m_node->setExtraKerning(pKerning);
+        Setup kerning(float kerning, bool validate = true) requires std::derived_from<Node, cocos2d::CCLabelBMFont> {
+            m_node->setExtraKerning(kerning);
             return m_node;
         }
 
-        Setup maxWidth(float pWidth, bool pValidate = true) requires std::derived_from<Node, geode::Label> {
-            m_node->setMaxWidth(pWidth);
+        Setup maxWidth(float width, bool validate = true) requires std::derived_from<Node, geode::Label> {
+            m_node->setMaxWidth(width);
 
-            if (pValidate) {
+            if (validate) {
                 m_node->validate();
             }
 
             return m_node;
         }
-        Setup fitBox(cocos2d::CCSize pBox, float pMaxScale, bool pValidate = true) requires std::derived_from<Node, geode::Label> {
-            m_node->setFitBox(pBox, pMaxScale);
+        Setup fitBox(cocos2d::CCSize box, float maxScale, bool validate = true) requires std::derived_from<Node, geode::Label> {
+            m_node->setFitBox(box, maxScale);
 
-            if (pValidate) {
-                m_node->validate();
-            }
-
-            return m_node;
-        }
-
-        Setup lineSpacing(float pSpacing, bool pValidate = true) requires std::derived_from<Node, geode::Label> {
-            m_node->setLineSpacing(pSpacing);
-
-            if (pValidate) {
+            if (validate) {
                 m_node->validate();
             }
 
             return m_node;
         }
 
-        Setup breakWords(bool pOn = true, bool pValidate = true) requires std::derived_from<Node, geode::Label> {
-            m_node->setBreakWords(pOn);
+        Setup lineSpacing(float spacing, bool validate = true) requires std::derived_from<Node, geode::Label> {
+            m_node->setLineSpacing(spacing);
 
-            if (pValidate) {
+            if (validate) {
+                m_node->validate();
+            }
+
+            return m_node;
+        }
+
+        Setup breakWords(bool on = true, bool validate = true) requires std::derived_from<Node, geode::Label> {
+            m_node->setBreakWords(on);
+
+            if (validate) {
                 m_node->validate();
             }
 
@@ -739,22 +739,22 @@ namespace nwo5::ui {
         
 
 
-        Setup filter(geode::ZStringView pFilter) requires std::derived_from<Node, geode::TextInput> {
-            m_node->setFilter(pFilter);
+        Setup filter(geode::ZStringView filter) requires std::derived_from<Node, geode::TextInput> {
+            m_node->setFilter(filter);
             return m_node;
         }
-        Setup filter(geode::CommonFilter pFilter) requires std::derived_from<Node, geode::TextInput> {
-            m_node->setCommonFilter(pFilter);
-            return m_node;
-        }
-
-        Setup maxCharCount(std::size_t pLength) requires std::derived_from<Node, geode::TextInput> {
-            m_node->setMaxCharCount(pLength);
+        Setup filter(geode::CommonFilter filter) requires std::derived_from<Node, geode::TextInput> {
+            m_node->setCommonFilter(filter);
             return m_node;
         }
 
-        Setup placeholder(geode::ZStringView pPlaceholder) requires std::derived_from<Node, geode::TextInput> {
-            m_node->setPlaceholder(pPlaceholder);
+        Setup maxCharCount(std::size_t length) requires std::derived_from<Node, geode::TextInput> {
+            m_node->setMaxCharCount(length);
+            return m_node;
+        }
+
+        Setup placeholder(geode::ZStringView placeholder) requires std::derived_from<Node, geode::TextInput> {
+            m_node->setPlaceholder(placeholder);
             return m_node;
         }
 
@@ -762,8 +762,8 @@ namespace nwo5::ui {
 
 
 
-        Setup toggle(bool pOn) requires std::derived_from<Node, CCMenuItemToggler> {
-            m_node->toggle(pOn);
+        Setup toggle(bool on) requires std::derived_from<Node, CCMenuItemToggler> {
+            m_node->toggle(on);
             return m_node;
         }
 
@@ -771,22 +771,22 @@ namespace nwo5::ui {
 
         
 
-        Setup gap(float pGap) requires std::derived_from<Node, geode::AxisLayout> {
-            m_node->setGap(pGap);
+        Setup gap(float gap) requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setGap(gap);
             return m_node;
         }
 
-        Setup alignment(Alignment pAlignment) requires std::derived_from<Node, geode::AxisLayout> {
-            m_node->setAxisAlignment(pAlignment);
+        Setup alignment(Alignment alignment) requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setAxisAlignment(alignment);
             return m_node;
         }
-        Setup crossAlignment(Alignment pAlignment) requires std::derived_from<Node, geode::AxisLayout> {
-            m_node->setCrossAxisAlignment(pAlignment);
+        Setup crossAlignment(Alignment alignment) requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setCrossAxisAlignment(alignment);
             m_node->setGrowCrossAxis(true);
             return m_node;
         }
-        Setup crossLineAlignment(Alignment pAlignment) requires std::derived_from<Node, geode::AxisLayout> {
-            m_node->setCrossAxisLineAlignment(pAlignment);
+        Setup crossLineAlignment(Alignment alignment) requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setCrossAxisLineAlignment(alignment);
             return m_node;
         }
 
@@ -799,120 +799,95 @@ namespace nwo5::ui {
             return m_node;
         }
 
-        Setup cross(bool pOn = true) requires std::derived_from<Node, geode::AxisLayout> {
-            m_node->setGrowCrossAxis(pOn);
+        Setup cross(bool on = true) requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setGrowCrossAxis(on);
             return m_node;
         }
 
-        Setup autoScale(bool pOn = true) requires std::derived_from<Node, geode::AxisLayout> {
-            m_node->setAutoScale(pOn);
+        Setup autoScale(bool on = true) requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setAutoScale(on);
             return m_node;
         }
 
-        Setup ignoreInvisible(bool pOn = true) requires std::derived_from<Node, geode::AxisLayout> {
-            m_node->ignoreInvisibleChildren(pOn);
+        Setup ignoreInvisible(bool on = true) requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->ignoreInvisibleChildren(on);
             return m_node;
         }
 
-        Setup padding(geode::Padding pPadding) requires std::derived_from<Node, geode::AxisLayout> {
-            m_node->setPadding(pPadding);
+        Setup padding(geode::Padding padding) requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setPadding(padding);
             return m_node;
         }
 
         template<typename T = bool>
         requires std::is_arithmetic_v<T>
-        Setup grow(T pMin = true) requires std::derived_from<Node, geode::AxisLayout> {
+        Setup grow(T min = true) requires std::derived_from<Node, geode::AxisLayout> {
             if constexpr (std::same_as<T, bool>) {
-                m_node->setAutoGrowAxis(pMin == true ? std::optional<float>{0.0f} : std::nullopt);
+                m_node->setAutoGrowAxis(min == true ? std::optional<float>{0.0f} : std::nullopt);
             }
             else {
-                m_node->setAutoGrowAxis(pMin);
+                m_node->setAutoGrowAxis(min);
             }
             return m_node;
         }
 
-        Setup reverse(bool pOn = true) requires std::derived_from<Node, geode::AxisLayout> {
-            m_node->setAxisReverse(pOn);
+        Setup reverse(bool on = true) requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setAxisReverse(on);
             return m_node;
         }
-        Setup crossReverse(bool pOn = true) requires std::derived_from<Node, geode::AxisLayout> {
-            m_node->setCrossAxisReverse(pOn);
-            return m_node;
-        }
-
-        Setup crossOverflow(bool pOn = true) requires std::derived_from<Node, geode::AxisLayout> {
-            m_node->setCrossAxisOverflow(pOn);
+        Setup crossReverse(bool on = true) requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setCrossAxisReverse(on);
             return m_node;
         }
 
-
-
-
-
-        Setup prevGap(float pGap) requires std::derived_from<Node, geode::AxisLayoutOptions> {
-            m_node->setPrevGap(pGap);
-            return m_node;
-        }
-        Setup nextGap(float pGap) requires std::derived_from<Node, geode::AxisLayoutOptions> {
-            m_node->setNextGap(pGap);
+        Setup crossOverflow(bool on = true) requires std::derived_from<Node, geode::AxisLayout> {
+            m_node->setCrossAxisOverflow(on);
             return m_node;
         }
 
-        Setup crossAlignment(Alignment pAlignment) requires std::derived_from<Node, geode::AxisLayoutOptions> {
-            m_node->setCrossAxisAlignment(pAlignment);
+
+
+
+
+        Setup prevGap(float gap) requires std::derived_from<Node, geode::AxisLayoutOptions> {
+            m_node->setPrevGap(gap);
+            return m_node;
+        }
+        Setup nextGap(float gap) requires std::derived_from<Node, geode::AxisLayoutOptions> {
+            m_node->setNextGap(gap);
             return m_node;
         }
 
-        Setup crossLineAlignment(Alignment pAlignment) requires std::derived_from<Node, geode::AxisLayoutOptions> {
-            m_node->setCrossAxisLineAlignment(pAlignment);
+        Setup crossAlignment(Alignment alignment) requires std::derived_from<Node, geode::AxisLayoutOptions> {
+            m_node->setCrossAxisAlignment(alignment);
+            return m_node;
+        }
+
+        Setup crossLineAlignment(Alignment alignment) requires std::derived_from<Node, geode::AxisLayoutOptions> {
+            m_node->setCrossAxisLineAlignment(alignment);
             return m_node;
         }
         
-        Setup autoScale(bool pOn = true) requires std::derived_from<Node, geode::AxisLayoutOptions> {
-            m_node->setAutoScale(pOn);
+        Setup autoScale(bool on = true) requires std::derived_from<Node, geode::AxisLayoutOptions> {
+            m_node->setAutoScale(on);
             return m_node;
         }
-        Setup relativeScale(float pScale) requires std::derived_from<Node, geode::AxisLayoutOptions> {
-            m_node->setRelativeScale(pScale);
-            return m_node;
-        }
-
-        Setup breakLine(bool pOn = true) requires std::derived_from<Node, geode::AxisLayoutOptions> {
-            m_node->setBreakLine(pOn);
-            return m_node;
-        }
-        Setup sameLine(bool pOn = true) requires std::derived_from<Node, geode::AxisLayoutOptions> {
-            m_node->setSameLine(pOn);
+        Setup relativeScale(float scale) requires std::derived_from<Node, geode::AxisLayoutOptions> {
+            m_node->setRelativeScale(scale);
             return m_node;
         }
 
-        Setup scalePriority(int pPriority) requires std::derived_from<Node, geode::AxisLayoutOptions> {
-            m_node->setScalePriority(pPriority);
+        Setup breakLine(bool on = true) requires std::derived_from<Node, geode::AxisLayoutOptions> {
+            m_node->setBreakLine(on);
+            return m_node;
+        }
+        Setup sameLine(bool on = true) requires std::derived_from<Node, geode::AxisLayoutOptions> {
+            m_node->setSameLine(on);
             return m_node;
         }
 
-
-
-
-
-        Setup anchor(geode::Anchor pAnchor) requires std::derived_from<Node, geode::AnchorLayoutOptions> {
-            m_node->setAnchor(pAnchor);
-            return m_node;
-        }
-        Setup offset(cocos2d::CCPoint pOff) requires std::derived_from<Node, geode::AnchorLayoutOptions> {
-            m_node->setOffset(pOff);
-            return m_node;
-        }
-        Setup offset(float pX, float pY) requires std::derived_from<Node, geode::AnchorLayoutOptions> {
-            m_node->setOffset({pX, pY});
-            return m_node;
-        }
-        Setup offsetX(float pX) requires std::derived_from<Node, geode::AnchorLayoutOptions> {
-            m_node->setOffset({pX, m_node->getOffset().y});
-            return m_node;
-        }
-        Setup offsetY(float pY) requires std::derived_from<Node, geode::AnchorLayoutOptions> {
-            m_node->setOffset({m_node->getOffset().x, pY});
+        Setup scalePriority(int priority) requires std::derived_from<Node, geode::AxisLayoutOptions> {
+            m_node->setScalePriority(priority);
             return m_node;
         }
 
@@ -920,8 +895,33 @@ namespace nwo5::ui {
 
 
 
-        Setup addTo(cocos2d::CCArray* pArray) {
-            pArray->addObject(m_node);
+        Setup anchor(geode::Anchor anchor) requires std::derived_from<Node, geode::AnchorLayoutOptions> {
+            m_node->setAnchor(anchor);
+            return m_node;
+        }
+        Setup offset(cocos2d::CCPoint off) requires std::derived_from<Node, geode::AnchorLayoutOptions> {
+            m_node->setOffset(off);
+            return m_node;
+        }
+        Setup offset(float x, float y) requires std::derived_from<Node, geode::AnchorLayoutOptions> {
+            m_node->setOffset({x, y});
+            return m_node;
+        }
+        Setup offsetX(float x) requires std::derived_from<Node, geode::AnchorLayoutOptions> {
+            m_node->setOffset({x, m_node->getOffset().y});
+            return m_node;
+        }
+        Setup offsetY(float y) requires std::derived_from<Node, geode::AnchorLayoutOptions> {
+            m_node->setOffset({m_node->getOffset().x, y});
+            return m_node;
+        }
+
+
+
+
+
+        Setup addTo(cocos2d::CCArray* array) {
+            array->addObject(m_node);
             return m_node;
         }
     };

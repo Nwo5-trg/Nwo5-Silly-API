@@ -7,8 +7,8 @@ namespace nwo5::utils {
     class SillyHSV;
 
     namespace impl {
-        constexpr SillyHSV toHSV4F(cocos2d::ccColor4F pCol);
-        constexpr cocos2d::ccColor4F toRGB4F(SillyHSV pHSV);
+        constexpr SillyHSV toHSV4F(cocos2d::ccColor4F col);
+        constexpr cocos2d::ccColor4F toRGB4F(SillyHSV hSV);
     }
 
     /// hsva class !
@@ -29,35 +29,35 @@ namespace nwo5::utils {
         static constexpr float ALPHA_MAX = 1.0f;
 
         constexpr SillyHSV() = default;
-        constexpr SillyHSV(float pH, float pS, float pV)
-            : h(pH), s(pS), v(pV), a(1.0f) {}
-        constexpr SillyHSV(float pH, float pS, float pV, float pA)
-            : h(pH), s(pS), v(pV), a(pA) {}
-        constexpr SillyHSV(cocos2d::ccColor4F pCol)
-            : SillyHSV(impl::toHSV4F(pCol)) {}
+        constexpr SillyHSV(float h, float s, float v)
+            : h(h), s(s), v(v), a(1.0f) {}
+        constexpr SillyHSV(float h, float s, float v, float a)
+            : h(h), s(s), v(v), a(a) {}
+        constexpr SillyHSV(cocos2d::ccColor4F col)
+            : SillyHSV(impl::toHSV4F(col)) {}
 
-        constexpr SillyHSV hueShift(float pAmount) {
-            return {std::fmod(h + pAmount, HUE_MAX), s, v, a};
+        constexpr SillyHSV hueShift(float amount) {
+            return {std::fmod(h + amount, HUE_MAX), s, v, a};
         }
     };
 
     namespace impl {
-        constexpr SillyHSV toHSV4F(cocos2d::ccColor4F pCol) {
-            const float max = std::max(std::max(pCol.r, pCol.g), pCol.b);
-            const float min = std::min(std::min(pCol.r, pCol.g), pCol.b);
+        constexpr SillyHSV toHSV4F(cocos2d::ccColor4F col) {
+            const float max = std::max(std::max(col.r, col.g), col.b);
+            const float min = std::min(std::min(col.r, col.g), col.b);
             const float delta = max - min;
 
-            SillyHSV out{0.0f, max ? (delta / max) : 0.0f, max, pCol.a};
+            SillyHSV out{0.0f, max ? (delta / max) : 0.0f, max, col.a};
 
             if (delta > 0.0f) {
-                if (max == pCol.r) {
-                    out.h = std::fmod((pCol.g - pCol.b) / delta, 6.0f);
+                if (max == col.r) {
+                    out.h = std::fmod((col.g - col.b) / delta, 6.0f);
                 }
-                else if (max == pCol.g) {
-                    out.h = ((pCol.b - pCol.r) / delta) + 2.0f;
+                else if (max == col.g) {
+                    out.h = ((col.b - col.r) / delta) + 2.0f;
                 }
                 else {
-                    out.h = ((pCol.r - pCol.g) / delta) + 4.0f;
+                    out.h = ((col.r - col.g) / delta) + 4.0f;
                 }
 
                 out.h *= 60.0f;
@@ -69,35 +69,35 @@ namespace nwo5::utils {
 
             return out;
         }
-        constexpr cocos2d::ccColor4F toRGB4F(SillyHSV pHSV) {
-            pHSV.h = std::fmod(pHSV.h, SillyHSV::HUE_MAX);
+        constexpr cocos2d::ccColor4F toRGB4F(SillyHSV hSV) {
+            hSV.h = std::fmod(hSV.h, SillyHSV::HUE_MAX);
 
-            const float c = pHSV.v * pHSV.s;
-            const float x = c * (1.0f - std::fabs(std::fmod(pHSV.h / 60.0f, 2.0f) - 1.0f));
-            const float m = pHSV.v - c;
+            const float c = hSV.v * hSV.s;
+            const float x = c * (1.0f - std::fabs(std::fmod(hSV.h / 60.0f, 2.0f) - 1.0f));
+            const float m = hSV.v - c;
 
             float r = 0.0f, g = 0.0f, b = 0.0f;
 
-            if (pHSV.h >= 0.0f && pHSV.h < 60.0f) {
+            if (hSV.h >= 0.0f && hSV.h < 60.0f) {
                 r = c; g = x; b = 0.0f;
             }
-            else if (pHSV.h >= 60.0f && pHSV.h < 120.0f) {
+            else if (hSV.h >= 60.0f && hSV.h < 120.0f) {
                 r = x; g = c; b = 0.0f;
             }
-            else if (pHSV.h >= 120.0f && pHSV.h < 180.0f) {
+            else if (hSV.h >= 120.0f && hSV.h < 180.0f) {
                 r = 0.0f; g = c; b = x;
             }
-            else if (pHSV.h >= 180.0f && pHSV.h < 240.0f) {
+            else if (hSV.h >= 180.0f && hSV.h < 240.0f) {
                 r = 0.0f; g = x; b = c;
             }
-            else if (pHSV.h >= 240.0f && pHSV.h < 300.0f) {
+            else if (hSV.h >= 240.0f && hSV.h < 300.0f) {
                 r = x; g = 0.0f; b = c;
             }
-            else if (pHSV.h >= 300.0f && pHSV.h < 360.0f) {
+            else if (hSV.h >= 300.0f && hSV.h < 360.0f) {
                 r = c; g = 0.0f; b = x;
             }
 
-            return {r + m, g + m, b + m, pHSV.a};
+            return {r + m, g + m, b + m, hSV.a};
         }
     }
 
@@ -115,139 +115,139 @@ namespace nwo5::utils {
     template<typename T>
     concept ColorHasOpacity = (
         IsColorHSV<T>,
-        requires(T pVal) {
-            pVal.a;
+        requires(T val) {
+            val.a;
         }
     );
 
     template<IsColorHSV After, IsColorHSV Before>
-    constexpr After color_cast(Before pVal) {
+    constexpr After color_cast(Before val) {
         if constexpr (std::same_as<Before, After>) {
-            return pVal;
+            return val;
         }
         else if constexpr (std::same_as<Before, SillyHSV>) {
-            return color_cast<cocos2d::ccColor4F>(impl::toRGB4F(pVal));
+            return color_cast<cocos2d::ccColor4F>(impl::toRGB4F(val));
         }
         else if constexpr (std::same_as<After, SillyHSV>) {
-            return impl::toHSV4F(color_cast<cocos2d::ccColor4F>(pVal));
+            return impl::toHSV4F(color_cast<cocos2d::ccColor4F>(val));
         }
         else if constexpr (std::same_as<Before, cocos2d::ccColor3B>) {
             if constexpr (std::same_as<After, cocos2d::ccColor4B>) {
-                return {pVal.r, pVal.g, pVal.b, 255};
+                return {val.r, val.g, val.b, 255};
             }
             else if constexpr (std::same_as<After, cocos2d::ccColor4F>) {
-                return {pVal.r / 255.0f, pVal.g / 255.0f, pVal.b / 255.0f, 1.0f};
+                return {val.r / 255.0f, val.g / 255.0f, val.b / 255.0f, 1.0f};
             }
         }
         else if constexpr (std::same_as<Before, cocos2d::ccColor4B>) {
             if constexpr (std::same_as<After, cocos2d::ccColor3B>) {
-                return {pVal.r, pVal.g, pVal.b};
+                return {val.r, val.g, val.b};
             }
             else if constexpr (std::same_as<After, cocos2d::ccColor4F>) {
-                return {pVal.r / 255.0f, pVal.g / 255.0f, pVal.b / 255.0f, pVal.a / 255.0f};
+                return {val.r / 255.0f, val.g / 255.0f, val.b / 255.0f, val.a / 255.0f};
             }
         }
         else {
             if constexpr (std::same_as<After, cocos2d::ccColor3B>) {
-                return {static_cast<GLubyte>(pVal.r * 255), static_cast<GLubyte>(pVal.g * 255), static_cast<GLubyte>(pVal.b * 255)};
+                return {static_cast<GLubyte>(val.r * 255), static_cast<GLubyte>(val.g * 255), static_cast<GLubyte>(val.b * 255)};
             }
             else if constexpr (std::same_as<After, cocos2d::ccColor4B>) {
-                return {static_cast<GLubyte>(pVal.r * 255), static_cast<GLubyte>(pVal.g * 255), static_cast<GLubyte>(pVal.b * 255), static_cast<GLubyte>(pVal.a * 255)};
+                return {static_cast<GLubyte>(val.r * 255), static_cast<GLubyte>(val.g * 255), static_cast<GLubyte>(val.b * 255), static_cast<GLubyte>(val.a * 255)};
             }
         }
     }
     
     template<IsColor T, typename U>
-    constexpr T setRed(T pCol, U pRed) {
-        pCol.r = pRed;
-        return pCol;
+    constexpr T setRed(T col, U red) {
+        col.r = red;
+        return col;
     }
     template<IsColor T, typename U>
-    constexpr T setGreen(T pCol, U pRed) {
-        pCol.g = pRed;
-        return pCol;
+    constexpr T setGreen(T col, U red) {
+        col.g = red;
+        return col;
     }
     template<IsColor T, typename U>
-    constexpr T setBlue(T pCol, U pRed) {
-        pCol.b = pRed;
-        return pCol;
+    constexpr T setBlue(T col, U red) {
+        col.b = red;
+        return col;
     }
     template<ColorHasOpacity T, typename U>
-    constexpr T setOpacity(T pCol, U pOpacity) {
-        pCol.a = pOpacity;
-        return pCol;
+    constexpr T setOpacity(T col, U opacity) {
+        col.a = opacity;
+        return col;
     }
 
     template<IsColor T>
-    constexpr SillyHSV toHSV(T pCol) {
-        return impl::toHSV4F(color_cast<cocos2d::ccColor4F>(pCol));
+    constexpr SillyHSV toHSV(T col) {
+        return impl::toHSV4F(color_cast<cocos2d::ccColor4F>(col));
     }
     template<IsColor T>
-    constexpr T toRGB(SillyHSV pCol) {
-        return color_cast<T>(impl::toRGB4F(pCol));
+    constexpr T toRGB(SillyHSV col) {
+        return color_cast<T>(impl::toRGB4F(col));
     }
 
     /// darken a colors value
-    /// @param pFactor 0 is no change, 1 is black
+    /// @param factor 0 is no change, 1 is black
     /// @note kinda slow since it converts to and from hsv
     template<IsColor T>
-    constexpr T darken(T pCol, float pFactor) {
-        auto hsv = toHSV(pCol);
+    constexpr T darken(T col, float factor) {
+        auto hsv = toHSV(col);
 
-        hsv.v = std::clamp(hsv.v * (1.0f - pFactor), 0.0f, 1.0f);
+        hsv.v = std::clamp(hsv.v * (1.0f - factor), 0.0f, 1.0f);
 
         return toRGB<T>(hsv);
     }
     /// lighten a colors value
-    /// @param pFactor 0 is no change, 1 is white
+    /// @param factor 0 is no change, 1 is white
     /// @note kinda slow since it converts to and from hsv
     template<IsColor T>
-    constexpr T lighten(T pCol, float pFactor) {
-        auto hsv = toHSV(pCol);
+    constexpr T lighten(T col, float factor) {
+        auto hsv = toHSV(col);
 
-        hsv.v = std::clamp(hsv.v + (1.0f - hsv.v) * pFactor, 0.0f, 1.0f);
+        hsv.v = std::clamp(hsv.v + (1.0f - hsv.v) * factor, 0.0f, 1.0f);
 
         return toRGB<T>(hsv);
     }
 
     template<IsColor T>
-    constexpr T lerp(T pStart, T pEnd, float pTime) {
+    constexpr T lerp(T start, T end, float time) {
         if constexpr (std::same_as<T, cocos2d::ccColor3B>) {
             return {
-                static_cast<GLubyte>(std::clamp(pStart.r + (static_cast<float>(pEnd.r) - pStart.r) * pTime, 0.0f, 255.0f)),
-                static_cast<GLubyte>(std::clamp(pStart.g + (static_cast<float>(pEnd.g) - pStart.g) * pTime, 0.0f, 255.0f)),
-                static_cast<GLubyte>(std::clamp(pStart.b + (static_cast<float>(pEnd.b) - pStart.b) * pTime, 0.0f, 255.0f))
+                static_cast<GLubyte>(std::clamp(start.r + (static_cast<float>(end.r) - start.r) * time, 0.0f, 255.0f)),
+                static_cast<GLubyte>(std::clamp(start.g + (static_cast<float>(end.g) - start.g) * time, 0.0f, 255.0f)),
+                static_cast<GLubyte>(std::clamp(start.b + (static_cast<float>(end.b) - start.b) * time, 0.0f, 255.0f))
             };
         }
         else if constexpr (std::same_as<T, cocos2d::ccColor4B>) {
             return {
-                static_cast<GLubyte>(std::clamp(pStart.r + (static_cast<float>(pEnd.r) - pStart.r) * pTime, 0.0f, 255.0f)),
-                static_cast<GLubyte>(std::clamp(pStart.g + (static_cast<float>(pEnd.g) - pStart.g) * pTime, 0.0f, 255.0f)),
-                static_cast<GLubyte>(std::clamp(pStart.b + (static_cast<float>(pEnd.b) - pStart.b) * pTime, 0.0f, 255.0f)),
-                static_cast<GLubyte>(std::clamp(pStart.a + (static_cast<float>(pEnd.a) - pStart.a) * pTime, 0.0f, 255.0f))
+                static_cast<GLubyte>(std::clamp(start.r + (static_cast<float>(end.r) - start.r) * time, 0.0f, 255.0f)),
+                static_cast<GLubyte>(std::clamp(start.g + (static_cast<float>(end.g) - start.g) * time, 0.0f, 255.0f)),
+                static_cast<GLubyte>(std::clamp(start.b + (static_cast<float>(end.b) - start.b) * time, 0.0f, 255.0f)),
+                static_cast<GLubyte>(std::clamp(start.a + (static_cast<float>(end.a) - start.a) * time, 0.0f, 255.0f))
             };
         }
         else {
             return {
-                pStart.r + (pEnd.r - pStart.r) * pTime,
-                pStart.g + (pEnd.g - pStart.g) * pTime,
-                pStart.b + (pEnd.b - pStart.b) * pTime,
-                pStart.a + (pEnd.a - pStart.a) * pTime
+                start.r + (end.r - start.r) * time,
+                start.g + (end.g - start.g) * time,
+                start.b + (end.b - start.b) * time,
+                start.a + (end.a - start.a) * time
             };
         }
     }
 
     namespace impl {
-        SILLY_API_DLL cocos2d::ccColor4F getChroma4F(float pSpeed, float pOffset, float pSaturation, float pValue);
+        SILLY_API_DLL cocos2d::ccColor4F getChroma4F(float speed, float offset, float saturation, float value);
     }
 
     /// get a chroma color based on the current time
-    /// @param pSpeed how long it should take for color to do a full 360 hue rotation (seconds)
-    /// @param pOffset added to hue (hint, u can use enums) * 360
-    /// @param pSaturation saturation of outputted color
-    /// @param pValue value of outputted color
+    /// @param speed how long it should take for color to do a full 360 hue rotation (seconds)
+    /// @param offset added to hue (hint, u can use enums) * 360
+    /// @param saturation saturation of outputted color
+    /// @param value value of outputted color
     template<typename ImplT = cocos2d::ccColor4F, typename Offset = float, typename T = std::decay_t<ImplT>>
-    T getChroma(float pSpeed, Offset pOffset = Offset{}, float pSaturation = 1.0f, float pValue = 1.0f) {
-        return color_cast<T>(nwo5::utils::impl::getChroma4F(pSpeed, enum_cast<float>(pOffset), pSaturation, pValue));
+    T getChroma(float speed, Offset offset = Offset{}, float saturation = 1.0f, float value = 1.0f) {
+        return color_cast<T>(nwo5::utils::impl::getChroma4F(speed, enum_cast<float>(offset), saturation, value));
     }
 }

@@ -19,8 +19,8 @@ namespace nwo5::editor {
                 }
             }
 
-            static void onModify(auto& pSelf) {
-                (void)pSelf.setHookPriority("EditorUI::init", Priority::First);
+            static void onModify(auto& self) {
+                (void)self.setHookPriority("EditorUI::init", Priority::First);
             }
 
             bool init(LevelEditorLayer* editorLayer) {
@@ -40,11 +40,11 @@ namespace nwo5::editor {
             }
         };
 
-        void createUndoObject(UndoCommand pCommand) {
-            ui()->createUndoObject(pCommand, false);
+        void createUndoObject(UndoCommand command) {
+            ui()->createUndoObject(command, false);
         }
-        void toggleMoveObject(bool pMove) {
-            s_shouldMoveObject = pMove;
+        void toggleMoveObject(bool move) {
+            s_shouldMoveObject = move;
         }
 
         // hjfod
@@ -73,19 +73,19 @@ namespace nwo5::editor {
         }
     }
 
-    bool loaded(LoadedType pType) {
-        switch (pType) {
+    bool loaded(LoadedType type) {
+        switch (type) {
             case LoadedType::Editor: return layer() && !layer()->m_initializing;
             case LoadedType::EditorValid: return layer();
             case LoadedType::UI: return layer() && impl::s_editorUIEarlyPtr;
             case LoadedType::UIValid: return ui();
         }
     }
-    bool notLoaded(LoadedType pType) {
-        return !loaded(pType);
+    bool notLoaded(LoadedType type) {
+        return !loaded(type);
     }
 
-    void update(bool pUpdateControls, bool pOtherwiseDeactivateControls) {
+    void update(bool updateControls, bool otherwiseDeactivateControls) {
         if (notLoaded(LoadedType::UI)) {
             return;
         }
@@ -98,7 +98,7 @@ namespace nwo5::editor {
         editor->updateStickyControls();
         editor->m_editorLayer->m_drawGridLayer->m_updateTimeMarkers = true;
         
-        if (pUpdateControls) {
+        if (updateControls) {
             if (auto control = editor->m_rotationControl; control && control->isVisible()) {
                 activateRotationControl();
             }
@@ -109,7 +109,7 @@ namespace nwo5::editor {
                 activateTransformControl();
             }
         }
-        else if (pOtherwiseDeactivateControls) {
+        else if (otherwiseDeactivateControls) {
             editor->deactivateRotationControl();
             editor->deactivateScaleControl();
             editor->deactivateTransformControl();
@@ -119,7 +119,7 @@ namespace nwo5::editor {
     float zoom() {
         return layer() ? layer()->m_objectLayer->getScale() : 0.0f;
     }
-    CCPoint center(bool pToolbar) {
+    CCPoint center(bool toolbar) {
         if (notLoaded(LoadedType::UI)) {
             return CCPointZero;
         }
@@ -127,22 +127,22 @@ namespace nwo5::editor {
         return CCPoint{
             (CCDirector::get()->getWinSize() / 2) - CCPoint{
                 layer()->m_objectLayer->getPositionX(), 
-                layer()->m_objectLayer->getPositionY() - (pToolbar ? (ui()->m_toolbarHeight / 2) : 0.0f)
+                layer()->m_objectLayer->getPositionY() - (toolbar ? (ui()->m_toolbarHeight / 2) : 0.0f)
             }
         } / zoom();
     }
-    CCSize size(bool pToolbar) {
+    CCSize size(bool toolbar) {
         if (notLoaded(LoadedType::UI)) {
             return CCSizeZero;
         }
         
         return CCSize{
             CCDirector::get()->getWinSize().width,
-            CCDirector::get()->getWinSize().height - (pToolbar ? ui()->m_toolbarHeight : 0.0f)
+            CCDirector::get()->getWinSize().height - (toolbar ? ui()->m_toolbarHeight : 0.0f)
         } / zoom();
     }
 
-    void move(cocos2d::CCPoint pPos) {
+    void move(cocos2d::CCPoint pos) {
         if (notLoaded(LoadedType::UIValid)) {
             return;
         }
@@ -151,52 +151,56 @@ namespace nwo5::editor {
         const auto currentPos = layer()->m_objectLayer->getPosition();
 
         ui()->moveGamelayer(
-            -pPos * scale + CCDirector::get()->getWinSize() / 2 - currentPos
+            -pos * scale + CCDirector::get()->getWinSize() / 2 - currentPos
         );
     }
-    void moveTo(GameObject* pObj, bool pZoomToFit, float pZoomBuffer, float pMinimumZoom, float pMaximumZoom) {
-        const auto bounds = editor::object::bounds(pObj, true);
+    void moveTo(GameObject* obj, bool zoomToFit, float zoomBuffer, float minimumZoom, float maximumZoom) {
+        const auto bounds = editor::object::bounds(obj, true);
 
         editor::move(bounds.origin + bounds.size / 2);
         editor::setZoom(
             std::clamp(
                 (CCDirector::get()->getWinSize().width / bounds.size.width) / 1.5f, 
-                pMinimumZoom, pMaximumZoom
+                minimumZoom, maximumZoom
             )
         );
     }
-    void moveTo(std::span<GameObject* const> pObjs, bool pZoomToFit, float pZoomBuffer, float pMinimumZoom, float pMaximumZoom) {
-        const auto bounds = editor::object::bounds(pObjs, true);
+    void moveTo(std::span<GameObject* const> objs, bool zoomToFit, float zoomBuffer, float minimumZoom, float maximumZoom) {
+        const auto bounds = editor::object::bounds(objs, true);
 
         editor::move(bounds.origin + bounds.size / 2);
         editor::setZoom(
             std::clamp(
                 (CCDirector::get()->getWinSize().width / bounds.size.width) / 1.5f, 
-                pMinimumZoom, pMaximumZoom
+                minimumZoom, maximumZoom
             )
         );
     }
-    void moveTo(CCArray* pObjs, bool pZoomToFit, float pZoomBuffer, float pMinimumZoom, float pMaximumZoom) {
-        const auto bounds = editor::object::bounds(pObjs);
+    void moveTo(CCArray* objs, bool zoomToFit, float zoomBuffer, float minimumZoom, float maximumZoom) {
+        const auto bounds = editor::object::bounds(objs);
 
         editor::move(bounds.origin + bounds.size / 2);
         editor::setZoom(
             std::clamp(
                 (CCDirector::get()->getWinSize().width / bounds.size.width) / 1.5f, 
-                pMinimumZoom, pMaximumZoom
+                minimumZoom, maximumZoom
             )
         );
     }
-    void setZoom(float pZoom) {
+
+    void setZoom(float zoom) {
+        setZoom(zoom, CCDirector::get()->getWinSize() / 2);
+    }
+    void setZoom(float zoom, CCPoint center) {
         if (notLoaded(LoadedType::UIValid)) {
             return;
         }
 
-        if (!pZoom) {
+        if (!zoom) {
             return;
         }
 
-        ui()->updateZoom(pZoom);
+        ui()->updateZoom(zoom, center);
     }
 
     bool isPlaytesting() {
@@ -206,7 +210,7 @@ namespace nwo5::editor {
         return layer() ? layer()->m_playbackMode : PlaybackMode::Not;
     }
 
-    void activateRotationControl(bool pRefresh) {
+    void activateRotationControl(bool refresh) {
         if (notLoaded(LoadedType::UI)) {
             return;
         }
@@ -215,7 +219,7 @@ namespace nwo5::editor {
             return;
         }
 
-        if (pRefresh) {
+        if (refresh) {
             deactivateRotationControl();
         }
         else if (ui()->m_rotationControl->isVisible()) {
@@ -229,7 +233,7 @@ namespace nwo5::editor {
             ui()->deactivateRotationControl();
         }
     }
-    void activateScaleControl(bool pXY, bool pRefresh) {
+    void activateScaleControl(bool xY, bool refresh) {
         if (notLoaded(LoadedType::UI)) {
             return;
         }
@@ -238,21 +242,21 @@ namespace nwo5::editor {
             return;
         }
 
-        if (pRefresh) {
+        if (refresh) {
             deactivateScaleControl();
         }
         else if (ui()->m_scaleControl->isVisible()) {
             return;
         }
 
-        ui()->activateScaleControl(nwo5::utils::CCTag::create(pXY ? 30 : 29));
+        ui()->activateScaleControl(nwo5::utils::CCTag::create(xY ? 30 : 29));
     }
     void deactivateScaleControl() {
         if (loaded(LoadedType::UI) && ui()->m_scaleControl && ui()->m_scaleControl->isVisible()) {
             ui()->deactivateScaleControl();
         }
     }
-    void activateTransformControl(bool pRefresh) {
+    void activateTransformControl(bool refresh) {
         if (notLoaded(LoadedType::UI)) {
             return;
         }
@@ -261,7 +265,7 @@ namespace nwo5::editor {
             return;
         }
 
-        if (pRefresh) {
+        if (refresh) {
             deactivateTransformControl();
         }
         else if (ui()->m_transformControl->isVisible()) {
@@ -283,82 +287,90 @@ namespace nwo5::editor {
         
         return layer()->m_currentLayer;
     }
-    bool layerSelectable(int pLayer, bool pIgnoreLocked) {
-        if (notLoaded(LoadedType::EditorValid) || pLayer > editor::constants::MAX_LAYERS || pLayer < 0 || (!pIgnoreLocked && layerLocked(pLayer))) {
+    bool layerSelectable(int layer, bool ignoreLocked) {
+        if (notLoaded(LoadedType::EditorValid) || layer > editor::constants::MAX_LAYERS || layer < 0 || (!ignoreLocked && layerLocked(layer))) {
             return false;
         }
         
-        const auto layer = currentLayer();
+        const auto cl = currentLayer();
 
-        return layer == editor::constants::ALL_LAYERS || layer == pLayer;
+        return cl == editor::constants::ALL_LAYERS || layer == cl;
     }
-    bool layerLocked(int pLayer) {
-        if (notLoaded(LoadedType::EditorValid) || pLayer > editor::constants::MAX_LAYERS || pLayer < 0) {
+    bool layerLocked(int layer) {
+        if (notLoaded(LoadedType::EditorValid) || layer > editor::constants::MAX_LAYERS || layer < 0) {
             return false;
         }
 
-        return layer()->isLayerLocked(pLayer);
+        return editor::layer()->isLayerLocked(layer);
     }
-    void setLayer(int pLayer) {
-        if (notLoaded(LoadedType::UI) || pLayer > editor::constants::MAX_LAYERS || pLayer < editor::constants::ALL_LAYERS) {
+    void setLayer(int layer) {
+        if (notLoaded(LoadedType::UI) || layer > editor::constants::MAX_LAYERS || layer < editor::constants::ALL_LAYERS) {
             return;
         }
 
-        layer()->m_currentLayer = pLayer;
+        editor::layer()->m_currentLayer = layer;
         // its fucking crazy to me that robtop calls layers "groups" internally :sob:
         ui()->updateGroupIDLabel();
     }
-    void lockLayer(int pLayer, bool pLock) {
-        if (notLoaded(LoadedType::UI) || pLayer > editor::constants::MAX_LAYERS || pLayer < editor::constants::ALL_LAYERS || layerLocked(pLayer) == pLock) {
+    void lockLayer(int layer, bool lock) {
+        if (notLoaded(LoadedType::UI) || layer > editor::constants::MAX_LAYERS || layer < editor::constants::ALL_LAYERS || layerLocked(layer) == lock) {
             return;
         }
 
         const auto editorLayer = currentLayer();
-        const auto lockingEnabled = layer()->m_layerLockingEnabled;
+        const auto lockingEnabled = editor::layer()->m_layerLockingEnabled;
 
-        layer()->m_currentLayer = pLayer;
-        layer()->m_layerLockingEnabled = true;
+        editor::layer()->m_currentLayer = layer;
+        editor::layer()->m_layerLockingEnabled = true;
         
         // i dont wanna re this function it looks like a bunch of math and im scared
-        layer()->toggleLockActiveLayer();
+        editor::layer()->toggleLockActiveLayer();
         ui()->updateGroupIDLabel();
 
-        layer()->m_currentLayer = editorLayer;
-        layer()->m_layerLockingEnabled = lockingEnabled;
+        editor::layer()->m_currentLayer = editorLayer;
+        editor::layer()->m_layerLockingEnabled = lockingEnabled;
     }
 
-    CCArray* objectArray(bool pCopy) {
-        return loaded(LoadedType::Editor) ? (pCopy ? utils::array::copy(layer()->m_objects) : layer()->m_objects) : CCArray::create();
+    CCArray* objectArray(bool copy) {
+        return loaded(LoadedType::Editor) ? (copy ? utils::array::copy(layer()->m_objects) : layer()->m_objects) : CCArray::create();
     }
-    CCArray* objectsWithGroup(int pGroup, bool pCopy) {
+    CCArray* objectsWithGroup(int group, bool copy) {
         if (notLoaded(LoadedType::Editor)) {
             return CCArray::create();
         }
         
-        if (auto ptr = layer()->m_groupDict->objectForKey(pGroup)) {
-            return pCopy ? utils::array::copy(static_cast<CCArray*>(ptr)) : static_cast<CCArray*>(ptr);
+        if (auto ptr = layer()->m_groupDict->objectForKey(group)) {
+            return copy ? utils::array::copy(static_cast<CCArray*>(ptr)) : static_cast<CCArray*>(ptr);
         }
         else {
             return CCArray::create();
         }
     }
-    GameObject* groupParent(int pGroup) {
-        return loaded(LoadedType::Editor) ? layer()->getGroupParent(pGroup) : nullptr;
+    GameObject* groupParent(int group) {
+        if (notLoaded(LoadedType::Editor)) {
+            return nullptr;
+        }
+
+        if (auto parents = static_cast<cocos2d::CCArray*>(layer()->m_parentGroupsDict->objectForKey(group)); parents->count() != 0) {
+            return static_cast<GameObject*>(parents->firstObject());
+        }
+        
+        return nullptr;
     }
 
-    cocos2d::CCPoint snappedPos(cocos2d::CCPoint pPos, std::optional<int> pID, float pGridSize) {
-        const auto offset = ui()->offsetForKey(pID.value_or(1));
-        const auto pos = pPos - offset;
-        const auto gridSize = pGridSize * (editor::object::size(pID.value_or(1)) / 30.0f);
+    cocos2d::CCPoint snappedPos(cocos2d::CCPoint pos, std::optional<int> id, float gridSize) {
+        const auto offset = ui()->offsetForKey(id.value_or(1));
+        pos -= offset;
+        gridSize *= (editor::object::size(id.value_or(1)) / 30.0f);
 
         return CCPoint{
             (std::floor(pos.x / gridSize) + 0.5f) * gridSize,
             (std::floor(pos.y / gridSize) + 0.5f) * gridSize
         } + offset;
     }
-    cocos2d::CCPoint snappedPos(GameObject* pObj, float pGridSize) {
+    cocos2d::CCPoint snappedPos(GameObject* obj, float gridSize) {
         return snappedPos(
-            pObj->getRealPosition(), editor::object::id(pObj), pGridSize
+            obj->getRealPosition(), editor::object::id(obj), gridSize
         );
     }
 

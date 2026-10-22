@@ -12,11 +12,11 @@ namespace nwo5::editor {
     }
 
     class $modify(EditorUI) {
-        static void onModify(auto& pSelf) {
-            (void)pSelf.setHookPriorityPre("EditorUI::deselectAll", Priority::First);
-            (void)pSelf.setHookPriorityPre("EditorUI::deselectObject", Priority::First);
-            (void)pSelf.setHookPriorityPre("EditorUI::selectObject", Priority::First);
-            (void)pSelf.setHookPriorityPre("EditorUI::selectObjects", Priority::First);
+        static void onModify(auto& self) {
+            (void)self.setHookPriorityPre("EditorUI::deselectAll", Priority::First);
+            (void)self.setHookPriorityPre("EditorUI::deselectObject", Priority::First);
+            (void)self.setHookPriorityPre("EditorUI::selectObject", Priority::First);
+            (void)self.setHookPriorityPre("EditorUI::selectObjects", Priority::First);
         }
 
         void deselectAll() {
@@ -78,14 +78,14 @@ namespace nwo5::editor {
             std::optional<size_t> lastObjectCount = std::nullopt;
         };
 
-        static void onModify(auto& pSelf) {
-            (void)pSelf.setHookPriorityPre("LevelEditorLayer::updateEditor", Priority::First);
-            (void)pSelf.setHookPriorityPre("LevelEditorLayer::createObject", Priority::First);
-            (void)pSelf.setHookPriorityPre("LevelEditorLayer::createObjectsFromString", Priority::First);
-            (void)pSelf.setHookPriorityPre("LevelEditorLayer::removeObject", Priority::First);
-            (void)pSelf.setHookPriorityPre("LevelEditorLayer::removeAllObjectsOfType", Priority::First);
-            (void)pSelf.setHookPriorityPre("LevelEditorLayer::onPlaytest", Priority::First);
-            (void)pSelf.setHookPriorityPre("LevelEditorLayer::onStopPlaytest", Priority::First);
+        static void onModify(auto& self) {
+            (void)self.setHookPriorityPre("LevelEditorLayer::updateEditor", Priority::First);
+            (void)self.setHookPriorityPre("LevelEditorLayer::createObject", Priority::First);
+            (void)self.setHookPriorityPre("LevelEditorLayer::createObjectsFromString", Priority::First);
+            (void)self.setHookPriorityPre("LevelEditorLayer::removeObject", Priority::First);
+            (void)self.setHookPriorityPre("LevelEditorLayer::removeAllObjectsOfType", Priority::First);
+            (void)self.setHookPriorityPre("LevelEditorLayer::onPlaytest", Priority::First);
+            (void)self.setHookPriorityPre("LevelEditorLayer::onStopPlaytest", Priority::First);
         }
 
         void updateEditor(float dt) {
@@ -110,7 +110,7 @@ namespace nwo5::editor {
             return ret;
         }
 
-        CCArray* createObjectsFromString(const gd::string& str, bool noUndo, bool noLimit) {
+        CCArray* createObjectsFromString(const std::string& str, bool noUndo, bool noLimit) {
             auto ret = LevelEditorLayer::createObjectsFromString(str, noUndo, noLimit);
 
             if (ret) {

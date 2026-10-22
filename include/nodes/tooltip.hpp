@@ -22,13 +22,13 @@ namespace nwo5::nodes {
 
         float m_padding = 5.0f;
 
-        void updateText(geode::ZStringView pText);
+        void updateText(geode::ZStringView text);
         void updateAutomatic();
 
-        bool init(geode::ZStringView pFont, bool pFollowMouse, bool pAutomatic);
+        bool init(geode::ZStringView font, bool followMouse, bool automatic);
     public:
         /// show tooltip with text
-        void show(geode::ZStringView pText);
+        void show(geode::ZStringView text);
         /// hide tool tip
         void hide();
 
@@ -36,29 +36,29 @@ namespace nwo5::nodes {
         void updateAnchor();
 
         /// runs on mouse move and mouse scroll
-        void setUpdateFunc(geode::Function<void()> pFunc);
+        void setUpdateFunc(geode::Function<void()> func);
 
         /// set background opacity
-        void setOpacity(uint8_t pOpacity);
+        void setOpacity(uint8_t opacity);
         /// get opacity (default is 127)
         /// @returns background opacity
         uint8_t getOpacity() const;
 
         /// set max width of tooltip
-        void setMaxWidth(float pWidth);
+        void setMaxWidth(float width);
         /// get max width (default is 300)
         /// @returns max width
         float getMaxWidth() const;
 
         /// set if tooltip should go to mouse pos
-        void setFollowMouse(bool pOn);
+        void setFollowMouse(bool on);
         /// get follow mouse enabled (default is true)
         /// @returns tooltip is following mouse
         bool getFollowMouse() const;
 
         /// set if tooltip should show/hide automatically (hides tooltip when disabled)
         /// @note only works with follow mouse enabled
-        void setAutomatic(bool pOn);
+        void setAutomatic(bool on);
         /// get automatic mode enabled (default is true)
         /// @returns tooltip is automatic
         bool getAutomatic() const;
@@ -66,18 +66,18 @@ namespace nwo5::nodes {
         /// set if tooltip should dynamically set anchor based on position
         /// you can force an anchor update with Tooltip::updateAnchor
         /// @note only works with follow mouse enabled
-        void setDynamicAnchor(bool pOn);
+        void setDynamicAnchor(bool on);
         /// get dynamic anchor enabled (default is true)
         /// @returns dynamic anchor enabled
         bool getDynamicAnchor() const;
         /// set default anchor of tooltip and sets current anchor
-        void setDefaultAnchor(cocos2d::CCPoint pAnchor);
+        void setDefaultAnchor(cocos2d::CCPoint anchor);
         /// get default anchor
         /// @returns default anchor
         cocos2d::CCPoint getDefaultAnchor() const;
 
         /// set padding (*total* space between background and label, distance between backround edge and label on either side will be this number / 2)
-        void setPadding(float pPadding);
+        void setPadding(float padding);
         /// get padding (default is 5)
         /// @returns padding
         float getPadding() const;
@@ -86,10 +86,10 @@ namespace nwo5::nodes {
         geode::NineSlice* getBackground() const;
 
         /// create tooltip
-        /// @param pFont label font
-        /// @param pFollowMouse if tooltip should follow mouse (and dynamic anchor) or be static (ie ur responsible for moving it)
-        /// @param pAutomatic if follow mouse is true, do you want the tooltip to automatically show/hide on objects with tooltips
-        static Tooltip* create(geode::ZStringView pFont, bool pFollowMouse = true, bool pAutomatic = true);
+        /// @param font label font
+        /// @param followMouse if tooltip should follow mouse (and dynamic anchor) or be static (ie ur responsible for moving it)
+        /// @param automatic if follow mouse is true, do you want the tooltip to automatically show/hide on objects with tooltips
+        static Tooltip* create(geode::ZStringView font, bool followMouse = true, bool automatic = true);
     };
 
     class SILLY_API_DLL TooltipInfo final : public cocos2d::CCObject {
@@ -97,7 +97,7 @@ namespace nwo5::nodes {
         std::string m_text;
         cocos2d::CCNode* m_node = nullptr;
 
-        bool init(cocos2d::CCNode* pNode, geode::ZStringView pText);
+        bool init(cocos2d::CCNode* node, geode::ZStringView text);
         ~TooltipInfo();
 
         inline static std::unordered_set<cocos2d::CCNode*> set;
@@ -110,11 +110,11 @@ namespace nwo5::nodes {
         cocos2d::CCNode* getNode() const;
 
         /// create a tooltip info object
-        /// @param pText tooltip text
-        static TooltipInfo* create(geode::ZStringView pText);
+        /// @param text tooltip text
+        static TooltipInfo* create(geode::ZStringView text);
         /// create a tooltip info object and add it to node
-        /// @param pNode node tooltip will be added to
-        /// @param pText tooltip text
-        static TooltipInfo* create(cocos2d::CCNode* pNode, geode::ZStringView pText);
+        /// @param node node tooltip will be added to
+        /// @param text tooltip text
+        static TooltipInfo* create(cocos2d::CCNode* node, geode::ZStringView text);
     };
 };

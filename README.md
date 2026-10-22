@@ -5,6 +5,8 @@ if ur not a dev this is useless to u
 
 theres a documentation for pretty much everything in headers, otherwise heres a feature list and half finished docs !
 
+# the setting stuff is out of date and alot of it is deprecated, but if u js wanna use setting cache, remove settingsmanager->load call, change "Setting" to "SettingCache", and include nwo5/cache instead of nwo5/setting
+
 ## Features
 - geode setting cache (by making them inline variables so also ide autocomplete)
 - plethora of editor/object/selection utils
@@ -60,9 +62,9 @@ for example to scale an object
 using namespace geode::prelude;
 
 class $modify(EditorUI) {
-    void customScaleObjects(CCArray* pObjects, float pScale) {
-        // scale pObjects to pScale (biggest obj scale will be pScale, everything else gets scaled accordingly) with undo enabled
-        nwo5::editor::object::scale(pObjects, pScale, true);
+    void customScaleObjects(CCArray* objects, float scale) {
+        // scale objects to scale (biggest obj scale will be scale, everything else gets scaled accordingly) with undo enabled
+        nwo5::editor::object::scale(objects, scale, true);
 
         nwo5::editor::update();
     }
@@ -174,10 +176,10 @@ struct SillyData {
 template<typename T>
 class SillySetting : public nwo5::settings::Setting<T, SillyData> {
 public:
-    SillySetting(std::string_view pKey, SillyData pData)
-        : nwo5::settings::Setting<T, SillyData>(pKey) 
+    SillySetting(std::string_view key, SillyData data)
+        : nwo5::settings::Setting<T, SillyData>(key) 
     {
-        this->data() = pData;
+        this->data() = data;
     }
 };
 

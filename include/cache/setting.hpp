@@ -28,8 +28,8 @@ namespace nwo5::cache {
 
             m_value = m_setting->getValue();
 
-            m_listener = geode::SettingChangedEventV3(m_mod, m_key).listen([this] (std::shared_ptr<geode::SettingV3> pSetting) {
-                if (auto ty = geode::cast::typeinfo_pointer_cast<GeodeSettingType>(pSetting)) {
+            m_listener = geode::SettingChangedEventV3(m_mod, m_key).listen([this] (std::shared_ptr<geode::SettingV3> setting) {
+                if (auto ty = geode::cast::typeinfo_pointer_cast<GeodeSettingType>(setting)) {
                     m_value = ty->getValue();
                 }
             }, geode::Priority::First);
@@ -38,8 +38,8 @@ namespace nwo5::cache {
     public:
         using Type = T;
 
-        SettingCache(std::string pKey, geode::Mod* pMod = geode::Mod::get())
-            : m_key(pKey), m_mod(pMod)
+        SettingCache(std::string key, geode::Mod* mod = geode::Mod::get())
+            : m_key(key), m_mod(mod)
         {
             if (m_mod && m_mod->isLoaded()) {
                 this->load();
@@ -57,24 +57,24 @@ namespace nwo5::cache {
         operator const T&() const {
             return m_value;
         }
-        auto operator==(const T& pVal) {
-            return m_value == pVal;
+        auto operator==(const T& val) {
+            return m_value == val;
         }
-        auto operator<=>(const T& pVal) const requires std::three_way_comparable<T> {
-            return m_value <=> pVal;
+        auto operator<=>(const T& val) const requires std::three_way_comparable<T> {
+            return m_value <=> val;
         }
-        auto& operator=(const T& pVal) {
-            this->set(pVal);
+        auto& operator=(const T& val) {
+            this->set(val);
 
             return *this;
         }
 
         /// set value and sync
         /// @returns old value
-        T set(T pVal) {
+        T set(T val) {
             const auto ret = m_value;
 
-            m_value = pVal;
+            m_value = val;
             this->sync();
 
             return ret;

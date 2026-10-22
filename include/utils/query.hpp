@@ -12,8 +12,8 @@ namespace nwo5::utils {
         Node* m_node;
 
     public:
-        Query(Node* pNode) 
-            : m_node(pNode) {}
+        Query(Node* node) 
+            : m_node(node) {}
 
         operator Node*() const {
             return m_node;
@@ -40,8 +40,8 @@ namespace nwo5::utils {
         /// check if current node has id (and optionally typeinfo cast)
         template<typename ImplT = cocos2d::CCNode, typename T = std::remove_pointer_t<ImplT>>
         requires std::derived_from<T, cocos2d::CCNode>
-        Query<T> id(geode::ZStringView pID) {
-            if (!m_node || m_node->getID() != pID) {
+        Query<T> id(geode::ZStringView id) {
+            if (!m_node || m_node->getID() != id) {
                 return nullptr;
             }
 
@@ -54,8 +54,8 @@ namespace nwo5::utils {
         /// check if current node has tag (and optionally typeinfo cast)
         template<typename ImplT = cocos2d::CCNode, typename T = std::remove_pointer_t<ImplT>>
         requires std::derived_from<T, cocos2d::CCNode>
-        Query<T> tag(int pTag) {
-            if (!m_node || m_node->getTag() != pTag) {
+        Query<T> tag(int tag) {
+            if (!m_node || m_node->getTag() != tag) {
                 return nullptr;
             }
 
@@ -80,7 +80,7 @@ namespace nwo5::utils {
         /// check if current node matches predicate (and optionally typeinfo cast)
         template<typename ImplT = cocos2d::CCNode, typename T = std::remove_pointer_t<ImplT>, std::predicate<T*> Callback>
         requires std::derived_from<T, cocos2d::CCNode>
-        Query<T> predicate(Callback&& pPredicate) {
+        Query<T> predicate(Callback&& predicate) {
             if (!m_node) {
                 return nullptr;
             }
@@ -88,14 +88,14 @@ namespace nwo5::utils {
             if constexpr (!std::same_as<T, cocos2d::CCNode>) {
                 auto cast = geode::cast::typeinfo_cast<T*>(m_node);
 
-                if (!cast || !pPredicate(cast)) {
+                if (!cast || !predicate(cast)) {
                     return nullptr;
                 }
 
                 return cast;
             }
             else {
-                if (!pPredicate(m_node)) {
+                if (!predicate(m_node)) {
                     return nullptr;
                 }
 
@@ -108,8 +108,8 @@ namespace nwo5::utils {
         /// check if current node has x amount of children (and optionally typeinfo cast)
         template<typename ImplT = cocos2d::CCNode, typename T = std::remove_pointer_t<ImplT>>
         requires std::derived_from<T, cocos2d::CCNode>
-        Query<T> childrenCount(size_t pCount) {
-            if (!m_node || m_node->getchildrenCount() != pCount) {
+        Query<T> childrenCount(size_t count) {
+            if (!m_node || m_node->getchildrenCount() != count) {
                 return nullptr;
             }
 
@@ -123,8 +123,8 @@ namespace nwo5::utils {
         /// check if current node has sprite name (and optionally typeinfo cast)
         template<typename ImplT = cocos2d::CCSprite, typename T = std::remove_pointer_t<ImplT>>
         requires std::derived_from<T, cocos2d::CCSprite>
-        Query<T> sprite(geode::ZStringView pSpriteName) {
-            if (!m_node || !geode::cocos::isSpriteName(m_node, pSpriteName.c_str())) {
+        Query<T> sprite(geode::ZStringView spriteName) {
+            if (!m_node || !geode::cocos::isSpriteName(m_node, spriteName.c_str())) {
                 return nullptr;
             }
 
@@ -133,8 +133,8 @@ namespace nwo5::utils {
         /// check if current node has sprite frame name (and optionally typeinfo cast)
         template<typename ImplT = cocos2d::CCSprite, typename T = std::remove_pointer_t<ImplT>>
         requires std::derived_from<T, cocos2d::CCSprite>
-        Query<T> frame(geode::ZStringView pSpriteFrameName) {
-            if (!m_node || !geode::cocos::isSpriteFrameName(m_node, pSpriteFrameName.c_str())) {
+        Query<T> frame(geode::ZStringView spriteFrameName) {
+            if (!m_node || !geode::cocos::isSpriteFrameName(m_node, spriteFrameName.c_str())) {
                 return nullptr;
             }
 
@@ -144,14 +144,14 @@ namespace nwo5::utils {
         /// check if current node matches string using cclabelprotocol (and optionally typeinfo cast)
         template<typename ImplT = cocos2d::CCLabelProtocol, typename T = std::remove_pointer_t<ImplT>>
         requires std::derived_from<T, cocos2d::CCLabelProtocol>
-        Query<T> string(geode::ZStringView pString) {
+        Query<T> string(geode::ZStringView string) {
             if (!m_node) {
                 return nullptr;
             }
 
             auto cast = geode::cast::typeinfo_cast<T*>(m_node);
 
-            if (!cast || pString != cast->getString()) {
+            if (!cast || string != cast->getString()) {
                 return nullptr;
             }
 
@@ -165,13 +165,13 @@ namespace nwo5::utils {
         /// find child node with id (and optionally typeinfo cast)
         template<typename ImplT = cocos2d::CCNode, typename T = std::remove_pointer_t<ImplT>>
         requires std::derived_from<T, cocos2d::CCNode>
-        Query<T> byID(geode::ZStringView pID) {
+        Query<T> byID(geode::ZStringView id) {
             if (!m_node) {
                 return nullptr;
             }
 
             for (auto child : m_node->getChildrenExt()) {
-                if (!child || child->getID() != pID) {
+                if (!child || child->getID() != id) {
                     continue;
                 }
 
@@ -194,13 +194,13 @@ namespace nwo5::utils {
         /// find child node with tag (and optionally typeinfo cast)
         template<typename ImplT = cocos2d::CCNode, typename T = std::remove_pointer_t<ImplT>>
         requires std::derived_from<T, cocos2d::CCNode>
-        Query<T> byTag(int pTag) {
+        Query<T> byTag(int tag) {
             if (!m_node) {
                 return nullptr;
             }
 
             for (auto child : m_node->getChildrenExt()) {
-                if (!child || child->getTag() != pTag) {
+                if (!child || child->getTag() != tag) {
                     continue;
                 }
 
@@ -224,28 +224,28 @@ namespace nwo5::utils {
         /// find child node by type
         template<typename ImplT = cocos2d::CCNode, typename T = std::remove_pointer_t<ImplT>>
         requires std::derived_from<T, cocos2d::CCNode>
-        Query<T> byType(size_t pIndex = 0) {
+        Query<T> byType(size_t index = 0) {
             if (!m_node) {
                 return nullptr;
             }
 
-            return m_node->template getChildByType<T*>(pIndex);
+            return m_node->template getChildByType<T*>(index);
         }
         /// same as byType
         template<typename ImplT = cocos2d::CCNode, typename T = std::remove_pointer_t<ImplT>>
         requires std::derived_from<T, cocos2d::CCNode>
-        Query<T> byIndex(size_t pIndex = 0) {
+        Query<T> byIndex(size_t index = 0) {
             if (!m_node) {
                 return nullptr;
             }
 
-            return m_node->template getChildByType<T*>(pIndex);
+            return m_node->template getChildByType<T*>(index);
         }
 
         /// find child that matches predicate (and optionally typeinfo cast)
         template<typename ImplT = cocos2d::CCNode, typename T = std::remove_pointer_t<ImplT>, std::predicate<T*> Callback>
         requires std::derived_from<T, cocos2d::CCNode>
-        Query<T> byPredicate(Callback&& pPredicate) {
+        Query<T> byPredicate(Callback&& predicate) {
             if (!m_node) {
                 return nullptr;
             }
@@ -258,14 +258,14 @@ namespace nwo5::utils {
                 if constexpr (!std::same_as<T, cocos2d::CCNode>) {
                     auto cast = geode::cast::typeinfo_cast<T*>(child);
 
-                    if (!cast || !pPredicate(cast)) {
+                    if (!cast || !predicate(cast)) {
                         continue;
                     }
 
                     return cast;
                 }
                 else {
-                    if (!pPredicate(child)) {
+                    if (!predicate(child)) {
                         continue;
                     }
 
@@ -279,13 +279,13 @@ namespace nwo5::utils {
         /// find child with sprite name (and optionally typeinfo cast)
         template<typename ImplT = cocos2d::CCSprite, typename T = std::remove_pointer_t<ImplT>>
         requires std::derived_from<T, cocos2d::CCSprite>
-        Query<T> bySprite(geode::ZStringView pSpriteName) {
+        Query<T> bySprite(geode::ZStringView spriteName) {
             if (!m_node) {
                 return nullptr;
             }
 
             for (auto child : m_node->getChildrenExt()) {
-                if (!child || !geode::cocos::isSpriteName(child, pSpriteName.c_str())) {
+                if (!child || !geode::cocos::isSpriteName(child, spriteName.c_str())) {
                     continue;
                 }
 
@@ -303,13 +303,13 @@ namespace nwo5::utils {
         /// find child with sprite frame name (and optionally typeinfo cast)
         template<typename ImplT = cocos2d::CCSprite, typename T = std::remove_pointer_t<ImplT>>
         requires std::derived_from<T, cocos2d::CCSprite>
-        Query<T> byFrame(geode::ZStringView pSpriteFrameName) {
+        Query<T> byFrame(geode::ZStringView spriteFrameName) {
             if (!m_node) {
                 return nullptr;
             }
 
             for (auto child : m_node->getChildrenExt()) {
-                if (!child || !geode::cocos::isSpriteFrameName(child, pSpriteFrameName.c_str())) {
+                if (!child || !geode::cocos::isSpriteFrameName(child, spriteFrameName.c_str())) {
                     continue;
                 }
 
@@ -328,7 +328,7 @@ namespace nwo5::utils {
         /// find child that matches string using cclabelprotocol (and optionally typeinfo cast)
         template<typename ImplT = cocos2d::CCLabelProtocol, typename T = std::remove_pointer_t<ImplT>>
         requires std::derived_from<T, cocos2d::CCLabelProtocol>
-        Query<T> byString(geode::ZStringView pString) {
+        Query<T> byString(geode::ZStringView string) {
             if (!m_node) {
                 return nullptr;
             }
@@ -340,7 +340,7 @@ namespace nwo5::utils {
 
                 auto cast = geode::cast::typeinfo_cast<T*>(child);
 
-                if (!cast || pString != cast->getString()) {
+                if (!cast || string != cast->getString()) {
                     continue;
                 }
 

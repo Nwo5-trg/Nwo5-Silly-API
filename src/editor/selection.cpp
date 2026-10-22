@@ -3,112 +3,112 @@
 using namespace geode::prelude;
 
 namespace nwo5::editor::selection {
-    void add(GameObject* pObj, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
-        if (notLoaded(LoadedType::Editor) || (pUseFilter && pAlsoCheckLayers && !editor::object::canSelectLayer(pObj))) {
+    void add(GameObject* obj, bool undo, bool useFilter, bool alsoCheckLayers, bool applyLinkControls) {
+        if (notLoaded(LoadedType::Editor) || (useFilter && alsoCheckLayers && !editor::object::canSelectLayer(obj))) {
             return;
         }
 
         // technically checking twice but idec 
-        if (pUndo && (!pUseFilter || ui()->canSelectObject(pObj))) {
+        if (undo && (!useFilter || ui()->canSelectObject(obj))) {
             ui()->createUndoSelectObject(false);
         }
         
         const auto ret = ui()->m_stickyControlsEnabled;
-        ui()->m_stickyControlsEnabled &= pApplyLinkControls;
+        ui()->m_stickyControlsEnabled &= applyLinkControls;
 
-        ui()->selectObjects(CCArray::createWithObject(pObj), !pUseFilter);
+        ui()->selectObjects(CCArray::createWithObject(obj), !useFilter);
 
         ui()->m_stickyControlsEnabled = ret;
     }
-    void add(std::span<GameObject* const> pObjs, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
-        add(CCArrayExt(pObjs).inner(), pUndo, pUseFilter, pAlsoCheckLayers);
+    void add(std::span<GameObject* const> objs, bool undo, bool useFilter, bool alsoCheckLayers, bool applyLinkControls) {
+        add(CCArrayExt(objs).inner(), undo, useFilter, alsoCheckLayers);
     }
-    void add(cocos2d::CCArray* pObjs, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
+    void add(cocos2d::CCArray* objs, bool undo, bool useFilter, bool alsoCheckLayers, bool applyLinkControls) {
         if (notLoaded(LoadedType::Editor)) {
             return;
         }
         
-        const auto checkLayers = pUseFilter && pAlsoCheckLayers;
+        const auto checkLayers = useFilter && alsoCheckLayers;
 
-        auto objs = checkLayers ? CCArray::create() : pObjs;
+        auto filtered = checkLayers ? CCArray::create() : objs;
 
         if (checkLayers) {
-            for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
+            for (auto obj : CCArrayExt<GameObject*>(objs)) {
                 if (editor::object::canSelectLayer(obj)) {
-                    objs->addObject(obj);
+                    filtered->addObject(obj);
                 }
             }
         }
 
-        if (pUndo) {
+        if (undo) {
             ui()->createUndoSelectObject(false);
         }
         
-        if (pApplyLinkControls) {
-            ui()->selectObjects(objs, !pUseFilter);
+        if (applyLinkControls) {
+            ui()->selectObjects(filtered, !useFilter);
         }
         else {
             const auto ret = ui()->m_stickyControlsEnabled;
             ui()->m_stickyControlsEnabled = false;
 
-            ui()->selectObjects(objs, !pUseFilter);
+            ui()->selectObjects(filtered, !useFilter);
 
             ui()->m_stickyControlsEnabled = ret;
         }
     }
-    void set(GameObject* pObj, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
-        if (notLoaded(LoadedType::Editor) || (pUseFilter && pAlsoCheckLayers && !editor::object::canSelectLayer(pObj))) {
+    void set(GameObject* obj, bool undo, bool useFilter, bool alsoCheckLayers, bool applyLinkControls) {
+        if (notLoaded(LoadedType::Editor) || (useFilter && alsoCheckLayers && !editor::object::canSelectLayer(obj))) {
             return;
         }
 
         // technically checking twice but idec 
-        if (pUndo && (!pUseFilter || ui()->canSelectObject(pObj))) {
+        if (undo && (!useFilter || ui()->canSelectObject(obj))) {
             ui()->createUndoSelectObject(false);
         }
 
         clear();
         
         const auto ret = ui()->m_stickyControlsEnabled;
-        ui()->m_stickyControlsEnabled &= pApplyLinkControls;
+        ui()->m_stickyControlsEnabled &= applyLinkControls;
 
-        ui()->selectObjects(CCArray::createWithObject(pObj), !pUseFilter);
+        ui()->selectObjects(CCArray::createWithObject(obj), !useFilter);
 
         ui()->m_stickyControlsEnabled = ret;
     }
-    void set(std::span<GameObject* const> pObjs, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
-        set(CCArrayExt(pObjs).inner(), pUndo, pUseFilter, pAlsoCheckLayers);
+    void set(std::span<GameObject* const> objs, bool undo, bool useFilter, bool alsoCheckLayers, bool applyLinkControls) {
+        set(CCArrayExt(objs).inner(), undo, useFilter, alsoCheckLayers);
     }
-    void set(cocos2d::CCArray* pObjs, bool pUndo, bool pUseFilter, bool pAlsoCheckLayers, bool pApplyLinkControls) {
+    void set(cocos2d::CCArray* objs, bool undo, bool useFilter, bool alsoCheckLayers, bool applyLinkControls) {
         if (notLoaded(LoadedType::Editor)) {
             return;
         }
         
-        const auto checkLayers = pUseFilter && pAlsoCheckLayers;
+        const auto checkLayers = useFilter && alsoCheckLayers;
 
-        auto objs = checkLayers ? CCArray::create() : pObjs;
+        auto filtered = checkLayers ? CCArray::create() : objs;
 
         if (checkLayers) {
-            for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
+            for (auto obj : CCArrayExt<GameObject*>(objs)) {
                 if (editor::object::canSelectLayer(obj)) {
-                    objs->addObject(obj);
+                    filtered->addObject(obj);
                 }
             }
         }
         
-        if (pUndo) {
+        if (undo) {
             ui()->createUndoSelectObject(false);
         }
 
         clear();
         
-        if (pApplyLinkControls) {
-            ui()->selectObjects(objs, !pUseFilter);
+        if (applyLinkControls) {
+            ui()->selectObjects(filtered, !useFilter);
         }
         else {
             const auto ret = ui()->m_stickyControlsEnabled;
             ui()->m_stickyControlsEnabled = false;
 
-            ui()->selectObjects(objs, !pUseFilter);
+            ui()->selectObjects(filtered, !useFilter);
 
             ui()->m_stickyControlsEnabled = ret;
         }
@@ -132,59 +132,59 @@ namespace nwo5::editor::selection {
     cocos2d::CCRect bounds() {
         return editor::object::bounds(get());
     }
-    cocos2d::CCPoint center(bool pIgnoreParent) {
-        return editor::object::center(get(), pIgnoreParent);
+    cocos2d::CCPoint center(bool ignoreParent) {
+        return editor::object::center(get(), ignoreParent);
     }
 
-    void clear(bool pUndo) {
-        remove(get(), pUndo);
+    void clear(bool undo) {
+        remove(get(), undo);
     }
-    void remove(GameObject* pObj, bool pUndo) {
+    void remove(GameObject* obj, bool undo) {
         if (notLoaded(LoadedType::Editor)) {
             return;
         }
         
-        if (pUndo) {
+        if (undo) {
             ui()->createUndoSelectObject(false);
         }
 
-        pObj->deselectObject();
+        obj->deselectObject();
 
-        if (ui()->m_selectedObject == pObj) {
+        if (ui()->m_selectedObject == obj) {
             ui()->m_selectedObject = nullptr;
         }
         
-        ui()->m_selectedObjects->removeObject(pObj, false);
+        ui()->m_selectedObjects->removeObject(obj, false);
     }
-    void remove(std::span<GameObject* const> pObjs, bool pUndo) {
+    void remove(std::span<GameObject* const> objs, bool undo) {
         if (notLoaded(LoadedType::Editor)) {
             return;
         }
         
-        if (pUndo) {
+        if (undo) {
             ui()->createUndoSelectObject(false);
         }
 
-        for (auto obj : pObjs) {
+        for (auto obj : objs) {
             remove(obj);
         }
     }
-    void remove(cocos2d::CCArray* pObjs, bool pUndo) {
+    void remove(cocos2d::CCArray* objs, bool undo) {
         if (notLoaded(LoadedType::Editor)) {
             return;
         }
         
-        if (pUndo) {
+        if (undo) {
             ui()->createUndoSelectObject(false);
         }
 
-        for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
+        for (auto obj : CCArrayExt<GameObject*>(objs)) {
             remove(obj);
         }
     }
 
-    void repairColors(std::span<GameObject* const> pObjs) {
-        for (auto obj : pObjs) {
+    void repairColors(std::span<GameObject* const> objs) {
+        for (auto obj : objs) {
             if (!obj->m_isSelected) {
                 continue;
             }
@@ -192,8 +192,8 @@ namespace nwo5::editor::selection {
             obj->updateObjectEditorColor();
         }
     }
-    void repairColors(cocos2d::CCArray* pObjs) {
-        for (auto obj : CCArrayExt<GameObject*>(pObjs)) {
+    void repairColors(cocos2d::CCArray* objs) {
+        for (auto obj : CCArrayExt<GameObject*>(objs)) {
             if (!obj->m_isSelected) {
                 continue;
             }

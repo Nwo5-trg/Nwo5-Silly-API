@@ -10,194 +10,194 @@ namespace nwo5::utils {
     requires std::is_floating_point_v<T>
     struct Easing final {
     private:
-        static T bounceTime(T pX) {
-            if (pX < 1 / T{2.75}) {
-                return T{7.5625} * pX * pX;
+        static T bounceTime(T x) {
+            if (x < 1 / T{2.75}) {
+                return T{7.5625} * x * x;
             }
-            else if (pX < 2 / T{2.75}) {
-                pX -= T{1.5} / T{2.75};
+            else if (x < 2 / T{2.75}) {
+                x -= T{1.5} / T{2.75};
 
-                return T{7.5625} * pX * pX + T{0.75};
+                return T{7.5625} * x * x + T{0.75};
             }
-            else if(pX < T{2.5} / T{2.75}) {
-                pX -= T{2.25} / T{2.75};
+            else if(x < T{2.5} / T{2.75}) {
+                x -= T{2.25} / T{2.75};
 
-                return T{7.5625} * pX * pX + T{0.9375};
+                return T{7.5625} * x * x + T{0.9375};
             }
 
-            pX -= T{2.625} / T{2.75};
+            x -= T{2.625} / T{2.75};
 
-            return T{7.5625} * pX * pX + T{0.984375};
+            return T{7.5625} * x * x + T{0.984375};
         }
         
     public:
-        static T linear(T pX, T pE) {
-            return pX;
+        static T linear(T x, T e) {
+            return x;
         }
-        static T inOut(T pX, T pE) {
-            pX *= 2;
+        static T inOut(T x, T e) {
+            x *= 2;
 
-            if (pX < 1) {
-                return T{0.5} * std::pow(pX, pE);
+            if (x < 1) {
+                return T{0.5} * std::pow(x, e);
             }
 
-            return 1 - T{0.5} * std::pow(T{2} - pX, pE);
+            return 1 - T{0.5} * std::pow(T{2} - x, e);
         }
-        static T in(T pX, T pE) {
-            return std::pow(pX, pE);
+        static T in(T x, T e) {
+            return std::pow(x, e);
         }
-        static T out(T pX, T pE) {
-            return std::pow(pX, 1 / pE);
+        static T out(T x, T e) {
+            return std::pow(x, 1 / e);
         }
-        static T elasticInOut(T pX, T pE) {
-            if (pX == 0 || pX == 1) {
-                return pX;
+        static T elasticInOut(T x, T e) {
+            if (x == 0 || x == 1) {
+                return x;
             }
 
-            pX *= 2;
+            x *= 2;
 
-            if (!pE) {
-                pE = T{0.3} * T{1.5};
+            if (!e) {
+                e = T{0.3} * T{1.5};
             }
 
-            pX -= 1;
+            x -= 1;
 
-            if (pX < 0) {
-                return -T{0.5} * std::pow(2, 10 * pX) * std::sin((pX - (pE / 4)) * (std::numbers::pi_v<T> * 2) / pE);
+            if (x < 0) {
+                return -T{0.5} * std::pow(2, 10 * x) * std::sin((x - (e / 4)) * (std::numbers::pi_v<T> * 2) / e);
             }
             else {
-                return std::pow(2, -10 * pX) * std::sin((pX - (pE / 4)) * (std::numbers::pi_v<T> * 2) / pE) * T{0.5} + 1;
+                return std::pow(2, -10 * x) * std::sin((x - (e / 4)) * (std::numbers::pi_v<T> * 2) / e) * T{0.5} + 1;
             }
         }
-        static T elasticIn(T pX, T pE) {
-            if (pX == 0 || pX == 1) {
-                return pX;
+        static T elasticIn(T x, T e) {
+            if (x == 0 || x == 1) {
+                return x;
             }
 
-            if (!pE) {
-                pE = T{0.3};
+            if (!e) {
+                e = T{0.3};
             }
 
-            pX -= 1;
+            x -= 1;
 
-            return -std::pow(2, 10 * pX) * std::sin((pX - (pE / 4)) * (std::numbers::pi_v<T> * 2) / pE);
+            return -std::pow(2, 10 * x) * std::sin((x - (e / 4)) * (std::numbers::pi_v<T> * 2) / e);
         }
-        static T elasticOut(T pX, T pE) {
-            if (pX == 0 || pX == 1) {
-                return pX;
+        static T elasticOut(T x, T e) {
+            if (x == 0 || x == 1) {
+                return x;
             }
 
-            if (!pE) {
-                pE = T{0.3};
+            if (!e) {
+                e = T{0.3};
             }
 
-            return std::pow(2, -10 * pX) * std::sin((pX - (pE / 4)) * (std::numbers::pi_v<T> * 2) / pE) + 1;
+            return std::pow(2, -10 * x) * std::sin((x - (e / 4)) * (std::numbers::pi_v<T> * 2) / e) + 1;
         }
-        static T bounceInOut(T pX, T pE) {
-            if (pX < 0.5f) {
-                return (1 - bounceTime(1 - (pX * 2))) * T{0.5};
+        static T bounceInOut(T x, T e) {
+            if (x < 0.5f) {
+                return (1 - bounceTime(1 - (x * 2))) * T{0.5};
             }
             else {
-                return bounceTime(pX * 2 - 1) * T{0.5} + T{0.5};
+                return bounceTime(x * 2 - 1) * T{0.5} + T{0.5};
             }
         }
-        static T bounceIn(T pX, T pE) {
-            return 1 - bounceTime(1 - pX);
+        static T bounceIn(T x, T e) {
+            return 1 - bounceTime(1 - x);
         }
-        static T bounceOut(T pX, T pE) {
-            return bounceTime(pX);
+        static T bounceOut(T x, T e) {
+            return bounceTime(x);
         }
-        static T exponentialInOut(T pX, T pE) {
-            if(!pX || pX == 1) {
-                return pX;
-            }
-            
-            if (pX < T{0.5}) {
-                return T{0.5} * std::pow(2, 10 * (pX * 2 - 1));
+        static T exponentialInOut(T x, T e) {
+            if(!x || x == 1) {
+                return x;
             }
             
-            return T{0.5} * (-std::pow(2, -10 * (pX * 2 - 1)) + 2);
+            if (x < T{0.5}) {
+                return T{0.5} * std::pow(2, 10 * (x * 2 - 1));
+            }
+            
+            return T{0.5} * (-std::pow(2, -10 * (x * 2 - 1)) + 2);
         }
-        static T exponentialIn(T pX, T pE) {
-            if (!pX || pX == 1) {
-                return pX;
+        static T exponentialIn(T x, T e) {
+            if (!x || x == 1) {
+                return x;
             }
 
             // ????? y cocos this seemse so pointless but ill do it anyway for the sake of parity
-            return std::pow(2, 10 * (pX - 1)) - T{0.001};
+            return std::pow(2, 10 * (x - 1)) - T{0.001};
         }
-        static T exponentialOut(T pX, T pE) {
-            if (!pX || pX == 1) {
-                return pX;
+        static T exponentialOut(T x, T e) {
+            if (!x || x == 1) {
+                return x;
             }
             
-            return -std::pow(2, -10 * pX) + 1;
+            return -std::pow(2, -10 * x) + 1;
         }
-        static T sineInOut(T pX, T pE) {
-            return -T{0.5} * (std::cos(std::numbers::pi_v<T> * pX) - 1);
+        static T sineInOut(T x, T e) {
+            return -T{0.5} * (std::cos(std::numbers::pi_v<T> * x) - 1);
         }
-        static T sineIn(T pX, T pE) {
-            return -1 * std::cos(pX * (std::numbers::pi_v<T> / 2)) + 1;
+        static T sineIn(T x, T e) {
+            return -1 * std::cos(x * (std::numbers::pi_v<T> / 2)) + 1;
         }
-        static T sineOut(T pX, T pE) {
-            return std::sin(pX * (std::numbers::pi_v<T> / 2));
+        static T sineOut(T x, T e) {
+            return std::sin(x * (std::numbers::pi_v<T> / 2));
         }
-        static T backInOut(T pX, T pE) {
+        static T backInOut(T x, T e) {
             constexpr auto overshoot = T{1.70158} * T{1.525};
 
-            pX *= 2;
+            x *= 2;
 
-            if (pX < 1) {
-                return (pX * pX * ((overshoot + 1) * pX - overshoot)) / 2;
+            if (x < 1) {
+                return (x * x * ((overshoot + 1) * x - overshoot)) / 2;
             }
             else {
-                pX -= 2;
-                return (pX * pX * ((overshoot + 1) * pX + overshoot)) / 2 + 1;
+                x -= 2;
+                return (x * x * ((overshoot + 1) * x + overshoot)) / 2 + 1;
             }
         }
-        static T backIn(T pX, T pE) {
+        static T backIn(T x, T e) {
             constexpr auto overshoot = T{1.70158};
 
-            return pX * pX * ((overshoot + 1) * pX - overshoot);
+            return x * x * ((overshoot + 1) * x - overshoot);
         }
-        static T backOut(T pX, T pE) {
+        static T backOut(T x, T e) {
             constexpr auto overshoot = T{1.70158};
 
-            pX -= 1;
+            x -= 1;
 
-            return pX * pX * ((overshoot + 1) * pX + overshoot) + 1;
+            return x * x * ((overshoot + 1) * x + overshoot) + 1;
         }
     };
 
     template<typename T>
-    T ease(EasingType pType, T pX, T pE = T{}) {
-        switch (pType) {
-            case EasingType::None: return nwo5::utils::Easing<T>::linear(pX, pE);
-            case EasingType::EaseIn: return nwo5::utils::Easing<T>::in(pX, pE);
-            case EasingType::EaseOut: return nwo5::utils::Easing<T>::out(pX, pE);
-            case EasingType::EaseInOut: return nwo5::utils::Easing<T>::inOut(pX, pE);
-            case EasingType::ElasticInOut: return nwo5::utils::Easing<T>::elasticInOut(pX, pE);
-            case EasingType::ElasticIn: return nwo5::utils::Easing<T>::elasticIn(pX, pE);
-            case EasingType::ElasticOut: return nwo5::utils::Easing<T>::elasticOut(pX, pE);
-            case EasingType::BounceInOut: return nwo5::utils::Easing<T>::bounceInOut(pX, pE);
-            case EasingType::BounceIn: return nwo5::utils::Easing<T>::bounceIn(pX, pE);
-            case EasingType::BounceOut: return nwo5::utils::Easing<T>::bounceOut(pX, pE);
-            case EasingType::ExponentialInOut: return nwo5::utils::Easing<T>::exponentialInOut(pX, pE);
-            case EasingType::ExponentialIn: return nwo5::utils::Easing<T>::exponentialIn(pX, pE);
-            case EasingType::ExponentialOut: return nwo5::utils::Easing<T>::exponentialOut(pX, pE);
-            case EasingType::SineInOut: return nwo5::utils::Easing<T>::sineInOut(pX, pE);
-            case EasingType::SineIn: return nwo5::utils::Easing<T>::sineIn(pX, pE);
-            case EasingType::SineOut: return nwo5::utils::Easing<T>::sineOut(pX, pE);
-            case EasingType::BackInOut: return nwo5::utils::Easing<T>::backInOut(pX, pE);
-            case EasingType::BackIn: return nwo5::utils::Easing<T>::backIn(pX, pE);
-            case EasingType::BackOut: return nwo5::utils::Easing<T>::backOut(pX, pE);
+    T ease(EasingType type, T x, T e = T{}) {
+        switch (type) {
+            case EasingType::None: return nwo5::utils::Easing<T>::linear(x, e);
+            case EasingType::EaseIn: return nwo5::utils::Easing<T>::in(x, e);
+            case EasingType::EaseOut: return nwo5::utils::Easing<T>::out(x, e);
+            case EasingType::EaseInOut: return nwo5::utils::Easing<T>::inOut(x, e);
+            case EasingType::ElasticInOut: return nwo5::utils::Easing<T>::elasticInOut(x, e);
+            case EasingType::ElasticIn: return nwo5::utils::Easing<T>::elasticIn(x, e);
+            case EasingType::ElasticOut: return nwo5::utils::Easing<T>::elasticOut(x, e);
+            case EasingType::BounceInOut: return nwo5::utils::Easing<T>::bounceInOut(x, e);
+            case EasingType::BounceIn: return nwo5::utils::Easing<T>::bounceIn(x, e);
+            case EasingType::BounceOut: return nwo5::utils::Easing<T>::bounceOut(x, e);
+            case EasingType::ExponentialInOut: return nwo5::utils::Easing<T>::exponentialInOut(x, e);
+            case EasingType::ExponentialIn: return nwo5::utils::Easing<T>::exponentialIn(x, e);
+            case EasingType::ExponentialOut: return nwo5::utils::Easing<T>::exponentialOut(x, e);
+            case EasingType::SineInOut: return nwo5::utils::Easing<T>::sineInOut(x, e);
+            case EasingType::SineIn: return nwo5::utils::Easing<T>::sineIn(x, e);
+            case EasingType::SineOut: return nwo5::utils::Easing<T>::sineOut(x, e);
+            case EasingType::BackInOut: return nwo5::utils::Easing<T>::backInOut(x, e);
+            case EasingType::BackIn: return nwo5::utils::Easing<T>::backIn(x, e);
+            case EasingType::BackOut: return nwo5::utils::Easing<T>::backOut(x, e);
             default: return T{};
         }
     }
 
     template<typename T>
-    EasingFunction<T> getEasingFunction(EasingType pType) {
-        switch (pType) {
+    EasingFunction<T> getEasingFunction(EasingType type) {
+        switch (type) {
             case EasingType::None: return nwo5::utils::Easing<T>::linear;
             case EasingType::EaseIn: return nwo5::utils::Easing<T>::in;
             case EasingType::EaseOut: return nwo5::utils::Easing<T>::out;

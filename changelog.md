@@ -9,6 +9,7 @@
 - saved value cache
 - moved ui::sprite/frame to ui::resources::sprite/frame
 - renamed ui::spr/sprFrame to ui::sprite/frame
+- made ui utils all inline so they can mayb get optimized
 
 **Removed**
 

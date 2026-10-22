@@ -5,273 +5,273 @@
 
 namespace nwo5::editor::object {
     namespace impl {
-        SILLY_API_DLL GameObject* createObject(int pID, cocos2d::CCPoint pPos, bool pUndo = false, bool pSetup = true);
-        SILLY_API_DLL GameObject* createObject(int pID, cocos2d::CCPoint pPos, geode::ZStringView pArgs, bool pUndo = false);
-        SILLY_API_DLL GameObject* createObject(geode::ZStringView pStr, bool pUndo = false);
-        SILLY_API_DLL cocos2d::CCArray* createObjects(geode::ZStringView pStr, bool pUndo = false);
+        SILLY_API_DLL GameObject* createObject(int id, cocos2d::CCPoint pos, bool undo = false, bool setup = true);
+        SILLY_API_DLL GameObject* createObject(int id, cocos2d::CCPoint pos, geode::ZStringView args, bool undo = false);
+        SILLY_API_DLL GameObject* createObject(geode::ZStringView str, bool undo = false);
+        SILLY_API_DLL cocos2d::CCArray* createObjects(geode::ZStringView str, bool undo = false);
     }
     
     /// get obj string
-    SILLY_API_DLL std::string string(GameObject* pObj);
+    SILLY_API_DLL std::string string(GameObject* obj);
     /// get obj string seperated with ;
-    SILLY_API_DLL std::string string(std::span<GameObject* const> pObjs);
+    SILLY_API_DLL std::string string(std::span<GameObject* const> objs);
     /// get obj string seperated with ;
-    SILLY_API_DLL std::string string(cocos2d::CCArray* pObjs);
+    SILLY_API_DLL std::string string(cocos2d::CCArray* objs);
 
     /// create basic object
-    /// @param pID obj id
-    /// @param pSetup do the basic object setup (e.g. 0.5 duration default for triggers)
+    /// @param id obj id
+    /// @param setup do the basic object setup (e.g. 0.5 duration default for triggers)
     /// @returns obj created
     template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
     requires std::derived_from<T, GameObject>
-    GameObject* create(int pID, bool pUndo = false, bool pSetup = true) {
-        return static_cast<T*>(impl::createObject(pID, cocos2d::CCPointZero, pUndo, pSetup));
+    GameObject* create(int id, bool undo = false, bool setup = true) {
+        return static_cast<T*>(impl::createObject(id, cocos2d::CCPointZero, undo, setup));
     }
     /// create basic object
-    /// @param pID obj id
-    /// @param pPos pos to create obj at
-    /// @param pSetup do the basic object setup (e.g. 0.5 duration default for triggers)
+    /// @param id obj id
+    /// @param pos pos to create obj at
+    /// @param setup do the basic object setup (e.g. 0.5 duration default for triggers)
     /// @returns obj created
     template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
     requires std::derived_from<T, GameObject>
-    GameObject* create(int pID, cocos2d::CCPoint pPos, bool pUndo = false, bool pSetup = true) {
-        return static_cast<T*>(impl::createObject(pID, pPos, pUndo, pSetup));
+    GameObject* create(int id, cocos2d::CCPoint pos, bool undo = false, bool setup = true) {
+        return static_cast<T*>(impl::createObject(id, pos, undo, setup));
     }
-    /// pretty much fmt::format("1,{},2,0,3,0,{}", pID, pArgs)
-    /// @param pID obj id
-    /// @param pArgs any additional config for the obj as an obj string, can include leading comma
+    /// pretty much fmt::format("1,{},2,0,3,0,{}", id, args)
+    /// @param id obj id
+    /// @param args any additional config for the obj as an obj string, can include leading comma
     /// @returns obj created
     template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
     requires std::derived_from<T, GameObject>
-    GameObject* create(int pID, geode::ZStringView pArgs, bool pUndo = false) {
-        return static_cast<T*>(impl::createObject(pID, cocos2d::CCPointZero, pArgs, pUndo));
+    GameObject* create(int id, geode::ZStringView args, bool undo = false) {
+        return static_cast<T*>(impl::createObject(id, cocos2d::CCPointZero, args, undo));
     }
-    /// pretty much fmt::format("1,{},2,{},3,{},{}", pID, pPos.x, pPos.y, pArgs)
-    /// @param pID obj id
-    /// @param pPos pos to create obj at
-    /// @param pArgs any additional config for the obj as an obj string, can include leading comma
+    /// pretty much fmt::format("1,{},2,{},3,{},{}", id, pos.x, pos.y, args)
+    /// @param id obj id
+    /// @param pos pos to create obj at
+    /// @param args any additional config for the obj as an obj string, can include leading comma
     /// @note does *not* do basic obj setup (e.g. 0.5 duration default for triggers)
     /// @returns obj created
     template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
     requires std::derived_from<T, GameObject>
-    GameObject* create(int pID, cocos2d::CCPoint pPos, geode::ZStringView pArgs, bool pUndo = false) {
-        return static_cast<T*>(impl::createObject(pID, pPos, pArgs, pUndo));
+    GameObject* create(int id, cocos2d::CCPoint pos, geode::ZStringView args, bool undo = false) {
+        return static_cast<T*>(impl::createObject(id, pos, args, undo));
     }
     /// create object from string
-    /// @param pStr obj string
+    /// @param str obj string
     /// @returns objscreated
     template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
     requires std::derived_from<T, GameObject>
-    GameObject* create(geode::ZStringView pStr, bool pUndo = false) {
-        return static_cast<T*>(impl::createObject(pStr, pUndo));
+    GameObject* create(geode::ZStringView str, bool undo = false) {
+        return static_cast<T*>(impl::createObject(str, undo));
     }
     /// create mutliple objects from string
-    /// @param pStr obj string
+    /// @param str obj string
     /// @returns objs created
     template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
     requires std::derived_from<T, GameObject>
-    geode::cocos::CCArrayExt<T> createMulti(geode::ZStringView pStr, bool pUndo = false) {
-        return impl::createObjects(pStr, pUndo);
+    geode::cocos::CCArrayExt<T> createMulti(geode::ZStringView str, bool undo = false) {
+        return impl::createObjects(str, undo);
     }
 
     /// deletes object
-    SILLY_API_DLL void remove(GameObject* pObj, bool pUndo = false);
+    SILLY_API_DLL void remove(GameObject* obj, bool undo = false);
     /// deletes objects
-    SILLY_API_DLL void remove(std::span<GameObject* const> pObjs, bool pUndo = false);
+    SILLY_API_DLL void remove(std::span<GameObject* const> objs, bool undo = false);
     /// deletes objects
-    SILLY_API_DLL void remove(cocos2d::CCArray* pObjs, bool pUndo = false);
+    SILLY_API_DLL void remove(cocos2d::CCArray* objs, bool undo = false);
 
-    SILLY_API_DLL std::vector<int> groups(GameObject* pObj);
-    SILLY_API_DLL std::vector<int> groups(std::span<GameObject* const> pObjs, bool pSort = false);
-    SILLY_API_DLL std::vector<int> groups(cocos2d::CCArray* pObjs, bool pSort = false);
+    SILLY_API_DLL std::vector<int> groups(GameObject* obj);
+    SILLY_API_DLL std::vector<int> groups(std::span<GameObject* const> objs, bool sort = false);
+    SILLY_API_DLL std::vector<int> groups(cocos2d::CCArray* objs, bool sort = false);
 
     /// check if an object has any groups
     /// @returns true if object has any groups, false otherwise
-    SILLY_API_DLL bool hasGroups(GameObject* pObj);
+    SILLY_API_DLL bool hasGroups(GameObject* obj);
     /// check if an object has a specific group
-    /// @param pGroup
+    /// @param group
     /// @returns true if object has group or group is 0
-    SILLY_API_DLL bool hasGroup(GameObject* pObj, int pGroup);
+    SILLY_API_DLL bool hasGroup(GameObject* obj, int group);
 
-    SILLY_API_DLL bool sharesGroup(std::span<GameObject* const> pObjs, int pGroup);
-    SILLY_API_DLL bool sharesGroup(cocos2d::CCArray* pObjs, int pGroup);
-    SILLY_API_DLL std::vector<int> sharedGroups(std::span<GameObject* const> pObjs, bool pSort = false);
-    SILLY_API_DLL std::vector<int> sharedGroups(cocos2d::CCArray* pObjs, bool pSort = false);
+    SILLY_API_DLL bool sharesGroup(std::span<GameObject* const> objs, int group);
+    SILLY_API_DLL bool sharesGroup(cocos2d::CCArray* objs, int group);
+    SILLY_API_DLL std::vector<int> sharedGroups(std::span<GameObject* const> objs, bool sort = false);
+    SILLY_API_DLL std::vector<int> sharedGroups(cocos2d::CCArray* objs, bool sort = false);
 
     /// add group to object
-    /// @param pObj target
-    /// @param pGroup group
-    SILLY_API_DLL void addGroup(GameObject* pObj, int pGroup);
+    /// @param obj target
+    /// @param group group
+    SILLY_API_DLL void addGroup(GameObject* obj, int group);
     /// add group to objects
-    /// @param pObjs targets
-    /// @param pGroup group
-    SILLY_API_DLL void addGroup(std::span<GameObject* const> pObjs, int pGroup);
+    /// @param objs targets
+    /// @param group group
+    SILLY_API_DLL void addGroup(std::span<GameObject* const> objs, int group);
     /// add group to objects
-    /// @param pObjs targets
-    /// @param pGroup group
-    SILLY_API_DLL void addGroup(cocos2d::CCArray* pObjs, int pGroup);
+    /// @param objs targets
+    /// @param group group
+    SILLY_API_DLL void addGroup(cocos2d::CCArray* objs, int group);
     /// remove group from object
-    /// @param pObj targets
-    /// @param pGroup group
-    SILLY_API_DLL void removeGroup(GameObject* pObj, int pGroup);
+    /// @param obj targets
+    /// @param group group
+    SILLY_API_DLL void removeGroup(GameObject* obj, int group);
     /// remove group from objects
-    /// @param pObjs targets
-    /// @param pGroup group
-    SILLY_API_DLL void removeGroup(std::span<GameObject* const> pObjs, int pGroup);
+    /// @param objs targets
+    /// @param group group
+    SILLY_API_DLL void removeGroup(std::span<GameObject* const> objs, int group);
     /// remove group from objects
-    /// @param pObjs targets
-    /// @param pGroup group
-    SILLY_API_DLL void removeGroup(cocos2d::CCArray* pObjs, int pGroup);
+    /// @param objs targets
+    /// @param group group
+    SILLY_API_DLL void removeGroup(cocos2d::CCArray* objs, int group);
 
     /// check if a group has a group parent
     /// @returns true if group has a parent, false otherwise
-    SILLY_API_DLL bool hasParent(int pGroup);
+    SILLY_API_DLL bool hasParent(int group);
     /// checks if objects contains the group parent for group
     /// @returns true if objects has groups group parent, false otherwise
-    SILLY_API_DLL bool hasParent(std::span<GameObject* const> pObjs, int pGroup);
+    SILLY_API_DLL bool hasParent(std::span<GameObject* const> objs, int group);
     /// checks if objects contains the group parent for group
     /// @returns true if objects has groups group parent, false otherwise
-    SILLY_API_DLL bool hasParent(cocos2d::CCArray* pObjs, int pGroup);
+    SILLY_API_DLL bool hasParent(cocos2d::CCArray* objs, int group);
 
-    SILLY_API_DLL std::optional<int> baseColor(GameObject* pObj);
+    SILLY_API_DLL std::optional<int> baseColor(GameObject* obj);
     /// set objects color channel or does nothing if object doesnt support base color
-    /// @param pColor color channel
+    /// @param color color channel
     /// @note pretty much js a decomp of CustomizeObjectLayer::updateSelected
-    SILLY_API_DLL void setBaseColor(GameObject* pObj, int pColor);
-    SILLY_API_DLL std::optional<int> detailColor(GameObject* pObj);
+    SILLY_API_DLL void setBaseColor(GameObject* obj, int color);
+    SILLY_API_DLL std::optional<int> detailColor(GameObject* obj);
     /// set objects color channel or does nothing if object doesnt support detail color
-    /// @param pColor color channel
+    /// @param color color channel
     /// @note pretty much js a decomp of CustomizeObjectLayer::updateSelected
-    SILLY_API_DLL void setDetailColor(GameObject* pObj, int pColor);
-    SILLY_API_DLL bool hasColor(GameObject* pObj, int pColor, bool pPrimary);
+    SILLY_API_DLL void setDetailColor(GameObject* obj, int color);
+    SILLY_API_DLL bool hasColor(GameObject* obj, int color, bool primary);
     
     /// get obj id
     /// @returns obj id
-    SILLY_API_DLL int id(GameObject* pObj);
+    SILLY_API_DLL int id(GameObject* obj);
     /// get obj id(s)
-    /// @param pSort sort the output vector
+    /// @param sort sort the output vector
     /// @returns obj ids
-    SILLY_API_DLL std::vector<int> ids(std::span<GameObject* const> pObjs, bool pSort = false);
+    SILLY_API_DLL std::vector<int> ids(std::span<GameObject* const> objs, bool sort = false);
     /// get obj id(s)
-    /// @param pSort sort the output vector
+    /// @param sort sort the output vector
     /// @returns obj ids
-    SILLY_API_DLL std::vector<int> ids(cocos2d::CCArray* pObjs, bool pSort = false);
+    SILLY_API_DLL std::vector<int> ids(cocos2d::CCArray* objs, bool sort = false);
 
     /// get object editor layer
     /// @returns editor layer
-    SILLY_API_DLL int layer(GameObject* pObj);
+    SILLY_API_DLL int layer(GameObject* obj);
     /// set object editor layer
-    SILLY_API_DLL void setLayer(GameObject* pObj, int pLayer);
+    SILLY_API_DLL void setLayer(GameObject* obj, int layer);
     /// set objects editor layer
-    SILLY_API_DLL void setLayer(std::span<GameObject* const> pObjs, int pLayer);
+    SILLY_API_DLL void setLayer(std::span<GameObject* const> objs, int layer);
     /// set objects editor layer
-    SILLY_API_DLL void setLayer(cocos2d::CCArray* pObjs, int pLayer);
+    SILLY_API_DLL void setLayer(cocos2d::CCArray* objs, int layer);
     /// get object secondary editor layer
     /// @returns secondary editor layer
-    SILLY_API_DLL int layer2(GameObject* pObj);
+    SILLY_API_DLL int layer2(GameObject* obj);
     /// set object secondary editor layer
-    SILLY_API_DLL void setLayer2(GameObject* pObj, int pLayer);
+    SILLY_API_DLL void setLayer2(GameObject* obj, int layer);
     /// set objects secondary editor layer
-    SILLY_API_DLL void setLayer2(std::span<GameObject* const> pObjs, int pLayer);
+    SILLY_API_DLL void setLayer2(std::span<GameObject* const> objs, int layer);
     /// set objects secondary editor layer
-    SILLY_API_DLL void setLayer2(cocos2d::CCArray* pObjs, int pLayer);
+    SILLY_API_DLL void setLayer2(cocos2d::CCArray* objs, int layer);
 
-    SILLY_API_DLL bool canSelectLayer(GameObject* pObj, bool pIgnoreLocked = false);
+    SILLY_API_DLL bool canSelectLayer(GameObject* obj, bool ignoreLocked = false);
 
     /// get object z order
-    SILLY_API_DLL int zOrder(GameObject* pObj);
+    SILLY_API_DLL int zOrder(GameObject* obj);
     /// set object z order
-    SILLY_API_DLL void setZOrder(GameObject* pObj, int pOrder);
+    SILLY_API_DLL void setZOrder(GameObject* obj, int order);
     /// set objects z order
-    SILLY_API_DLL void setZOrder(std::span<GameObject* const> pObjs, int pOrder);
+    SILLY_API_DLL void setZOrder(std::span<GameObject* const> objs, int order);
     /// set objects z order
-    SILLY_API_DLL void setZOrder(cocos2d::CCArray* pObjs, int pOrder);
+    SILLY_API_DLL void setZOrder(cocos2d::CCArray* objs, int order);
 
     /// get bounds of objects
-    /// @param pContentSize use content size of object instead of grid size
+    /// @param contentSize use content size of object instead of grid size
     /// @returns bounds or CCRectZero, origin is the center of the bottom left, size is distance to the top right
-    SILLY_API_DLL cocos2d::CCRect bounds(GameObject* pObj, bool pContentSize = false);
+    SILLY_API_DLL cocos2d::CCRect bounds(GameObject* obj, bool contentSize = false);
     /// get bounds of objects
-    /// @param pAddSize adds scaled content size of the objects to the position checked
+    /// @param addSize adds scaled content size of the objects to the position checked
     /// @returns bounds or CCRectZero, origin is the center of the bottom left most object, size is distance to the top right most objects center
-    SILLY_API_DLL cocos2d::CCRect bounds(std::span<GameObject* const> pObjs, bool pAddSize = false);
+    SILLY_API_DLL cocos2d::CCRect bounds(std::span<GameObject* const> objs, bool addSize = false);
     /// get bounds of objects
-    /// @param pAddSize adds scaled content size of the objects to the position checked
+    /// @param addSize adds scaled content size of the objects to the position checked
     /// @returns bounds or CCRectZero, origin is the center of the bottom left most object, size is distance to the top right most objects center
-    SILLY_API_DLL cocos2d::CCRect bounds(cocos2d::CCArray* pObjs, bool pAddSize = false);
+    SILLY_API_DLL cocos2d::CCRect bounds(cocos2d::CCArray* objs, bool addSize = false);
     /// get center of objects
-    /// @param pObjs objects
-    /// @param pIgnoreParent use robtops function if false lol
+    /// @param objs objects
+    /// @param ignoreParent use robtops function if false lol
     /// @returns center of bounds or parent group
-    SILLY_API_DLL cocos2d::CCPoint center(std::span<GameObject* const> pObjs, bool pIgnoreParent = true);
+    SILLY_API_DLL cocos2d::CCPoint center(std::span<GameObject* const> objs, bool ignoreParent = true);
     /// get center of objects
-    /// @param pObjs objects
-    /// @param pIgnoreParent use robtops function if false lol
+    /// @param objs objects
+    /// @param ignoreParent use robtops function if false lol
     /// @returns center of bounds
-    SILLY_API_DLL cocos2d::CCPoint center(cocos2d::CCArray* pObjs, bool pIgnoreParent = true);
+    SILLY_API_DLL cocos2d::CCPoint center(cocos2d::CCArray* objs, bool ignoreParent = true);
 
     /// cluster objects in place
-    /// @param pOut output vector
-    /// @param pObjs objects
-    /// @param pClusterSize cluster size
-    SILLY_API_DLL void cluster(std::vector<std::vector<GameObject*>>& pOut, std::span<GameObject* const> pObjs, float pClusterSize);
+    /// @param out output vector
+    /// @param objs objects
+    /// @param clusterSize cluster size
+    SILLY_API_DLL void cluster(std::vector<std::vector<GameObject*>>& out, std::span<GameObject* const> objs, float clusterSize);
     /// cluster objects in place
-    /// @param pOut output vector
-    /// @param pObjs objects
-    /// @param pClusterSize cluster size
-    SILLY_API_DLL void cluster(std::vector<std::vector<GameObject*>>& pOut, cocos2d::CCArray* pObjs, float pClusterSize);
+    /// @param out output vector
+    /// @param objs objects
+    /// @param clusterSize cluster size
+    SILLY_API_DLL void cluster(std::vector<std::vector<GameObject*>>& out, cocos2d::CCArray* objs, float clusterSize);
     /// cluster objects not in place (why)
-    /// @param pObjs objects
-    /// @param pClusterSize cluster size
+    /// @param objs objects
+    /// @param clusterSize cluster size
     /// @returns object clusters
-    SILLY_API_DLL std::vector<std::vector<GameObject*>> cluster(std::span<GameObject* const> pObjs, float pClusterSize);
+    SILLY_API_DLL std::vector<std::vector<GameObject*>> cluster(std::span<GameObject* const> objs, float clusterSize);
     /// cluster objects not in place (why)
-    /// @param pObjs objects
-    /// @param pClusterSize cluster size
+    /// @param objs objects
+    /// @param clusterSize cluster size
     /// @returns object clusters
-    SILLY_API_DLL std::vector<std::vector<GameObject*>> cluster(cocos2d::CCArray* pObjs, float pClusterSize);
+    SILLY_API_DLL std::vector<std::vector<GameObject*>> cluster(cocos2d::CCArray* objs, float clusterSize);
 
     /// get (grid)size of object
-    SILLY_API_DLL float size(GameObject* pObj);
+    SILLY_API_DLL float size(GameObject* obj);
     /// get (grid)size of object id
-    SILLY_API_DLL float size(int pID);
+    SILLY_API_DLL float size(int id);
     
-    SILLY_API_DLL void move(GameObject* pObj, cocos2d::CCPoint pTo, bool pUndo = false);
-    SILLY_API_DLL void move(std::span<GameObject* const> pObjs, cocos2d::CCPoint pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER);
-    SILLY_API_DLL void move(cocos2d::CCArray* pObjs, cocos2d::CCPoint pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER);
-    SILLY_API_DLL void moveBy(GameObject* pObj, cocos2d::CCPoint pOff, bool pUndo = false);
-    SILLY_API_DLL void moveBy(std::span<GameObject* const> pObjs, cocos2d::CCPoint pOff, bool pUndo = false);
-    SILLY_API_DLL void moveBy(cocos2d::CCArray* pObjs, cocos2d::CCPoint pOff, bool pUndo = false);
+    SILLY_API_DLL void move(GameObject* obj, cocos2d::CCPoint to, bool undo = false);
+    SILLY_API_DLL void move(std::span<GameObject* const> objs, cocos2d::CCPoint to, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt);
+    SILLY_API_DLL void move(cocos2d::CCArray* objs, cocos2d::CCPoint to, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt);
+    SILLY_API_DLL void moveBy(GameObject* obj, cocos2d::CCPoint off, bool undo = false);
+    SILLY_API_DLL void moveBy(std::span<GameObject* const> objs, cocos2d::CCPoint off, bool undo = false);
+    SILLY_API_DLL void moveBy(cocos2d::CCArray* objs, cocos2d::CCPoint off, bool undo = false);
 
-    SILLY_API_DLL void rotate(GameObject* pObj, float pTo, GameObject* pBase, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER, bool pMove = true);
-    SILLY_API_DLL void rotate(std::span<GameObject* const> pObjs, float pTo, GameObject* pBase, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER, bool pMove = true);
-    SILLY_API_DLL void rotate(cocos2d::CCArray* pObjs, float pTo, GameObject* pBase, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER, bool pMove = true);
-    SILLY_API_DLL void rotateBy(GameObject* pObj, float pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER, bool pMove = true);
-    SILLY_API_DLL void rotateBy(std::span<GameObject* const> pObjs, float pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER, bool pMove = true);
-    SILLY_API_DLL void rotateBy(cocos2d::CCArray* pObjs, float pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER, bool pMove = true);
+    SILLY_API_DLL void rotate(GameObject* obj, float to, GameObject* base, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt, bool move = true);
+    SILLY_API_DLL void rotate(std::span<GameObject* const> objs, float to, GameObject* base, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt, bool move = true);
+    SILLY_API_DLL void rotate(cocos2d::CCArray* objs, float to, GameObject* base, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt, bool move = true);
+    SILLY_API_DLL void rotateBy(GameObject* obj, float to, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt, bool move = true);
+    SILLY_API_DLL void rotateBy(std::span<GameObject* const> objs, float to, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt, bool move = true);
+    SILLY_API_DLL void rotateBy(cocos2d::CCArray* objs, float to, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt, bool move = true);
 
-    SILLY_API_DLL void scale(GameObject* pObj, float pX, float pY, bool pUndo = false);
-    SILLY_API_DLL void scale(GameObject* pObj, float pTo, bool pUndo = false);
-    SILLY_API_DLL void scaleX(GameObject* pObj, float pTo, bool pUndo = false);
-    SILLY_API_DLL void scaleY(GameObject* pObj, float pTo, bool pUndo = false);
-    SILLY_API_DLL void scale(std::span<GameObject* const> pObjs, float pX, float pY, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER, bool pMove = true);
-    SILLY_API_DLL void scale(std::span<GameObject* const> pObjs, float pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER, bool pMove = true);
-    SILLY_API_DLL void scaleX(std::span<GameObject* const> pObjs, float pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER, bool pMove = true);
-    SILLY_API_DLL void scaleY(std::span<GameObject* const> pObjs, float pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER, bool pMove = true);
-    SILLY_API_DLL void scale(cocos2d::CCArray* pObjs, float pX, float pY, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER, bool pMove = true);
-    SILLY_API_DLL void scale(cocos2d::CCArray* pObjs, float pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER, bool pMove = true);
-    SILLY_API_DLL void scaleX(cocos2d::CCArray* pObjs, float pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER, bool pMove = true);
-    SILLY_API_DLL void scaleY(cocos2d::CCArray* pObjs, float pTo, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER, bool pMove = true);
-    SILLY_API_DLL void scaleBy(GameObject* pObj, float pX, float pY, bool pUndo = false);
-    SILLY_API_DLL void scaleBy(GameObject* pObj, float pMod, bool pUndo = false);
-    SILLY_API_DLL void scaleXBy(GameObject* pObj, float pMod, bool pUndo = false);
-    SILLY_API_DLL void scaleYBy(GameObject* pObj, float pMod, bool pUndo = false);
-    SILLY_API_DLL void scaleBy(std::span<GameObject* const> pObjs, float pX, float pY, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER, bool pMove = true);
-    SILLY_API_DLL void scaleBy(std::span<GameObject* const> pObjs, float pMod, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER, bool pMove = true);
-    SILLY_API_DLL void scaleXBy(std::span<GameObject* const> pObjs, float pMod, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER, bool pMove = true);
-    SILLY_API_DLL void scaleYBy(std::span<GameObject* const> pObjs, float pMod, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER, bool pMove = true);
-    SILLY_API_DLL void scaleBy(cocos2d::CCArray* pObjs, float pX, float pY, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER, bool pMove = true);
-    SILLY_API_DLL void scaleBy(cocos2d::CCArray* pObjs, float pMod, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER, bool pMove = true);
-    SILLY_API_DLL void scaleXBy(cocos2d::CCArray* pObjs, float pMod, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER, bool pMove = true);
-    SILLY_API_DLL void scaleYBy(cocos2d::CCArray* pObjs, float pMod, bool pUndo = false, cocos2d::CCPoint pCenter = editor::constants::AUTO_CENTER, bool pMove = true);
+    SILLY_API_DLL void scale(GameObject* obj, float x, float y, bool undo = false);
+    SILLY_API_DLL void scale(GameObject* obj, float to, bool undo = false);
+    SILLY_API_DLL void scaleX(GameObject* obj, float to, bool undo = false);
+    SILLY_API_DLL void scaleY(GameObject* obj, float to, bool undo = false);
+    SILLY_API_DLL void scale(std::span<GameObject* const> objs, float x, float y, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt, bool move = true);
+    SILLY_API_DLL void scale(std::span<GameObject* const> objs, float to, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt, bool move = true);
+    SILLY_API_DLL void scaleX(std::span<GameObject* const> objs, float to, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt, bool move = true);
+    SILLY_API_DLL void scaleY(std::span<GameObject* const> objs, float to, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt, bool move = true);
+    SILLY_API_DLL void scale(cocos2d::CCArray* objs, float x, float y, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt, bool move = true);
+    SILLY_API_DLL void scale(cocos2d::CCArray* objs, float to, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt, bool move = true);
+    SILLY_API_DLL void scaleX(cocos2d::CCArray* objs, float to, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt, bool move = true);
+    SILLY_API_DLL void scaleY(cocos2d::CCArray* objs, float to, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt, bool move = true);
+    SILLY_API_DLL void scaleBy(GameObject* obj, float x, float y, bool undo = false);
+    SILLY_API_DLL void scaleBy(GameObject* obj, float mod, bool undo = false);
+    SILLY_API_DLL void scaleXBy(GameObject* obj, float mod, bool undo = false);
+    SILLY_API_DLL void scaleYBy(GameObject* obj, float mod, bool undo = false);
+    SILLY_API_DLL void scaleBy(std::span<GameObject* const> objs, float x, float y, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt, bool move = true);
+    SILLY_API_DLL void scaleBy(std::span<GameObject* const> objs, float mod, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt, bool move = true);
+    SILLY_API_DLL void scaleXBy(std::span<GameObject* const> objs, float mod, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt, bool move = true);
+    SILLY_API_DLL void scaleYBy(std::span<GameObject* const> objs, float mod, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt, bool move = true);
+    SILLY_API_DLL void scaleBy(cocos2d::CCArray* objs, float x, float y, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt, bool move = true);
+    SILLY_API_DLL void scaleBy(cocos2d::CCArray* objs, float mod, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt, bool move = true);
+    SILLY_API_DLL void scaleXBy(cocos2d::CCArray* objs, float mod, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt, bool move = true);
+    SILLY_API_DLL void scaleYBy(cocos2d::CCArray* objs, float mod, bool undo = false, std::optional<cocos2d::CCPoint> center = std::nullopt, bool move = true);
 }

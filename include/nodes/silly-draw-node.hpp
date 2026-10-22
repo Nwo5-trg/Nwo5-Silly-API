@@ -4,11 +4,11 @@
 #include <Geode/cocos/draw_nodes/CCDrawNode.h>
 
 namespace nwo5::nodes {
-    constexpr cocos2d::ccVertex2F toVert(cocos2d::CCPoint pPoint) {
-        return {pPoint.x, pPoint.y};
+    constexpr cocos2d::ccVertex2F toVert(cocos2d::CCPoint point) {
+        return {point.x, point.y};
     }
-    constexpr cocos2d::ccVertex2F toVert(float pX, float pY) {
-        return {pX, pY};
+    constexpr cocos2d::ccVertex2F toVert(float x, float y) {
+        return {x, y};
     }
 
     namespace impl {
@@ -35,76 +35,76 @@ namespace nwo5::nodes {
         virtual void draw();
         
     public:
-        /// draw a line from pStart to pEnd
-        bool drawSegment(const cocos2d::CCPoint& pStart, const cocos2d::CCPoint& pEnd, float pThickness, const cocos2d::ccColor4F& pColor);
-        /// draw a *straight* line from pStart to pEnd
+        /// draw a line from start to end
+        bool drawSegment(const cocos2d::CCPoint& start, const cocos2d::CCPoint& end, float thickness, const cocos2d::ccColor4F& color);
+        /// draw a *straight* line from start to end
         /// this function is "faster" than drawSegment
         /// but should only be used if u arent connecting segments to eachother
         /// because itll look bad and leave a gap
-        bool drawLine(const cocos2d::CCPoint& pStart, const cocos2d::CCPoint& pEnd, float pThickness, const cocos2d::ccColor4F& pColor);
-        /// draw a dashed line from pStart to pEnd
-        /// @param pSegmentLength how long a dashed dot + empty space segment is
-        /// @param pSegmentDotSize percentage of segmentLength the dot is (dashDotLength = pSegmentLength * pSegmentDotSize)
-        bool drawDashedLine(const cocos2d::CCPoint& pStart, const cocos2d::CCPoint& pEnd, float pThickness, const cocos2d::ccColor4F& pColor, float pSegmentLength, float pSegmentDotSize = 0.5f);
-        /// draw a line from pPoints[0] to pPoints[1], then pPoints[1] to pPoints[2], etc...
-        /// @param pPoints ptr to a c array of ccpoints
-        /// @param pSize amount of points in c array
-        /// @note does nothing if pSegments < 2
-        bool drawSegments(const cocos2d::CCPoint* pPoints, unsigned int pSize, float pThickness, const cocos2d::ccColor4F& pColor);
-        /// draw a line from pPoints[0] to pPoints[1], then pPoints[1] to pPoints[2], etc...
+        bool drawLine(const cocos2d::CCPoint& start, const cocos2d::CCPoint& end, float thickness, const cocos2d::ccColor4F& color);
+        /// draw a dashed line from start to end
+        /// @param segmentLength how long a dashed dot + empty space segment is
+        /// @param segmentDotSize percentage of segmentLength the dot is (dashDotLength = segmentLength * segmentDotSize)
+        bool drawDashedLine(const cocos2d::CCPoint& start, const cocos2d::CCPoint& end, float thickness, const cocos2d::ccColor4F& color, float segmentLength, float segmentDotSize = 0.5f);
+        /// draw a line from points[0] to points[1], then points[1] to points[2], etc...
+        /// @param points ptr to a c array of ccpoints
+        /// @param size amount of points in c array
         /// @note does nothing if segments < 2
-        bool drawSegments(std::span<const cocos2d::CCPoint> pPoints, float pThickness, const cocos2d::ccColor4F& pColor);
+        bool drawSegments(const cocos2d::CCPoint* points, unsigned int size, float thickness, const cocos2d::ccColor4F& color);
+        /// draw a line from points[0] to points[1], then points[1] to points[2], etc...
+        /// @note does nothing if segments < 2
+        bool drawSegments(std::span<const cocos2d::CCPoint> points, float thickness, const cocos2d::ccColor4F& color);
 
-        /// draw a circle at pCenter with radius pRadius
-        /// @param pSegments how many triangle "slices" the circle is made up of
+        /// draw a circle at center with radius radius
+        /// @param segments how many triangle "slices" the circle is made up of
         /// @note does nothing if segments < 3
-        bool drawCircle(const cocos2d::CCPoint& pCenter, float pRadius, const cocos2d::ccColor4F& pColor, unsigned int pSegments, float pOutlineThickness = 0.0f, const cocos2d::ccColor4F& pOutlineColor = impl::CLEAR_COLOR);
-        /// draw an ellipse at pCenter with radius pRadius
-        /// @param pSegments how many triangle "slices" the circle is made up of
+        bool drawCircle(const cocos2d::CCPoint& center, float radius, const cocos2d::ccColor4F& color, unsigned int segments, float outlineThickness = 0.0f, const cocos2d::ccColor4F& outlineColor = impl::CLEAR_COLOR);
+        /// draw an ellipse at center with radius radius
+        /// @param segments how many triangle "slices" the circle is made up of
         /// @note does nothing if segments < 3
-        bool drawEllipse(const cocos2d::CCPoint& pCenter, cocos2d::CCSize pRadius, const cocos2d::ccColor4F& pColor, unsigned int pSegments, float pOutlineThickness = 0.0f, const cocos2d::ccColor4F& pOutlineColor = impl::CLEAR_COLOR);
+        bool drawEllipse(const cocos2d::CCPoint& center, cocos2d::CCSize radius, const cocos2d::ccColor4F& color, unsigned int segments, float outlineThickness = 0.0f, const cocos2d::ccColor4F& outlineColor = impl::CLEAR_COLOR);
 
-        /// draw a polygon with points pPoints
-        /// @param pPoints ptr to a c array of ccpoints
-        /// @param pSize amount of points in c array
+        /// draw a polygon with points points
+        /// @param points ptr to a c array of ccpoints
+        /// @param size amount of points in c array
         /// @note does nothing if segments
         /// @note border alignment not impl
         /// @note calls ccdrawnode::drawPolygon internally
-        bool drawPolygon(const cocos2d::CCPoint* pPoints, unsigned int pSize, const cocos2d::ccColor4F& pColor, float pOutlineThickness = 0.0f, const cocos2d::ccColor4F& pOutlineColor = impl::CLEAR_COLOR, cocos2d::BorderAlignment = {});
-        /// draw a polygon with points pPoints
+        bool drawPolygon(const cocos2d::CCPoint* points, unsigned int size, const cocos2d::ccColor4F& color, float outlineThickness = 0.0f, const cocos2d::ccColor4F& outlineColor = impl::CLEAR_COLOR, cocos2d::BorderAlignment = {});
+        /// draw a polygon with points points
         /// @note does nothing if segments
         /// @note border alignment not impl
         /// @note calls ccdrawnode::drawPolygon internally
-        bool drawPolygon(std::span<const cocos2d::CCPoint> pPoints, const cocos2d::ccColor4F& pColor, float pOutlineThickness = 0.0f, const cocos2d::ccColor4F& pOutlineColor = impl::CLEAR_COLOR, cocos2d::BorderAlignment = {});
+        bool drawPolygon(std::span<const cocos2d::CCPoint> points, const cocos2d::ccColor4F& color, float outlineThickness = 0.0f, const cocos2d::ccColor4F& outlineColor = impl::CLEAR_COLOR, cocos2d::BorderAlignment = {});
 
-        /// draw a square with radius pRadius
-        bool drawDot(const cocos2d::CCPoint& pCenter, float pRadius, const cocos2d::ccColor4F& pColor);
+        /// draw a square with radius radius
+        bool drawDot(const cocos2d::CCPoint& center, float radius, const cocos2d::ccColor4F& color);
 
-        /// draw a rect from pRect
+        /// draw a rect from rect
         /// @note border alignment not impl
-        bool drawRect(const cocos2d::CCRect& pRect, const cocos2d::ccColor4F& pColor, float pOutlineThickness = 0.0f, const cocos2d::ccColor4F& = impl::CLEAR_COLOR, cocos2d::BorderAlignment = {});
-        /// draw a rect from pStart to pEnd
+        bool drawRect(const cocos2d::CCRect& rect, const cocos2d::ccColor4F& color, float outlineThickness = 0.0f, const cocos2d::ccColor4F& = impl::CLEAR_COLOR, cocos2d::BorderAlignment = {});
+        /// draw a rect from start to end
         /// @note border alignment not impl
-        bool drawRect(const cocos2d::CCPoint& pStart, const cocos2d::CCPoint& pEnd, const cocos2d::ccColor4F& pColor, float pOutlineThickness = 0.0f, const cocos2d::ccColor4F& pOutlineColor = impl::CLEAR_COLOR, cocos2d::BorderAlignment = {});
+        bool drawRect(const cocos2d::CCPoint& start, const cocos2d::CCPoint& end, const cocos2d::ccColor4F& color, float outlineThickness = 0.0f, const cocos2d::ccColor4F& outlineColor = impl::CLEAR_COLOR, cocos2d::BorderAlignment = {});
 
         /// set tint color for everything drawn
-        void setTint(const cocos2d::ccColor4F& pColor);
+        void setTint(const cocos2d::ccColor4F& color);
         const cocos2d::ccColor4F& getTint() const;
 
         /// set if tint color is used
-        void setUseTint(bool pTint);
+        void setUseTint(bool tint);
         bool getUseTint() const;
 
         /// std::vector::reserve
-        void reserve(unsigned int pSize);
-        /// std::vector::reserve(m_nBufferCount + pCount)
-        void reserveCount(unsigned int pCount);
+        void reserve(unsigned int size);
+        /// std::vector::reserve(m_nBufferCount + count)
+        void reserveCount(unsigned int count);
         /// reserves space for triangles and updates buffercount/dirty accordingly
         /// @returns a ptr at the end of the buffer u can write ur triangles to
-        Triangle* writeTriangles(unsigned int pCount);
+        Triangle* writeTriangles(unsigned int count);
         /// reserves space for vertices and updates buffercount/dirty accordingly
         /// @returns a ptr at the end of the buffer u can write ur vertices to
-        Vertex* writeVertices(unsigned int pCount);
+        Vertex* writeVertices(unsigned int count);
 
         static SillyDrawNode* create();
     };

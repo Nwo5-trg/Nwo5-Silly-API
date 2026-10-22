@@ -3,64 +3,64 @@
 using namespace geode::prelude;
 
 namespace nwo5::utils {
-    size_t stringCount(std::string_view pString, std::string_view pSubstr) {
+    size_t stringCount(std::string_view string, std::string_view substr) {
         size_t count = 0;
 
-        for (auto i = pString.find(pSubstr); i != std::string::npos; i = pString.find(pSubstr, ++i)) {
+        for (auto i = string.find(substr); i != std::string::npos; i = string.find(substr, ++i)) {
             count++;
         }
 
         return count;
     }
-    size_t stringCountIndependant(std::string_view pString, std::string_view pSubstr) {
+    size_t stringCountIndependant(std::string_view string, std::string_view substr) {
         size_t count = 0;
-        const auto size = pSubstr.size();
+        const auto size = substr.size();
 
-        for (auto i = pString.find(pSubstr); i != std::string::npos; i = pString.find(pSubstr, i + size)) {
+        for (auto i = string.find(substr); i != std::string::npos; i = string.find(substr, i + size)) {
             count++;
         }
 
         return count;
     }
-    size_t stringCount(std::string_view pString, char pSubstr) {
-        return string::count(pString, pSubstr);
+    size_t stringCount(std::string_view string, char substr) {
+        return string::count(string, substr);
     }
 
-    bool isToggled(CCObject* pToggler) {
-        return !static_cast<CCMenuItemToggler*>(pToggler)->m_toggled;
+    bool isToggled(CCObject* toggler) {
+        return !static_cast<CCMenuItemToggler*>(toggler)->m_toggled;
     }
-    void toggleWithCallback(CCObject* pToggler, bool pOn) {
-        auto toggler = static_cast<CCMenuItemToggler*>(pToggler);
+    void toggleWithCallback(CCObject* toggler, bool on) {
+        auto node = static_cast<CCMenuItemToggler*>(toggler);
         
-        toggler->m_toggled = !pOn;
-        toggler->toggleWithCallback(pOn);
+        node->m_toggled = !on;
+        node->toggleWithCallback(on);
     }
 
-    float getFontScaling(int pFont) {
-        if (pFont == 0) {
+    float getFontScaling(int font) {
+        if (font == 0) {
             return 1.0f;
         }
-        else if (pFont <= 59) {
+        else if (font <= 59) {
             return 0.75f;
         }
-        else if (pFont == 60) {
+        else if (font == 60) {
             return 1.75f;
         }
         else {
             return 1.0f;
         }
     }
-    std::string getFontString(int pFont) {
-        if (pFont == 0) {
+    std::string getFontString(int font) {
+        if (font == 0) {
             return "bigFont.fnt";
         }
-        else if (pFont <= 59) {
-            return fmt::format("gjFont{}{}.fnt", pFont < 10 ? "0" : "", pFont);
+        else if (font <= 59) {
+            return fmt::format("gjFont{}{}.fnt", font < 10 ? "0" : "", font);
         } 
-        else if (pFont == 60) {
+        else if (font == 60) {
             return "chatFont.fnt";
         } 
-        else if (pFont == 61) {
+        else if (font == 61) {
             return "goldFont.fnt";
         }
         else {
@@ -68,22 +68,22 @@ namespace nwo5::utils {
         }
     }
 
-    CCTag* CCTag::create(int pTag) {
+    CCTag* CCTag::create(int tag) {
         auto ret = new CCTag;
 
-        ret->setTag(pTag);
+        ret->setTag(tag);
 
         ret->autorelease();
 
         return ret;
     }
 
-    CCRect rectOverlap(const CCRect& pA, const CCRect& pB) {
-        const CCPoint a{std::max(pA.getMinX(), pB.getMinX()), std::max(pA.getMinY(), pB.getMinY())};
-        const CCPoint b{std::min(pA.getMaxX(), pB.getMaxX()), std::min(pA.getMaxY(), pB.getMaxY())};
+    CCRect rectOverlap(const CCRect& a, const CCRect& b) {
+        const CCPoint pointA{std::max(a.getMinX(), b.getMinX()), std::max(a.getMinY(), b.getMinY())};
+        const CCPoint pointB{std::min(a.getMaxX(), b.getMaxX()), std::min(a.getMaxY(), b.getMaxY())};
 
-        if (b.x > a.x && b.y > a.y) {
-            return CCRect{a, b - a};
+        if (pointB.x > pointA.x && pointB.y > pointA.y) {
+            return CCRect{pointA, pointB - pointA};
         }
 
         return CCRectZero;

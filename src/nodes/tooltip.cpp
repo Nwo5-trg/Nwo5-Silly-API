@@ -5,8 +5,8 @@ using namespace nwo5::ui::prelude;
 using namespace geode::prelude;
 
 namespace nwo5::nodes {
-    void Tooltip::updateText(geode::ZStringView pText) {
-        m_label->setText(pText);
+    void Tooltip::updateText(geode::ZStringView text) {
+        m_label->setText(text);
 
         m_background->setContentSize({ui::w(m_label) + m_padding, ui::h(m_label) + m_padding});
 
@@ -22,21 +22,21 @@ namespace nwo5::nodes {
 
         const auto worldPos = cocos::getMousePos();
 
-        const auto find = [this, worldPos] (this auto&& pSelf, CCNode* pNode, CCPoint pPos) -> CCNode* {
-            if (!pNode || !pNode->isVisible()) {
+        const auto find = [this, worldPos] (this auto&& self, CCNode* node, CCPoint pos) -> CCNode* {
+            if (!node || !node->isVisible()) {
                 return nullptr;
             }
 
-            if (pNode->boundingBox().containsPoint(pPos)) {
-                if (TooltipInfo::getSet().contains(pNode)) {
-                    return pNode;
+            if (node->boundingBox().containsPoint(pos)) {
+                if (TooltipInfo::getSet().contains(node)) {
+                    return node;
                 }
             }
 
-            const auto pos = pNode->convertToNodeSpace(worldPos);
+            const auto nodePos = node->convertToNodeSpace(worldPos);
 
-            for (auto child : pNode->getChildrenExt()) {
-                if (auto node = pSelf(child, pos)) {
+            for (auto child : node->getChildrenExt()) {
+                if (auto node = self(child, nodePos)) {
                     return node;
                 }
             }
@@ -69,14 +69,14 @@ namespace nwo5::nodes {
         }
     }
 
-    bool Tooltip::init(geode::ZStringView pFont, bool pFollowMouse, bool pAutomatic) {
+    bool Tooltip::init(geode::ZStringView font, bool followMouse, bool automatic) {
         if (!CCNode::init()) {
             return false;
         }
 
-        m_followingMouse = pFollowMouse;
-        m_dynamicAnchor = pFollowMouse;
-        m_automatic = pAutomatic;
+        m_followingMouse = followMouse;
+        m_dynamicAnchor = followMouse;
+        m_automatic = automatic;
 
         m_background = ui::nineSlice(resources::sprite::SQUARE)
             .id("background"_spr)
@@ -84,7 +84,7 @@ namespace nwo5::nodes {
             .opacity(127)
             .parent(this);
 
-        m_label = ui::label(pFont)
+        m_label = ui::label(font)
             .id("label"_spr)
             .pos(CCPointZero)
             .maxWidth(300.0f - m_padding)
@@ -142,11 +142,11 @@ namespace nwo5::nodes {
         return true;
     }
 
-    void Tooltip::show(geode::ZStringView pText) {
+    void Tooltip::show(geode::ZStringView text) {
         this->setVisible(true);
 
-        if (pText != m_label->getString()) {
-            this->updateText(pText);
+        if (text != m_label->getString()) {
+            this->updateText(text);
         }
     }
     void Tooltip::hide() {
@@ -187,19 +187,19 @@ namespace nwo5::nodes {
         Setup(m_label).center();
     }
 
-    void Tooltip::setUpdateFunc(geode::Function<void()> pFunc) {
-        m_updateFunc = std::move(pFunc);
+    void Tooltip::setUpdateFunc(geode::Function<void()> func) {
+        m_updateFunc = std::move(func);
     }
 
-    void Tooltip::setOpacity(uint8_t pOpacity) {
-        m_background->setOpacity(pOpacity);
+    void Tooltip::setOpacity(uint8_t opacity) {
+        m_background->setOpacity(opacity);
     }
     uint8_t Tooltip::getOpacity() const {
         return m_background->getOpacity();
     }
 
-    void Tooltip::setMaxWidth(float pWidth) {
-        m_label->setMaxWidth(pWidth - m_padding);
+    void Tooltip::setMaxWidth(float width) {
+        m_label->setMaxWidth(width - m_padding);
 
         this->updateText(m_label->getText());
     }
@@ -207,15 +207,15 @@ namespace nwo5::nodes {
         return m_label->getMaxWidth() + m_padding;
     }
 
-    void Tooltip::setFollowMouse(bool pOn) {
-        m_followingMouse = pOn;
+    void Tooltip::setFollowMouse(bool on) {
+        m_followingMouse = on;
     }
     bool Tooltip::getFollowMouse() const {
         return m_followingMouse;
     }
 
-    void Tooltip::setAutomatic(bool pOn) {
-        m_automatic = pOn;
+    void Tooltip::setAutomatic(bool on) {
+        m_automatic = on;
 
         if (!m_automatic) {
             this->hide();
@@ -225,14 +225,14 @@ namespace nwo5::nodes {
         return m_automatic;
     }
 
-    void Tooltip::setDynamicAnchor(bool pOn) {
-        m_dynamicAnchor = pOn;
+    void Tooltip::setDynamicAnchor(bool on) {
+        m_dynamicAnchor = on;
     }
     bool Tooltip::getDynamicAnchor() const {
         return m_dynamicAnchor;
     }
-    void Tooltip::setDefaultAnchor(CCPoint pAnchor) {
-        m_defaultAnchor = pAnchor;
+    void Tooltip::setDefaultAnchor(CCPoint anchor) {
+        m_defaultAnchor = anchor;
 
         this->setAnchorPoint(m_defaultAnchor);
 
@@ -243,9 +243,9 @@ namespace nwo5::nodes {
         return m_defaultAnchor;
     }
 
-    void Tooltip::setPadding(float pPadding) {
-        m_label->setMaxWidth((m_label->getMaxWidth() + m_padding) - pPadding);
-        m_padding = pPadding;
+    void Tooltip::setPadding(float padding) {
+        m_label->setMaxWidth((m_label->getMaxWidth() + m_padding) - padding);
+        m_padding = padding;
     }
     float Tooltip::getPadding() const {
         return m_padding;
@@ -258,10 +258,10 @@ namespace nwo5::nodes {
         return m_background;
     }
 
-    Tooltip* Tooltip::create(geode::ZStringView pFont, bool pFollowMouse, bool pAutomatic) {
+    Tooltip* Tooltip::create(geode::ZStringView font, bool followMouse, bool automatic) {
         auto ret = new Tooltip;
 
-        if (!ret->init(pFont, pFollowMouse, pAutomatic)) {
+        if (!ret->init(font, followMouse, automatic)) {
             delete ret;
 
             return nullptr;
@@ -272,11 +272,11 @@ namespace nwo5::nodes {
         return ret;
     }
 
-    bool TooltipInfo::init(cocos2d::CCNode* pNode, geode::ZStringView pText) {
-        m_text = pText;
+    bool TooltipInfo::init(cocos2d::CCNode* node, geode::ZStringView text) {
+        m_text = text;
 
-        if (pNode) {
-            pNode->setUserObject("tooltip"_spr, this);
+        if (node) {
+            node->setUserObject("tooltip"_spr, this);
         }
 
         return true;
@@ -285,13 +285,13 @@ namespace nwo5::nodes {
         set.erase(this->m_node);
     }
 
-    ListenerHandle TooltipInfo::listener = UserObjectSetEvent("tooltip"_spr).listen([] (CCNode* pNode, CCObject* pObject) {
-        if (set.contains(pNode)) {
-            set.erase(pNode);
+    ListenerHandle TooltipInfo::listener = UserObjectSetEvent("tooltip"_spr).listen([] (CCNode* node, CCObject* object) {
+        if (set.contains(node)) {
+            set.erase(node);
         }
-        if (auto info = typeinfo_cast<TooltipInfo*>(pObject)) {
-            set.insert(pNode);
-            info->m_node = pNode;
+        if (auto info = typeinfo_cast<TooltipInfo*>(object)) {
+            set.insert(node);
+            info->m_node = node;
         }
     });
 
@@ -306,10 +306,10 @@ namespace nwo5::nodes {
         return m_node;
     }
 
-    TooltipInfo* TooltipInfo::create(geode::ZStringView pText) {
+    TooltipInfo* TooltipInfo::create(geode::ZStringView text) {
         auto ret = new TooltipInfo;
 
-        if (!ret->init(nullptr, pText)) {
+        if (!ret->init(nullptr, text)) {
             delete ret;
 
             return nullptr;
@@ -319,10 +319,10 @@ namespace nwo5::nodes {
 
         return ret;
     }
-    TooltipInfo* TooltipInfo::create(cocos2d::CCNode* pNode, geode::ZStringView pText) {
+    TooltipInfo* TooltipInfo::create(cocos2d::CCNode* node, geode::ZStringView text) {
         auto ret = new TooltipInfo;
 
-        if (!ret->init(pNode, pText)) {
+        if (!ret->init(node, text)) {
             delete ret;
 
             return nullptr;

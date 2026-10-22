@@ -116,28 +116,28 @@ namespace nwo5::nodes {
         CHECK_GL_ERROR_DEBUG();
     }
 
-    bool SillyDrawNode::drawSegment(const CCPoint& pStart, const CCPoint& pEnd, float pThickness, const ccColor4F& pColor) {
-        if (pStart == pEnd || !pColor.a || !pThickness) {
+    bool SillyDrawNode::drawSegment(const CCPoint& start, const CCPoint& end, float thickness, const ccColor4F& color) {
+        if (start == end || !color.a || !thickness) {
             return false;
         }
         
         auto ptr = writeTriangles(2 * 3);
 
-        const auto n = ccpNormalize(ccpPerp(pEnd - pStart));
+        const auto n = ccpNormalize(ccpPerp(end - start));
         const auto t = ccpPerp(n);
 
-        const auto nw = n * pThickness;
-        const auto tw = t * pThickness;
-        const auto v0 = toVert(pEnd - (nw + tw));
-        const auto v1 = toVert(pEnd + (nw - tw));
-        const auto v2 = toVert(pEnd - nw);
-        const auto v3 = toVert(pEnd + nw);
-        const auto v4 = toVert(pStart - nw);
-        const auto v5 = toVert(pStart + nw);
-        const auto v6 = toVert(pStart - (nw - tw));
-        const auto v7 = toVert(pStart + (nw + tw));
+        const auto nw = n * thickness;
+        const auto tw = t * thickness;
+        const auto v0 = toVert(end - (nw + tw));
+        const auto v1 = toVert(end + (nw - tw));
+        const auto v2 = toVert(end - nw);
+        const auto v3 = toVert(end + nw);
+        const auto v4 = toVert(start - nw);
+        const auto v5 = toVert(start + nw);
+        const auto v6 = toVert(start - (nw - tw));
+        const auto v7 = toVert(start + (nw + tw));
 
-        const auto col = color_cast<ccColor4B>(pColor);
+        const auto col = color_cast<ccColor4B>(color);
 
         ptr[0] = {
             {v0, col, {}}, {v1, col, {}}, {v2, col, {}}
@@ -160,22 +160,22 @@ namespace nwo5::nodes {
 
         return true;
     }
-    bool SillyDrawNode::drawLine(const CCPoint& pStart, const CCPoint& pEnd, float pThickness, const ccColor4F& pColor) {
-        if (pStart == pEnd || !pColor.a || !pThickness) {
+    bool SillyDrawNode::drawLine(const CCPoint& start, const CCPoint& end, float thickness, const ccColor4F& color) {
+        if (start == end || !color.a || !thickness) {
             return false;
         }
         
         auto ptr = writeTriangles(2);
 
-        const auto n = ccpNormalize(ccpPerp(ccpSub(pEnd, pStart)));
-        const auto nw = ccpMult(n, pThickness);
+        const auto n = ccpNormalize(ccpPerp(ccpSub(end, start)));
+        const auto nw = ccpMult(n, thickness);
 
-        const auto v0 = toVert(pStart - nw);
-        const auto v1 = toVert(pStart + nw);
-        const auto v2 = toVert(pEnd - nw);
-        const auto v3 = toVert(pEnd + nw);
+        const auto v0 = toVert(start - nw);
+        const auto v1 = toVert(start + nw);
+        const auto v2 = toVert(end - nw);
+        const auto v3 = toVert(end + nw);
 
-        const auto col = color_cast<ccColor4B>(pColor);
+        const auto col = color_cast<ccColor4B>(color);
 
         ptr[0] = {
             {v0, col, {}}, {v1, col, {}}, {v2, col, {}}
@@ -186,34 +186,34 @@ namespace nwo5::nodes {
 
         return true;
     }
-    bool SillyDrawNode::drawDashedLine(const CCPoint& pStart, const CCPoint& pEnd, float pThickness, const ccColor4F& pColor, float pSegmentLength, float pSegmentDotSize) {
-        if (pStart == pEnd || !pColor.a || !pThickness || !pSegmentLength) {
+    bool SillyDrawNode::drawDashedLine(const CCPoint& start, const CCPoint& end, float thickness, const ccColor4F& color, float segmentLength, float segmentDotSize) {
+        if (start == end || !color.a || !thickness || !segmentLength) {
             return false;
         }
 
-        const auto length = pStart.getDistance(pEnd);
+        const auto length = start.getDistance(end);
 
-        const unsigned int segments = std::ceil(length / pSegmentLength);
+        const unsigned int segments = std::ceil(length / segmentLength);
         auto ptr = writeTriangles(segments * 2);
 
-        const auto dotSize = pSegmentLength * pSegmentDotSize;
-        const auto col = color_cast<ccColor4B>(pColor);
+        const auto dotSize = segmentLength * segmentDotSize;
+        const auto col = color_cast<ccColor4B>(color);
 
-        const auto dir = (pEnd - pStart) / length;
+        const auto dir = (end - start) / length;
         const auto n = ccpPerp(dir);
-        const auto nw = n * pThickness;
+        const auto nw = n * thickness;
 
         size_t i = 0;
         for (int segment = 0; segment < segments; segment++) {
-            const float dist = segment * pSegmentLength;
+            const float dist = segment * segmentLength;
 
-            auto start = pStart + dir * dist;
-            auto end = pStart + dir * std::min(dist + dotSize, length);
+            const auto lineStart = start + dir * dist;
+            const auto lineEnd = start + dir * std::min(dist + dotSize, length);
 
-            const auto v0 = toVert(start - nw);
-            const auto v1 = toVert(start + nw);
-            const auto v2 = toVert(end - nw);
-            const auto v3 = toVert(end + nw);
+            const auto v0 = toVert(lineStart - nw);
+            const auto v1 = toVert(lineStart + nw);
+            const auto v2 = toVert(lineEnd - nw);
+            const auto v3 = toVert(lineEnd + nw);
 
             ptr[i++] = {
                 {v0, col, {}}, {v1, col, {}}, {v2, col, {}}
@@ -225,31 +225,31 @@ namespace nwo5::nodes {
 
         return true;
     }
-    bool SillyDrawNode::drawSegments(const CCPoint* pPoints, unsigned int pSize, float pThickness, const ccColor4F& pColor) {
-        if (pSize < 2 || !pColor.a || !pThickness) {
+    bool SillyDrawNode::drawSegments(const CCPoint* points, unsigned int size, float thickness, const ccColor4F& color) {
+        if (size < 2 || !color.a || !thickness) {
             return false;
         }
 
-        for (size_t i = 0; i < pSize - 1; i++) {
-            drawSegment(pPoints[i], pPoints[i + 1], pThickness, pColor);
+        for (size_t i = 0; i < size - 1; i++) {
+            drawSegment(points[i], points[i + 1], thickness, color);
         }
         
         return true;
     }
-    bool SillyDrawNode::drawSegments(std::span<const CCPoint> pPoints, float pThickness, const ccColor4F& pColor) {
-        return drawSegments(pPoints.data(), pPoints.size(), pThickness, pColor);
+    bool SillyDrawNode::drawSegments(std::span<const CCPoint> points, float thickness, const ccColor4F& color) {
+        return drawSegments(points.data(), points.size(), thickness, color);
     }
 
-    bool SillyDrawNode::drawCircle(const CCPoint& pCenter, float pRadius, const ccColor4F& pColor, unsigned int pSegments, float pOutlineThickness, const ccColor4F& pOutlineColor) {
-        return drawEllipse(pCenter, {pRadius, pRadius}, pColor, pSegments, pOutlineThickness, pOutlineColor);
+    bool SillyDrawNode::drawCircle(const CCPoint& center, float radius, const ccColor4F& color, unsigned int segments, float outlineThickness, const ccColor4F& outlineColor) {
+        return drawEllipse(center, {radius, radius}, color, segments, outlineThickness, outlineColor);
     }
-    bool SillyDrawNode::drawEllipse(const CCPoint& pCenter, CCSize pRadius, const ccColor4F& pColor, unsigned int pSegments, float pOutlineThickness, const ccColor4F& pOutlineColor) {
-        if (pSegments < 3 || pRadius == CCSizeZero) {
+    bool SillyDrawNode::drawEllipse(const CCPoint& center, CCSize radius, const ccColor4F& color, unsigned int segments, float outlineThickness, const ccColor4F& outlineColor) {
+        if (segments < 3 || radius == CCSizeZero) {
             return false;
         }
         
-        const auto fillTriangles = !pColor.a ? 0 : pSegments;
-        const auto outlineTriangles = (!pOutlineThickness || !pOutlineColor.a) ? 0 : pSegments * 2;
+        const auto fillTriangles = !color.a ? 0 : segments;
+        const auto outlineTriangles = (!outlineThickness || !outlineColor.a) ? 0 : segments * 2;
 
         if (!fillTriangles && !outlineTriangles) {
             return false;
@@ -257,35 +257,35 @@ namespace nwo5::nodes {
 
         auto ptr = writeTriangles(fillTriangles + outlineTriangles);
 
-        const auto fill = color_cast<ccColor4B>(pColor);
-        const auto outline = color_cast<ccColor4B>(pOutlineColor);
+        const auto fill = color_cast<ccColor4B>(color);
+        const auto outline = color_cast<ccColor4B>(outlineColor);
 
         const Vertex centerVertex = {
-            toVert(pCenter), color_cast<ccColor4B>(fill), {}
+            toVert(center), color_cast<ccColor4B>(fill), {}
         };
 
-        const CCSize inner = pRadius - pOutlineThickness;
+        const CCSize inner = radius - outlineThickness;
         // i love cocos operators :3
-        const CCSize outer = pRadius - (-pOutlineThickness);
+        const CCSize outer = radius - (-outlineThickness);
 
-        ccVertex2F fillStart = {pCenter.x + pRadius.width, pCenter.y};
+        ccVertex2F fillStart = {center.x + radius.width, center.y};
         ccVertex2F fillEnd;
 
-        ccVertex2F innerStart = {pCenter.x + inner.width, pCenter.y};
+        ccVertex2F innerStart = {center.x + inner.width, center.y};
         ccVertex2F innerEnd;
-        ccVertex2F outerStart = {pCenter.x + outer.width, pCenter.y};
+        ccVertex2F outerStart = {center.x + outer.width, center.y};
         ccVertex2F outerEnd;
 
-        const float delta = (std::numbers::pi * 2) / pSegments;
+        const float delta = (std::numbers::pi * 2) / segments;
 
         float angle = delta;
         size_t i = 0;
-        for (int segment = 0; segment < pSegments; segment++) {
+        for (int segment = 0; segment < segments; segment++) {
             const float ca = std::cos(angle);
             const float sa = std::sin(angle);
 
             if (fillTriangles) {
-                fillEnd = {pCenter.x + (pRadius.width * ca), pCenter.y + (pRadius.height * sa)};
+                fillEnd = {center.x + (radius.width * ca), center.y + (radius.height * sa)};
 
                 ptr[i++] = {
                     centerVertex,{fillStart, fill, {}}, {fillEnd, fill, {}}
@@ -295,8 +295,8 @@ namespace nwo5::nodes {
             }
 
             if (outlineTriangles) {
-                innerEnd = {pCenter.x + (inner.width * ca), pCenter.y + (inner.height* sa)};
-                outerEnd = {pCenter.x + (outer.width * ca), pCenter.y + (outer.height * sa)};
+                innerEnd = {center.x + (inner.width * ca), center.y + (inner.height* sa)};
+                outerEnd = {center.x + (outer.width * ca), center.y + (outer.height * sa)};
 
                 ptr[i++] = {
                     {outerStart, outline, {}}, {innerStart, outline, {}}, {innerEnd, outline, {}}
@@ -315,26 +315,26 @@ namespace nwo5::nodes {
         return true;
     }
 
-    bool SillyDrawNode::drawPolygon(const CCPoint* pPoints, unsigned int pSize, const ccColor4F& pColor, float pOutlineThickness, const ccColor4F& pOutlineColor, cocos2d::BorderAlignment) {
-        return CCDrawNode::drawPolygon(const_cast<CCPoint*>(pPoints), pSize, pColor, pOutlineThickness, pOutlineColor, {});
+    bool SillyDrawNode::drawPolygon(const CCPoint* points, unsigned int size, const ccColor4F& color, float outlineThickness, const ccColor4F& outlineColor, cocos2d::BorderAlignment) {
+        return CCDrawNode::drawPolygon(const_cast<CCPoint*>(points), size, color, outlineThickness, outlineColor, {});
     }
-    bool SillyDrawNode::drawPolygon(std::span<const CCPoint> pPoints, const ccColor4F& pColor, float pOutlineThickness, const ccColor4F& pOutlineColor, cocos2d::BorderAlignment) {
-        return CCDrawNode::drawPolygon(const_cast<CCPoint*>(pPoints.data()), pPoints.size(), pColor, pOutlineThickness, pOutlineColor, {});
+    bool SillyDrawNode::drawPolygon(std::span<const CCPoint> points, const ccColor4F& color, float outlineThickness, const ccColor4F& outlineColor, cocos2d::BorderAlignment) {
+        return CCDrawNode::drawPolygon(const_cast<CCPoint*>(points.data()), points.size(), color, outlineThickness, outlineColor, {});
     }
 
-    bool SillyDrawNode::drawDot(const CCPoint& pCenter, float pRadius, const ccColor4F& pColor) {
-        if (!pRadius) {
+    bool SillyDrawNode::drawDot(const CCPoint& center, float radius, const ccColor4F& color) {
+        if (!radius) {
             return false;
         }
 
         auto ptr = writeTriangles(2);
 
-        const auto v0 = toVert(pCenter - pRadius);
-        const auto v1 = toVert(pCenter.x + pRadius, pCenter.y - pRadius);
-        const auto v2 = toVert(pCenter.x - pRadius, pCenter.y + pRadius);
-        const auto v3 = toVert(pCenter - (-pRadius));
+        const auto v0 = toVert(center - radius);
+        const auto v1 = toVert(center.x + radius, center.y - radius);
+        const auto v2 = toVert(center.x - radius, center.y + radius);
+        const auto v3 = toVert(center - (-radius));
 
-        const auto col = color_cast<ccColor4B>(pColor);
+        const auto col = color_cast<ccColor4B>(color);
 
         ptr[0] = {
             {v0, col, {}}, {v1, col, {}}, {v2, col, {}}
@@ -346,13 +346,13 @@ namespace nwo5::nodes {
         return true;
     }
 
-    bool SillyDrawNode::drawRect(const CCRect& pRect, const ccColor4F& pColor, float pOutlineThickness, const ccColor4F& pOutlineColor, cocos2d::BorderAlignment) {
-        if (pRect.size == CCSizeZero) {
+    bool SillyDrawNode::drawRect(const CCRect& rect, const ccColor4F& color, float outlineThickness, const ccColor4F& outlineColor, cocos2d::BorderAlignment) {
+        if (rect.size == CCSizeZero) {
             return false;
         }
 
-        const auto fillTriangles = !pColor.a ? 0 : 2;
-        const auto outlineTriangles = (!pOutlineThickness || !pOutlineColor.a) ? 0 : (2 * 4);
+        const auto fillTriangles = !color.a ? 0 : 2;
+        const auto outlineTriangles = (!outlineThickness || !outlineColor.a) ? 0 : (2 * 4);
 
         if (!fillTriangles && !outlineTriangles) {
             return false;
@@ -360,14 +360,14 @@ namespace nwo5::nodes {
 
         auto ptr = writeTriangles(fillTriangles + outlineTriangles);
 
-        const auto v0 = toVert(pRect.origin);
-        const auto v1 = toVert(pRect.getMaxX(), pRect.getMinY());
-        const auto v2 = toVert(pRect.getMinX(), pRect.getMaxY());
-        const auto v3 = toVert(pRect.origin + pRect.size);
+        const auto v0 = toVert(rect.origin);
+        const auto v1 = toVert(rect.getMaxX(), rect.getMinY());
+        const auto v2 = toVert(rect.getMinX(), rect.getMaxY());
+        const auto v3 = toVert(rect.origin + rect.size);
 
         size_t i = 0;
         if (fillTriangles) {
-            const auto col = color_cast<ccColor4B>(pColor);
+            const auto col = color_cast<ccColor4B>(color);
             
             ptr[i++] = {
                 {v0, col, {}}, {v1, col, {}}, {v2, col, {}}
@@ -378,48 +378,48 @@ namespace nwo5::nodes {
         }
         
         if (outlineTriangles) {
-            const auto outlineColor = color_cast<ccColor4B>(pOutlineColor);
+            const auto outlineColor4b = color_cast<ccColor4B>(outlineColor);
 
             ptr[i++] = {
-                {{v0.x - pOutlineThickness, v0.y - pOutlineThickness}, outlineColor, {}}, {{v1.x + pOutlineThickness, v1.y - pOutlineThickness}, outlineColor, {}}, {{v1.x + pOutlineThickness, v1.y + pOutlineThickness}, outlineColor, {}}
+                {{v0.x - outlineThickness, v0.y - outlineThickness}, outlineColor4b, {}}, {{v1.x + outlineThickness, v1.y - outlineThickness}, outlineColor4b, {}}, {{v1.x + outlineThickness, v1.y + outlineThickness}, outlineColor4b, {}}
             };
             ptr[i++] = {
-                {{v0.x - pOutlineThickness, v0.y - pOutlineThickness}, outlineColor, {}}, {{v1.x + pOutlineThickness, v1.y + pOutlineThickness}, outlineColor, {}}, {{v0.x - pOutlineThickness, v0.y + pOutlineThickness}, outlineColor, {}}
-            };
-
-            ptr[i++] = {
-                {{v2.x - pOutlineThickness, v2.y - pOutlineThickness}, outlineColor, {}}, {{v3.x + pOutlineThickness, v3.y - pOutlineThickness}, outlineColor, {}}, {{v3.x + pOutlineThickness, v3.y + pOutlineThickness}, outlineColor, {}}
-            };
-            ptr[i++] = {
-                {{v2.x - pOutlineThickness, v2.y - pOutlineThickness}, outlineColor, {}}, {{v3.x + pOutlineThickness, v3.y + pOutlineThickness}, outlineColor, {}}, {{v2.x - pOutlineThickness, v2.y + pOutlineThickness}, outlineColor, {}}
+                {{v0.x - outlineThickness, v0.y - outlineThickness}, outlineColor4b, {}}, {{v1.x + outlineThickness, v1.y + outlineThickness}, outlineColor4b, {}}, {{v0.x - outlineThickness, v0.y + outlineThickness}, outlineColor4b, {}}
             };
 
             ptr[i++] = {
-                {{v0.x - pOutlineThickness, v0.y - pOutlineThickness}, outlineColor, {}}, {{v0.x + pOutlineThickness, v0.y - pOutlineThickness}, outlineColor, {}}, {{v2.x + pOutlineThickness, v2.y + pOutlineThickness}, outlineColor, {}}
+                {{v2.x - outlineThickness, v2.y - outlineThickness}, outlineColor4b, {}}, {{v3.x + outlineThickness, v3.y - outlineThickness}, outlineColor4b, {}}, {{v3.x + outlineThickness, v3.y + outlineThickness}, outlineColor4b, {}}
             };
             ptr[i++] = {
-                {{v0.x - pOutlineThickness, v0.y - pOutlineThickness}, outlineColor, {}}, {{v2.x + pOutlineThickness, v2.y + pOutlineThickness}, outlineColor, {}}, {{v2.x - pOutlineThickness, v2.y + pOutlineThickness}, outlineColor, {}}
+                {{v2.x - outlineThickness, v2.y - outlineThickness}, outlineColor4b, {}}, {{v3.x + outlineThickness, v3.y + outlineThickness}, outlineColor4b, {}}, {{v2.x - outlineThickness, v2.y + outlineThickness}, outlineColor4b, {}}
             };
 
             ptr[i++] = {
-                {{v1.x - pOutlineThickness, v1.y - pOutlineThickness}, outlineColor, {}}, {{v1.x + pOutlineThickness, v1.y - pOutlineThickness}, outlineColor, {}}, {{v3.x + pOutlineThickness, v3.y + pOutlineThickness}, outlineColor, {}}
+                {{v0.x - outlineThickness, v0.y - outlineThickness}, outlineColor4b, {}}, {{v0.x + outlineThickness, v0.y - outlineThickness}, outlineColor4b, {}}, {{v2.x + outlineThickness, v2.y + outlineThickness}, outlineColor4b, {}}
             };
             ptr[i++] = {
-                {{v1.x - pOutlineThickness, v1.y - pOutlineThickness}, outlineColor, {}}, {{v3.x + pOutlineThickness, v3.y + pOutlineThickness}, outlineColor, {}}, {{v3.x - pOutlineThickness, v3.y + pOutlineThickness}, outlineColor, {}}
+                {{v0.x - outlineThickness, v0.y - outlineThickness}, outlineColor4b, {}}, {{v2.x + outlineThickness, v2.y + outlineThickness}, outlineColor4b, {}}, {{v2.x - outlineThickness, v2.y + outlineThickness}, outlineColor4b, {}}
+            };
+
+            ptr[i++] = {
+                {{v1.x - outlineThickness, v1.y - outlineThickness}, outlineColor4b, {}}, {{v1.x + outlineThickness, v1.y - outlineThickness}, outlineColor4b, {}}, {{v3.x + outlineThickness, v3.y + outlineThickness}, outlineColor4b, {}}
+            };
+            ptr[i++] = {
+                {{v1.x - outlineThickness, v1.y - outlineThickness}, outlineColor4b, {}}, {{v3.x + outlineThickness, v3.y + outlineThickness}, outlineColor4b, {}}, {{v3.x - outlineThickness, v3.y + outlineThickness}, outlineColor4b, {}}
             };
         }
 
         return true;
     }
-    bool SillyDrawNode::drawRect(const CCPoint& pStart, const CCPoint& pEnd, const ccColor4F& pColor, float pOutlineThickness, const ccColor4F& pOutlineColor, cocos2d::BorderAlignment) {
-        const CCPoint min{std::min(pStart.x, pEnd.x), std::min(pStart.y, pEnd.y)};
-        const CCPoint max{std::max(pStart.x, pEnd.x), std::max(pStart.y, pEnd.y)};
+    bool SillyDrawNode::drawRect(const CCPoint& start, const CCPoint& end, const ccColor4F& color, float outlineThickness, const ccColor4F& outlineColor, cocos2d::BorderAlignment) {
+        const CCPoint min{std::min(start.x, end.x), std::min(start.y, end.y)};
+        const CCPoint max{std::max(start.x, end.x), std::max(start.y, end.y)};
         
-        return drawRect({min, max - min}, pColor, pOutlineThickness, pOutlineColor);
+        return drawRect({min, max - min}, color, outlineThickness, outlineColor);
     }
 
-    void SillyDrawNode::setTint(const ccColor4F& pColor) {
-        m_tintColor = pColor;
+    void SillyDrawNode::setTint(const ccColor4F& color) {
+        m_tintColor = color;
 
         m_bDirty = true;
     }
@@ -427,8 +427,8 @@ namespace nwo5::nodes {
         return m_tintColor;
     }
 
-    void SillyDrawNode::setUseTint(bool pTint) {
-        m_useTint = pTint;
+    void SillyDrawNode::setUseTint(bool tint) {
+        m_useTint = tint;
 
         m_bDirty = true;
     }
@@ -436,35 +436,35 @@ namespace nwo5::nodes {
         return m_useTint;
     }
 
-    void SillyDrawNode::reserve(unsigned int pSize) {
-        if (pSize > m_uBufferCapacity) {
-            m_uBufferCapacity += std::max(m_uBufferCapacity, pSize - m_nBufferCount);
+    void SillyDrawNode::reserve(unsigned int size) {
+        if (size > m_uBufferCapacity) {
+            m_uBufferCapacity += std::max(m_uBufferCapacity, size - m_nBufferCount);
             m_pBuffer = static_cast<ccV2F_C4B_T2F*>(
                 realloc(m_pBuffer, m_uBufferCapacity * sizeof(ccV2F_C4B_T2F))
             );
         }
     }
-    void SillyDrawNode::reserveCount(unsigned int pCount) {
-        reserve(m_nBufferCount + pCount);
+    void SillyDrawNode::reserveCount(unsigned int count) {
+        reserve(m_nBufferCount + count);
     }
-    SillyDrawNode::Triangle* SillyDrawNode::writeTriangles(unsigned int pCount) {
-        pCount *= 3;
+    SillyDrawNode::Triangle* SillyDrawNode::writeTriangles(unsigned int count) {
+        count *= 3;
 
-        reserveCount(pCount);
+        reserveCount(count);
 
         auto ptr = m_pBuffer + m_nBufferCount;
 
-        m_nBufferCount += pCount;
+        m_nBufferCount += count;
         m_bDirty = true;
 
         return reinterpret_cast<Triangle*>(ptr);
     }
-    SillyDrawNode::Vertex* SillyDrawNode::writeVertices(unsigned int pCount) {
-        reserveCount(pCount);
+    SillyDrawNode::Vertex* SillyDrawNode::writeVertices(unsigned int count) {
+        reserveCount(count);
         
         auto ptr = m_pBuffer + m_nBufferCount;
 
-        m_nBufferCount += pCount;
+        m_nBufferCount += count;
         m_bDirty = true;
 
         return reinterpret_cast<Vertex*>(ptr);
