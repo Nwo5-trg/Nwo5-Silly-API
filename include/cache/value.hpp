@@ -36,7 +36,7 @@ namespace nwo5::cache {
             }
 
             // lol this just gets overwritten but i only rly need it for the inital loading
-            m_listener = geode::ModStateEvent(geode::ModEventType::DataLoaded, m_mod).listen([this] {
+            m_listener = geode::ModStateEvent(geode::ModEventType::Loaded, m_mod).listen([this] {
                 this->load();
             });
         }

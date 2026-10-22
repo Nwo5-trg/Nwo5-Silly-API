@@ -29,8 +29,8 @@ namespace nwo5::cache {
             m_value = m_setting->getValue();
 
             m_listener = geode::SettingChangedEventV3(m_mod, m_key).listen([this] (std::shared_ptr<geode::SettingV3> setting) {
-                if (auto ty = geode::cast::typeinfo_pointer_cast<GeodeSettingType>(setting)) {
-                    m_value = ty->getValue();
+                if (setting == this->m_setting) {
+                    this->m_value = this->m_setting->getValue();
                 }
             }, geode::Priority::First);
         }
@@ -46,7 +46,7 @@ namespace nwo5::cache {
             }
 
             // lol this just gets overwritten but i only rly need it for the inital loading
-            m_listener = geode::ModStateEvent(geode::ModEventType::DataLoaded, m_mod).listen([this] {
+            m_listener = geode::ModStateEvent(geode::ModEventType::Loaded, m_mod).listen([this] {
                 this->load();
             });
         }
