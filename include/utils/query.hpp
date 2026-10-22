@@ -239,7 +239,7 @@ namespace nwo5::utils {
                 return nullptr;
             }
 
-            return m_node->template getChildByType<T*>(index);
+            return typeinfo_cast<T*>(m_node->template getChildByType<cocos2d::CCNode>(index));
         }
 
         /// find child that matches predicate (and optionally typeinfo cast)
