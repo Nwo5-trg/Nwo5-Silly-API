@@ -24,7 +24,7 @@ namespace nwo5::editor::object {
     /// @returns obj created
     template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
     requires std::derived_from<T, GameObject>
-    GameObject* create(int id, bool undo = false, bool setup = true) {
+    T* create(int id, bool undo = false, bool setup = true) {
         return static_cast<T*>(impl::createObject(id, cocos2d::CCPointZero, undo, setup));
     }
     /// create basic object
@@ -34,7 +34,7 @@ namespace nwo5::editor::object {
     /// @returns obj created
     template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
     requires std::derived_from<T, GameObject>
-    GameObject* create(int id, cocos2d::CCPoint pos, bool undo = false, bool setup = true) {
+    T* create(int id, cocos2d::CCPoint pos, bool undo = false, bool setup = true) {
         return static_cast<T*>(impl::createObject(id, pos, undo, setup));
     }
     /// pretty much fmt::format("1,{},2,0,3,0,{}", id, args)
@@ -43,7 +43,7 @@ namespace nwo5::editor::object {
     /// @returns obj created
     template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
     requires std::derived_from<T, GameObject>
-    GameObject* create(int id, geode::ZStringView args, bool undo = false) {
+    T* create(int id, geode::ZStringView args, bool undo = false) {
         return static_cast<T*>(impl::createObject(id, cocos2d::CCPointZero, args, undo));
     }
     /// pretty much fmt::format("1,{},2,{},3,{},{}", id, pos.x, pos.y, args)
@@ -54,7 +54,7 @@ namespace nwo5::editor::object {
     /// @returns obj created
     template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
     requires std::derived_from<T, GameObject>
-    GameObject* create(int id, cocos2d::CCPoint pos, geode::ZStringView args, bool undo = false) {
+    T* create(int id, cocos2d::CCPoint pos, geode::ZStringView args, bool undo = false) {
         return static_cast<T*>(impl::createObject(id, pos, args, undo));
     }
     /// create object from string
@@ -62,7 +62,7 @@ namespace nwo5::editor::object {
     /// @returns objscreated
     template<typename ImplT = GameObject, typename T = std::remove_pointer_t<ImplT>>
     requires std::derived_from<T, GameObject>
-    GameObject* create(geode::ZStringView str, bool undo = false) {
+    T* create(geode::ZStringView str, bool undo = false) {
         return static_cast<T*>(impl::createObject(str, undo));
     }
     /// create mutliple objects from string
