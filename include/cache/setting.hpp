@@ -44,11 +44,12 @@ namespace nwo5::cache {
             if (m_mod && m_mod->isLoaded()) {
                 this->load();
             }
-
-            // lol this just gets overwritten but i only rly need it for the inital loading
-            m_listener = geode::ModStateEvent(geode::ModEventType::Loaded, m_mod).listen([this] {
-                this->load();
-            });
+            else {
+                // lol this just gets overwritten but i only rly need it for the inital loading
+                m_listener = geode::ModStateEvent(geode::ModEventType::Loaded, m_mod).listen([this] {
+                    this->load();
+                }, geode::Priority::First);
+            }
         }
         
         const T& operator*() const {
