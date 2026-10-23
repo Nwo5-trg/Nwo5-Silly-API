@@ -3,6 +3,10 @@
 #include "../export.hpp"
 
 namespace nwo5::cache {
+    struct ValueCacheChanged : public geode::GlobalEvent<ValueCacheChanged, bool(geode::Mod* mod, std::string_view key, void* setting), bool(void* setting), geode::Mod*, std::string> {
+        using GlobalEvent::GlobalEvent;
+    };
+
     template<typename T>
     class ValueCache {
     protected:  
@@ -20,21 +24,14 @@ namespace nwo5::cache {
 
             m_value = m_mod->getSavedValue<T>(m_key, m_default);
 
-            Changed(m_mod, m_key).send(this);
+            ValueCacheChanged(m_mod, m_key).send(this);
 
             m_listener.destroy();
 
             m_loaded = true;
         }
 
-        template<typename Marker>
-        using EventType = geode::GlobalEvent<Marker, bool(geode::Mod* mod, std::string_view key, void* setting), bool(void* setting), geode::Mod*, std::string>;
-
     public:
-        struct Changed : public EventType<Changed> {
-            using EventType<Changed>::Event;
-        };
-
         using Type = T;
 
         ValueCache(std::string key, T defaultValue = T{}, geode::Mod* mod = geode::Mod::get())
@@ -76,7 +73,7 @@ namespace nwo5::cache {
 
             m_value = val;
 
-            Changed(m_mod, m_key).send(this);
+            ValueCacheChanged(m_mod, m_key).send(this);
 
             this->sync();
 
@@ -109,7 +106,7 @@ namespace nwo5::cache {
         /// listen to when this saved value changed
         /// @returns listener handle
         auto listen(geode::Function<bool(ValueCache* setting)> callback) const {
-            return Changed(m_mod, m_key).listen([customCallback = std::move(callback)] (void* setting) {
+            return ValueCacheChanged(m_mod, m_key).listen([customCallback = std::move(callback)] (void* setting) {
                 if constexpr (std::same_as<geode::utils::function::Return<decltype(callback)>, void>) {
                     customCallback(static_cast<T*>(setting));
                 }
