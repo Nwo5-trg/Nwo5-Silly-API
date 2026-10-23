@@ -63,6 +63,15 @@ namespace nwo5::nodes {
 
         return program;
     }
+    
+    struct SillyDrawNode::Impl {
+        ccColor4F tintColor;
+        bool useTint = false;
+    };
+
+    SillyDrawNode::SillyDrawNode() {
+        m_impl = std::make_unique<Impl>();
+    }
 
     bool SillyDrawNode::init() {
         if (!CCDrawNode::init()) {
@@ -76,14 +85,14 @@ namespace nwo5::nodes {
         return true;
     }
     void SillyDrawNode::draw() {
-        if (!m_nBufferCount || m_useTint && !m_tintColor.a) {
+        if (!m_nBufferCount ||  m_impl->useTint && !m_impl->tintColor.a) {
             return;
         }
 
         CC_NODE_DRAW_SETUP();
         ccGLBlendFunc(m_sBlendFunc.src, m_sBlendFunc.dst);
 
-        const auto tint = m_useTint ? m_tintColor : ccColor4F{1.0f, 1.0f, 1.0f, 1.0f};
+        const auto tint = m_impl->useTint ? m_impl->tintColor : ccColor4F{1.0f, 1.0f, 1.0f, 1.0f};
 
         getShaderProgram()->setUniformLocationWith4f(
             getShaderProgram()->getUniformLocationForName("u_tint"),
@@ -419,21 +428,21 @@ namespace nwo5::nodes {
     }
 
     void SillyDrawNode::setTint(const ccColor4F& color) {
-        m_tintColor = color;
+        m_impl->tintColor = color;
 
         m_bDirty = true;
     }
     const ccColor4F& SillyDrawNode::getTint() const {
-        return m_tintColor;
+        return m_impl->tintColor;
     }
 
     void SillyDrawNode::setUseTint(bool tint) {
-        m_useTint = tint;
+        m_impl->useTint = tint;
 
         m_bDirty = true;
     }
     bool SillyDrawNode::getUseTint() const {
-        return m_useTint;
+        return m_impl->useTint;
     }
 
     void SillyDrawNode::reserve(unsigned int size) {

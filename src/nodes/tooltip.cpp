@@ -5,15 +5,33 @@ using namespace nwo5::ui::prelude;
 using namespace geode::prelude;
 
 namespace nwo5::nodes {
+    struct Tooltip::Impl {
+        geode::NineSlice* background = nullptr;
+        geode::Label* label = nullptr;
+
+        geode::Function<void()> updateFunc = nullptr;
+
+        bool followingMouse = false;
+        bool automatic = false;
+        bool dynamicAnchor = false;
+        cocos2d::CCPoint defaultAnchor = {0.0f, 0.0f};
+
+        float padding = 5.0f;
+    };
+
+    Tooltip::Tooltip() {
+        m_impl = std::make_unique<Impl>();
+    }
+
     void Tooltip::updateText(geode::ZStringView text) {
-        m_label->setText(text);
+        m_impl->label->setText(text);
 
-        m_background->setContentSize({ui::w(m_label) + m_padding, ui::h(m_label) + m_padding});
+        m_impl->background->setContentSize({ui::w(m_impl->label) + m_impl->padding, ui::h(m_impl->label) + m_impl->padding});
 
-        this->setContentSize(ui::size(m_background));
+        this->setContentSize(ui::size(m_impl->background));
 
-        Setup(m_background).center();
-        Setup(m_label).center();
+        Setup(m_impl->background).center();
+        Setup(m_impl->label).center();
     }
     void Tooltip::updateAutomatic() {
         if (!this->getParent()) {
@@ -74,20 +92,20 @@ namespace nwo5::nodes {
             return false;
         }
 
-        m_followingMouse = followMouse;
-        m_dynamicAnchor = followMouse;
-        m_automatic = automatic;
+        m_impl->followingMouse = followMouse;
+        m_impl->dynamicAnchor = followMouse;
+        m_impl->automatic = automatic;
 
-        m_background = ui::nineSlice(resources::sprite::SQUARE)
+        m_impl->background = ui::nineSlice(resources::sprite::SQUARE)
             .id("background"_spr)
             .pos(CCPointZero)
             .opacity(127)
             .parent(this);
 
-        m_label = ui::label(font)
+        m_impl->label = ui::label(font)
             .id("label"_spr)
             .pos(CCPointZero)
-            .maxWidth(300.0f - m_padding)
+            .maxWidth(300.0f - m_impl->padding)
             .breakWords(false)
             .parent(this);
 
@@ -102,19 +120,19 @@ namespace nwo5::nodes {
                 return;
             }
             
-            if (this->m_followingMouse) {
+            if (this->m_impl->followingMouse) {
                 this->setPosition(this->getParent()->convertToNodeSpace(cocos::getMousePos()));
 
-                if (m_automatic) {
+                if (m_impl->automatic) {
                     this->updateAutomatic();
                 }
-                if (this->m_dynamicAnchor) {
+                if (this->m_impl->dynamicAnchor) {
                     this->updateAnchor();
                 }
             }
 
-            if (m_updateFunc) {
-                this->m_updateFunc();
+            if (m_impl->updateFunc) {
+                this->m_impl->updateFunc();
             }
         });
         
@@ -123,19 +141,19 @@ namespace nwo5::nodes {
                 return;
             }
 
-            if (this->m_followingMouse) {
+            if (this->m_impl->followingMouse) {
                 this->setPosition(this->getParent()->convertToNodeSpace(cocos::getMousePos()));
 
-                if (m_automatic) {
+                if (m_impl->automatic) {
                     this->updateAutomatic();
                 }
-                if (this->m_dynamicAnchor) {
+                if (this->m_impl->dynamicAnchor) {
                     this->updateAnchor();
                 }   
             }
 
-            if (m_updateFunc) {
-                this->m_updateFunc();
+            if (m_impl->updateFunc) {
+                this->m_impl->updateFunc();
             }
         });
 
@@ -145,7 +163,7 @@ namespace nwo5::nodes {
     void Tooltip::show(geode::ZStringView text) {
         this->setVisible(true);
 
-        if (text != m_label->getString()) {
+        if (text != m_impl->label->getString()) {
             this->updateText(text);
         }
     }
@@ -160,12 +178,12 @@ namespace nwo5::nodes {
             return;
         }
 
-        const auto pos = this->getPosition() + CCPoint{ui::sw(this) * m_defaultAnchor.x * 2 - 1, ui::sh(this) * m_defaultAnchor.y * 2 - 1};
+        const auto pos = this->getPosition() + CCPoint{ui::sw(this) * m_impl->defaultAnchor.x * 2 - 1, ui::sh(this) * m_impl->defaultAnchor.y * 2 - 1};
 
         const auto min = parent->convertToWorldSpace(pos);
         const auto max = parent->convertToWorldSpace(pos + ui::ssize(this));
 
-        auto anchor = m_defaultAnchor;
+        auto anchor = m_impl->defaultAnchor;
 
         if (min.x < 0.0f) {
             anchor.x = 0.0f;
@@ -183,79 +201,79 @@ namespace nwo5::nodes {
 
         this->setAnchorPoint(anchor);
 
-        Setup(m_background).center();
-        Setup(m_label).center();
+        Setup(m_impl->background).center();
+        Setup(m_impl->label).center();
     }
 
     void Tooltip::setUpdateFunc(geode::Function<void()> func) {
-        m_updateFunc = std::move(func);
+        m_impl->updateFunc = std::move(func);
     }
 
     void Tooltip::setOpacity(uint8_t opacity) {
-        m_background->setOpacity(opacity);
+        m_impl->background->setOpacity(opacity);
     }
     uint8_t Tooltip::getOpacity() const {
-        return m_background->getOpacity();
+        return m_impl->background->getOpacity();
     }
 
     void Tooltip::setMaxWidth(float width) {
-        m_label->setMaxWidth(width - m_padding);
+        m_impl->label->setMaxWidth(width - m_impl->padding);
 
-        this->updateText(m_label->getText());
+        this->updateText(m_impl->label->getText());
     }
     float Tooltip::getMaxWidth() const {
-        return m_label->getMaxWidth() + m_padding;
+        return m_impl->label->getMaxWidth() + m_impl->padding;
     }
 
     void Tooltip::setFollowMouse(bool on) {
-        m_followingMouse = on;
+        m_impl->followingMouse = on;
     }
     bool Tooltip::getFollowMouse() const {
-        return m_followingMouse;
+        return m_impl->followingMouse;
     }
 
     void Tooltip::setAutomatic(bool on) {
-        m_automatic = on;
+        m_impl->automatic = on;
 
-        if (!m_automatic) {
+        if (!m_impl->automatic) {
             this->hide();
         }
     }
     bool Tooltip::getAutomatic() const {
-        return m_automatic;
+        return m_impl->automatic;
     }
 
     void Tooltip::setDynamicAnchor(bool on) {
-        m_dynamicAnchor = on;
+        m_impl->dynamicAnchor = on;
     }
     bool Tooltip::getDynamicAnchor() const {
-        return m_dynamicAnchor;
+        return m_impl->dynamicAnchor;
     }
     void Tooltip::setDefaultAnchor(CCPoint anchor) {
-        m_defaultAnchor = anchor;
+        m_impl->defaultAnchor = anchor;
 
-        this->setAnchorPoint(m_defaultAnchor);
+        this->setAnchorPoint(m_impl->defaultAnchor);
 
-        Setup(m_background).center();
-        Setup(m_label).center();
+        Setup(m_impl->background).center();
+        Setup(m_impl->label).center();
     }
     CCPoint Tooltip::getDefaultAnchor() const {
-        return m_defaultAnchor;
+        return m_impl->defaultAnchor;
     }
 
     void Tooltip::setPadding(float padding) {
-        m_label->setMaxWidth((m_label->getMaxWidth() + m_padding) - padding);
-        m_padding = padding;
+        m_impl->label->setMaxWidth((m_impl->label->getMaxWidth() + m_impl->padding) - padding);
+        m_impl->padding = padding;
     }
     float Tooltip::getPadding() const {
-        return m_padding;
+        return m_impl->padding;
     }
 
     Label* Tooltip::getLabel() const {
-        return m_label;
+        return m_impl->label;
     }
     NineSlice* Tooltip::getBackground() const {
-        return m_background;
+        return m_impl->background;
     }
 
     Tooltip* Tooltip::create(geode::ZStringView font, bool followMouse, bool automatic) {

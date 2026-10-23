@@ -9,19 +9,13 @@ namespace nwo5::nodes {
     /// if you want to do all the logic yourself you can just set an updatefunc
     /// @note automatic mode does not pay attention to z order soooo gl with that might make that toggleable later cuz it would b slower
     class SILLY_API_DLL Tooltip final : public cocos2d::CCNode {
+    private:
+        struct Impl;
+
+        std::unique_ptr<Impl> m_impl;
     protected:
-        geode::NineSlice* m_background = nullptr;
-        geode::Label* m_label = nullptr;
-
-        geode::Function<void()> m_updateFunc = nullptr;
-
-        bool m_followingMouse = false;
-        bool m_automatic = false;
-        bool m_dynamicAnchor = false;
-        cocos2d::CCPoint m_defaultAnchor = {0.0f, 0.0f};
-
-        float m_padding = 5.0f;
-
+        Tooltip();
+        
         void updateText(geode::ZStringView text);
         void updateAutomatic();
 

@@ -24,12 +24,15 @@ namespace nwo5::nodes {
     /// - drawing ellipses
     /// - color tinting (off by default)
     class SILLY_API_DLL SillyDrawNode : public cocos2d::CCDrawNode {
-    protected:
-        cocos2d::ccColor4F m_tintColor{1.0f, 1.0f, 1.0f, 1.0f};
-        bool m_useTint = false;
+    private:
+        struct Impl;
 
+        std::unique_ptr<Impl> m_impl;
+    protected:
         using Vertex = cocos2d::ccV2F_C4B_T2F;
         using Triangle = cocos2d::ccV2F_C4B_T2F_Triangle;
+
+        SillyDrawNode();
         
         virtual bool init();
         virtual void draw();

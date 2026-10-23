@@ -34,7 +34,7 @@ namespace nwo5::ui {
 
     SILLY_API_DLL Setup<cocos2d::CCNode> dummy(geode::Layout* layout = nullptr);
 
-    SILLY_API_DLL Setup<geode::NineSlice> nineSlice(geode::ZStringView texture, float scaleMultiplier = 1.0);
+    SILLY_API_DLL Setup<geode::NineSlice> nineSlice(geode::ZStringView texture, float scaleMultiplier = 1.0f);
 
     SILLY_API_DLL Setup<cocos2d::CCSprite> sprite(geode::ZStringView texture);
     SILLY_API_DLL Setup<cocos2d::CCSprite> frame(geode::ZStringView texture);

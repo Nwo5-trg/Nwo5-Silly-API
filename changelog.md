@@ -10,6 +10,7 @@
 - moved ui::sprite/frame to ui::resources::sprite/frame
 - renamed ui::spr/sprFrame to ui::sprite/frame
 - made ui utils all inline so they can mayb get optimized
+- m_impl nodes
 
 **Removed**
 
@@ -24,6 +25,7 @@
 
 **Internal**
 
+- changed all parameters to be in camelCase
 - reorganized utils and ui namespaces
 
 ## v2.2.3
