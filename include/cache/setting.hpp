@@ -58,7 +58,7 @@ namespace nwo5::cache {
         operator const T&() const {
             return m_value;
         }
-        auto operator==(const T& val) {
+        auto operator==(const T& val) const {
             return m_value == val;
         }
         auto operator<=>(const T& val) const requires std::three_way_comparable<T> {
@@ -88,6 +88,10 @@ namespace nwo5::cache {
         /// get underlying setting
         auto data() const {
             return m_setting.get();
+        }
+        /// get mod
+        auto mod() const {
+            return m_mod;
         }
 
         /// sync the underlying setting value with cached value

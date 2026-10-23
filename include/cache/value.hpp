@@ -20,12 +20,21 @@ namespace nwo5::cache {
 
             m_value = m_mod->getSavedValue<T>(m_key, m_default);
 
+            Changed(m_mod, m_key).send(this);
+
             m_listener.destroy();
 
             m_loaded = true;
         }
 
+        template<typename Marker>
+        using EventType = geode::GlobalEvent<Marker, bool(geode::Mod* mod, std::string_view key, void* setting), bool(void* setting), geode::Mod*, std::string>;
+
     public:
+        struct Changed : public EventType<Changed> {
+            using EventType<Changed>::Event;
+        };
+
         using Type = T;
 
         ValueCache(std::string key, T defaultValue = T{}, geode::Mod* mod = geode::Mod::get())
@@ -48,7 +57,7 @@ namespace nwo5::cache {
         operator const T&() const {
             return m_value;
         }
-        auto operator==(const T& val) {
+        auto operator==(const T& val) const {
             return m_value == val;
         }
         auto operator<=>(const T& val) const requires std::three_way_comparable<T> {
@@ -66,6 +75,9 @@ namespace nwo5::cache {
             const auto ret = m_value;
 
             m_value = val;
+
+            Changed(m_mod, m_key).send(this);
+
             this->sync();
 
             return ret;
@@ -84,9 +96,29 @@ namespace nwo5::cache {
 
             return ret;
         }
+
         /// get key
-        auto key() {
+        auto key() const {
             return m_key;
+        }
+        /// get mod
+        auto mod() const {
+            return m_mod;
+        }
+
+        /// listen to when this saved value changed
+        /// @returns listener handle
+        auto listen(geode::Function<bool(ValueCache* setting)> callback) const {
+            return Changed(m_mod, m_key).listen([customCallback = std::move(callback)] (void* setting) {
+                if constexpr (std::same_as<geode::utils::function::Return<decltype(callback)>, void>) {
+                    customCallback(static_cast<T*>(setting));
+                }
+                else {
+                    return customCallback(static_cast<T*>(setting));
+                }
+
+                return geode::ListenerResult::Propagate;
+            });
         }
 
         /// sync the underlying setting value with cached value
