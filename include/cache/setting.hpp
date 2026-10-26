@@ -51,6 +51,7 @@ namespace nwo5::cache {
                 }, geode::Priority::First);
             }
         }
+        virtual ~SettingCache() = default;
         
         const T& operator*() const {
             return m_value;
