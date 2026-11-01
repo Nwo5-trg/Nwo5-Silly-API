@@ -2,6 +2,7 @@
 #include <Geode/modify/EditorUI.hpp>
 #include <Geode/modify/LevelEditorLayer.hpp>
 #include <utils/include.hpp>
+#include <Geode/binding/Standalones.hpp>
 
 using namespace geode::prelude;
 
@@ -359,7 +360,7 @@ namespace nwo5::editor {
     }
 
     cocos2d::CCPoint snappedPos(cocos2d::CCPoint pos, std::optional<int> id, float gridSize) {
-        const auto offset = ui()->offsetForKey(id.value_or(1));
+        const auto offset = offsetForKey(id.value_or(1));
         pos -= offset;
         gridSize *= (editor::object::size(id.value_or(1)) / 30.0f);
 
