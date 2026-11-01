@@ -72,6 +72,7 @@ namespace nwo5::nodes {
     SillyDrawNode::SillyDrawNode() {
         m_impl = std::make_unique<Impl>();
     }
+    SillyDrawNode::~SillyDrawNode() = default;
 
     bool SillyDrawNode::init() {
         if (!CCDrawNode::init()) {

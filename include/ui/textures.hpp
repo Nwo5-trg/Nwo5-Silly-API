@@ -153,8 +153,6 @@ namespace nwo5::ui::resources {
 
         static constexpr auto HELP_BUTTON = "GJ_helpBtn_001.png";
 
-        static constexpr auto AUDIO_BUTTON = "GJ_fxOnBtn_001.png";
-        static constexpr auto AUDIO_OFF_BUTTON = "GJ_fxOffBtn_001.png";
         static constexpr auto MUSIC_BUTTON = "GJ_musicOnBtn_001.png";
         static constexpr auto MUSIC_OFF_BUTTON = "GJ_musicOffBtn_001.png";
 

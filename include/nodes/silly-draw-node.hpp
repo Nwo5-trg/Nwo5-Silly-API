@@ -33,6 +33,7 @@ namespace nwo5::nodes {
         using Triangle = cocos2d::ccV2F_C4B_T2F_Triangle;
 
         SillyDrawNode();
+        ~SillyDrawNode();
         
         virtual bool init();
         virtual void draw();

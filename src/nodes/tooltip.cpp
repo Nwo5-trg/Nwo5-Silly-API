@@ -22,6 +22,7 @@ namespace nwo5::nodes {
     Tooltip::Tooltip() {
         m_impl = std::make_unique<Impl>();
     }
+    Tooltip::~Tooltip() = default;
 
     void Tooltip::updateText(geode::ZStringView text) {
         m_impl->label->setText(text);

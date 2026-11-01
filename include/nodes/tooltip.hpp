@@ -15,6 +15,7 @@ namespace nwo5::nodes {
         std::unique_ptr<Impl> m_impl;
     protected:
         Tooltip();
+        ~Tooltip();
         
         void updateText(geode::ZStringView text);
         void updateAutomatic();
