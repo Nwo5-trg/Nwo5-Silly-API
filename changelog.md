@@ -10,6 +10,7 @@
 - moved ui::sprite/frame to ui::resources::sprite/frame
 - renamed ui::spr/sprFrame to ui::sprite/frame
 - made ui utils all inline so they can mayb get optimized
+- use geode object id names instead of my own constants (if that pr actually gets merged :pray:)
 - m_impl nodes
 
 **Removed**
@@ -22,6 +23,7 @@
 **Fixed**
 
 - selection get ccarray specialization
+- collision blocks in trigger header
 
 **Internal**
 

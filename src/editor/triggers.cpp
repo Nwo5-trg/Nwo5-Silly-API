@@ -48,6 +48,7 @@ namespace nwo5::editor::trigger {
             case TIME_CONTROL_TRIGGER: [[__fallthrough__]];
             case ITEM_PERSIST_TRIGGER: [[__fallthrough__]];
             case PLATFORMER_PERCENT_TRIGGER: [[__fallthrough__]];
+            case COLLISION_BLOCK: [[__fallthrough__]];
             case COLLISION_TRIGGER: return static_cast<EffectGameObject*>(obj)->m_itemID;
             case STATIC_CAMERA_TRIGGER: return static_cast<EffectGameObject*>(obj)->m_centerGroupID;
             case GAMEPLAY_ROTATE_TRIGGER: return static_cast<RotateGameplayGameObject*>(obj)->m_targetChannelID;
@@ -111,6 +112,7 @@ namespace nwo5::editor::trigger {
             case TIME_CONTROL_TRIGGER: [[__fallthrough__]];
             case ITEM_PERSIST_TRIGGER: [[__fallthrough__]];
             case PLATFORMER_PERCENT_TRIGGER: [[__fallthrough__]];
+            case COLLISION_BLOCK: [[__fallthrough__]];
             case COLLISION_TRIGGER: {
                 static_cast<EffectGameObject*>(obj)->m_itemID = val;
             break; }
