@@ -1,6 +1,6 @@
 #pragma once
 
-namespace nwo5::ui {
+namespace nwo5::ui::resources {
     namespace frame {
         // @geode-ignore(unknown-resource)
         static constexpr auto GEAR = "geode.loader/settings.png";
@@ -153,8 +153,6 @@ namespace nwo5::ui {
 
         static constexpr auto HELP_BUTTON = "GJ_helpBtn_001.png";
 
-        static constexpr auto AUDIO_BUTTON = "GJ_fxOnBtn_001.png";
-        static constexpr auto AUDIO_OFF_BUTTON = "GJ_fxOffBtn_001.png";
         static constexpr auto MUSIC_BUTTON = "GJ_musicOnBtn_001.png";
         static constexpr auto MUSIC_OFF_BUTTON = "GJ_musicOffBtn_001.png";
 
@@ -165,6 +163,7 @@ namespace nwo5::ui {
         static constexpr auto RED_X_BUTTON_ALT = "GJ_deleteSongBtn_001.png";
         static constexpr auto DELETE_BUTTON_ALT = "GJ_deleteSongBtn_001.png";
     }
+    
     namespace sprite {
         static constexpr auto SQUARE = "square02_001.png";
         static constexpr auto BACKGROUND = "GJ_square01.png";

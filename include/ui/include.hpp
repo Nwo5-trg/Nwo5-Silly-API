@@ -5,12 +5,11 @@
 #include "utils.hpp"
 #include "setup.hpp"
 #include "constants.hpp"
-#include "syntax.hpp"
 #include "textures.hpp"
-#include "tooltip.hpp"
 
 namespace nwo5::ui::prelude {
     namespace ui = nwo5::ui;
+    namespace resources = nwo5::ui::resources;
 
     using ui::Setup;
 
@@ -21,6 +20,4 @@ namespace nwo5::ui::prelude {
     using ui::Font;
 
     using ui::Alignment;
-
-    using ui::Tooltip, ui::TooltipInfo;
 }

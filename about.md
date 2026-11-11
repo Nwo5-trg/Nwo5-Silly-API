@@ -6,10 +6,9 @@ if ur not a dev this is useless to u
 github has docs for setting cache, rest is in headers
 
 ## Features
-- geode setting cache (by making them inline variables so also ide autocomplete)
+- geode setting/saved value cache (by making them inline variables so also ide autocomplete)
 - plethora of editor/object/selection utils
 - tooltips using user objects
-- api to add edit tab buttons
 - highly opinionated uibuilder alternative
 - compile time info about every trigger in the game
 - bad drawnode rewrite

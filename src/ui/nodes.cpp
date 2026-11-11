@@ -3,181 +3,124 @@
 using namespace geode::prelude;
 
 namespace nwo5::ui {
-    Setup<CCMenuItemSpriteExtra> button(CCNode* pTop, CCObject* pTarget, SEL_MenuHandler pCallback) {
-        return CCMenuItemSpriteExtra::create(pTop, pTarget, pCallback);
+    Setup<Button> button(CCNode* top, Function<void(Button*)> callback) {
+        return Button::createWithNode(top, std::move(callback));
     }
-    Setup<CCMenuItemSpriteExtra> button(CCNode* pTop, Function<void(CCMenuItemSpriteExtra*)> pCallback) {
-        return CCMenuItemExt::createSpriteExtra(pTop, std::move(pCallback));
+    Setup<Button> buttonSprite(ZStringView name, Function<void(Button*)> callback, float scale) {
+        return Button::createWithNode(ui::sprite(name).scale(scale), std::move(callback));
     }
-    Setup<CCMenuItemSpriteExtra> buttonSprite(ZStringView pName, CCObject* pTarget, SEL_MenuHandler pCallback, float pScale) {
-        return CCMenuItemSpriteExtra::create(CCSprite::create(pName.c_str()), pTarget, pCallback);
+    Setup<Button> buttonFrame(ZStringView name, Function<void(Button*)> callback, float scale) {
+        return Button::createWithNode(ui::frame(name).scale(scale), std::move(callback));
     }
-    Setup<CCMenuItemSpriteExtra> buttonSprite(ZStringView pName, Function<void(CCMenuItemSpriteExtra*)> pCallback, float pScale) {
-        return CCMenuItemExt::createSpriteExtraWithFilename(pName, pScale, std::move(pCallback));
+    Setup<Button> circleButton(CCNode* top, CircleBaseColor color, Function<void(Button*)> callback) {
+        return Button::createWithNode(CircleButtonSprite::create(top, color), std::move(callback));
     }
-    Setup<CCMenuItemSpriteExtra> buttonFrame(ZStringView pName, CCObject* pTarget, SEL_MenuHandler pCallback, float pScale) {
-        return CCMenuItemSpriteExtra::create(CCSprite::createWithSpriteFrameName(pName.c_str()), pTarget, pCallback);
+    Setup<Button> circleButtonSprite(ZStringView name, CircleBaseColor color, Function<void(Button*)> callback, float scale) {
+        return Button::createWithNode(CircleButtonSprite::createWithSprite(name.c_str(), scale, color), std::move(callback));
     }
-    Setup<CCMenuItemSpriteExtra> buttonFrame(ZStringView pName, Function<void(CCMenuItemSpriteExtra*)> pCallback, float pScale) {
-        return CCMenuItemExt::createSpriteExtraWithFrameName(pName, pScale, std::move(pCallback));
-    }
-    Setup<CCMenuItemSpriteExtra> circleButton(CCNode* pTop, CircleBaseColor pColor, CCObject* pTarget, SEL_MenuHandler pCallback) {
-        return CCMenuItemSpriteExtra::create(CircleButtonSprite::create(pTop, pColor), pTarget, pCallback);
-    }
-    Setup<CCMenuItemSpriteExtra> circleButton(CCNode* pTop, CircleBaseColor pColor, Function<void(CCMenuItemSpriteExtra*)> pCallback) {
-        return CCMenuItemExt::createSpriteExtra(CircleButtonSprite::create(pTop, pColor), std::move(pCallback));
-    }
-    Setup<CCMenuItemSpriteExtra> circleButtonSprite(ZStringView pName, CircleBaseColor pColor, CCObject* pTarget, SEL_MenuHandler pCallback, float pScale) {
-        return CCMenuItemSpriteExtra::create(CircleButtonSprite::createWithSprite(pName.c_str(), pScale, pColor), pTarget, pCallback);
-    }
-    Setup<CCMenuItemSpriteExtra> circleButtonSprite(ZStringView pName, CircleBaseColor pColor, Function<void(CCMenuItemSpriteExtra*)> pCallback, float pScale) {
-        return CCMenuItemExt::createSpriteExtra(CircleButtonSprite::createWithSprite(pName.c_str(), pScale, pColor), std::move(pCallback));
-    }
-    Setup<CCMenuItemSpriteExtra> circleButtonFrame(ZStringView pName, CircleBaseColor pColor, CCObject* pTarget, SEL_MenuHandler pCallback, float pScale) {
-        return CCMenuItemSpriteExtra::create(CircleButtonSprite::createWithSpriteFrameName(pName.c_str(), pScale, pColor), pTarget, pCallback);
-    }
-    Setup<CCMenuItemSpriteExtra> circleButtonFrame(ZStringView pName, CircleBaseColor pColor, Function<void(CCMenuItemSpriteExtra*)> pCallback, float pScale) {
-        return CCMenuItemExt::createSpriteExtra(CircleButtonSprite::createWithSpriteFrameName(pName.c_str(), pScale, pColor), std::move(pCallback));
+    Setup<Button> circleButtonFrame(ZStringView name, CircleBaseColor color, Function<void(Button*)> callback, float scale) {
+        return Button::createWithNode(CircleButtonSprite::createWithSpriteFrameName(name.c_str(), scale, color), std::move(callback));
     }
 
-    Setup<CCMenuItemToggler> toggler(CCNode* pOff, CCNode* pOn, CCObject* pTarget, SEL_MenuHandler pCallback) {
-        return CCMenuItemToggler::create(pOff, pOn, pTarget, pCallback);
+    Setup<CCMenuItemToggler> toggler(CCNode* off, CCNode* on, Function<void(CCMenuItemToggler*)> callback) {
+        return CCMenuItemExt::createToggler(off, on, std::move(callback));
     }
-    Setup<CCMenuItemToggler> toggler(CCNode* pOff, CCNode* pOn, Function<void(CCMenuItemToggler*)> pCallback) {
-        return CCMenuItemExt::createToggler(pOff, pOn, std::move(pCallback));
+    Setup<CCMenuItemToggler> togglerBase(Function<void(CCMenuItemToggler*)> callback, float scale) {
+        return CCMenuItemExt::createTogglerWithStandardSprites(scale, std::move(callback));
     }
-    Setup<CCMenuItemToggler> togglerBase(CCObject* pTarget, SEL_MenuHandler pCallback, float pScale) {
-        return CCMenuItemToggler::createWithStandardSprites(pTarget, pCallback, pScale);
+    Setup<CCMenuItemToggler> togglerSprite(ZStringView off, ZStringView on, Function<void(CCMenuItemToggler*)> callback, float offScale, float onScale) {
+        return CCMenuItemExt::createToggler(ui::sprite(off.c_str()).scale(offScale), ui::sprite(on.c_str()).scale(onScale), std::move(callback));
     }
-    Setup<CCMenuItemToggler> togglerBase(Function<void(CCMenuItemToggler*)> pCallback, float pScale) {
-        return CCMenuItemExt::createTogglerWithStandardSprites(pScale, std::move(pCallback));
+    Setup<CCMenuItemToggler> togglerFrame(ZStringView off, ZStringView on, Function<void(CCMenuItemToggler*)> callback, float offScale, float onScale) {
+        return CCMenuItemExt::createToggler(ui::frame(off.c_str()).scale(offScale), ui::frame(on.c_str()).scale(onScale), std::move(callback));
     }
-    Setup<CCMenuItemToggler>  togglerSprite(ZStringView pOff, ZStringView pOn, CCObject* pTarget, SEL_MenuHandler pCallback, float pOffScale, float pOnScale) {
-        auto off = CCSprite::create(pOff.c_str());
-        auto on = CCSprite::create(pOn.c_str());
-        off->setScale(pOffScale);
-        on->setScale(pOnScale);
-        return CCMenuItemToggler::create(off, on, pTarget, pCallback);
+    Setup<CCMenuItemToggler> circleToggler(cocos2d::CCNode* off, cocos2d::CCNode* on, geode::Function<void(CCMenuItemToggler*)> callback, geode::CircleBaseColor offColor, geode::CircleBaseColor onColor) {
+        return CCMenuItemExt::createToggler(CircleButtonSprite::create(off, offColor), CircleButtonSprite::create(on, onColor), std::move(callback));
     }
-    Setup<CCMenuItemToggler>  togglerSprite(ZStringView pOff, ZStringView pOn, Function<void(CCMenuItemToggler*)> pCallback, float pOffScale, float pOnScale) {
-        auto off = CCSprite::create(pOff.c_str());
-        auto on = CCSprite::create(pOn.c_str());
-        off->setScale(pOffScale);
-        on->setScale(pOnScale);
-        return CCMenuItemExt::createToggler(off, on, std::move(pCallback));
+    Setup<CCMenuItemToggler> circleTogglerSprite(geode::ZStringView off, geode::ZStringView on, geode::Function<void(CCMenuItemToggler*)> callback, geode::CircleBaseColor offColor, geode::CircleBaseColor onColor, float offScale, float onScale) {
+        return CCMenuItemExt::createToggler(CircleButtonSprite::createWithSprite(off.c_str(), offScale, offColor), CircleButtonSprite::createWithSprite(on.c_str(), onScale, onColor), std::move(callback));
     }
-    Setup<CCMenuItemToggler>  togglerFrame(ZStringView pOff, ZStringView pOn, CCObject* pTarget, SEL_MenuHandler pCallback, float pOffScale, float pOnScale) {
-        auto off = CCSprite::createWithSpriteFrameName(pOff.c_str());
-        auto on = CCSprite::createWithSpriteFrameName(pOn.c_str());
-        off->setScale(pOffScale);
-        on->setScale(pOnScale);
-        return CCMenuItemToggler::create(off, on, pTarget, pCallback);
-    }
-    Setup<CCMenuItemToggler>  togglerFrame(ZStringView pOff, ZStringView pOn, Function<void(CCMenuItemToggler*)> pCallback, float pOffScale, float pOnScale) {
-        auto off = CCSprite::createWithSpriteFrameName(pOff.c_str());
-        auto on = CCSprite::createWithSpriteFrameName(pOn.c_str());
-        off->setScale(pOffScale);
-        on->setScale(pOnScale);
-        return CCMenuItemExt::createToggler(off, on, std::move(pCallback));
-    }
-    Setup<CCMenuItemToggler>  circleToggler(CCNode* pOff, CircleBaseColor pOffColor, CCNode* pOn, CircleBaseColor pOnColor, CCObject* pTarget, SEL_MenuHandler pCallback) {
-        return CCMenuItemToggler::create(CircleButtonSprite::create(pOff, pOffColor), CircleButtonSprite::create(pOn, pOnColor), pTarget, pCallback);
-    }
-    Setup<CCMenuItemToggler>  circleToggler(CCNode* pOff, CircleBaseColor pOffColor, CCNode* pOn, CircleBaseColor pOnColor, Function<void(CCMenuItemToggler*)> pCallback) {
-        return CCMenuItemExt::createToggler(CircleButtonSprite::create(pOff, pOffColor), CircleButtonSprite::create(pOn, pOnColor), std::move(pCallback));
-    }
-    Setup<CCMenuItemToggler>  circleTogglerSprite(ZStringView pOff, CircleBaseColor pOffColor, ZStringView pOn, CircleBaseColor pOnColor, CCObject* pTarget, SEL_MenuHandler pCallback, float pOffScale, float pOnScale) {
-        return CCMenuItemToggler::create(CircleButtonSprite::createWithSprite(pOff.c_str(), pOffScale, pOffColor), CircleButtonSprite::createWithSprite(pOn.c_str(), pOnScale, pOnColor), pTarget, pCallback);
-    }
-    Setup<CCMenuItemToggler>  circleTogglerSprite(ZStringView pOff, CircleBaseColor pOffColor, ZStringView pOn, CircleBaseColor pOnColor, Function<void(CCMenuItemToggler*)> pCallback, float pOffScale, float pOnScale) {
-        return CCMenuItemExt::createToggler(CircleButtonSprite::createWithSprite(pOff.c_str(), pOffScale, pOffColor), CircleButtonSprite::createWithSprite(pOn.c_str(), pOnScale, pOnColor), std::move(pCallback));
-    }
-    Setup<CCMenuItemToggler>  circleTogglerFrame(ZStringView pOff, CircleBaseColor pOffColor, ZStringView pOn, CircleBaseColor pOnColor, CCObject* pTarget, SEL_MenuHandler pCallback, float pOffScale, float pOnScale) {
-        return CCMenuItemToggler::create(CircleButtonSprite::createWithSpriteFrameName(pOff.c_str(), pOffScale, pOffColor), CircleButtonSprite::createWithSpriteFrameName(pOn.c_str(), pOnScale, pOnColor), pTarget, pCallback);
-    }
-    Setup<CCMenuItemToggler>  circleTogglerFrame(ZStringView pOff, CircleBaseColor pOffColor, ZStringView pOn, CircleBaseColor pOnColor, Function<void(CCMenuItemToggler*)> pCallback, float pOffScale, float pOnScale) {
-        return CCMenuItemExt::createToggler(CircleButtonSprite::createWithSpriteFrameName(pOff.c_str(), pOffScale, pOffColor), CircleButtonSprite::createWithSpriteFrameName(pOn.c_str(), pOnScale, pOnColor), std::move(pCallback));
+    Setup<CCMenuItemToggler> circleTogglerFrame(geode::ZStringView off, geode::ZStringView on, geode::Function<void(CCMenuItemToggler*)> callback, geode::CircleBaseColor offColor, geode::CircleBaseColor onColor, float offScale, float onScale) {
+        return CCMenuItemExt::createToggler(CircleButtonSprite::createWithSpriteFrameName(off.c_str(), offScale, offColor), CircleButtonSprite::createWithSpriteFrameName(on.c_str(), onScale, onColor), std::move(callback));
     }
 
-    Setup<Label> label(ZStringView pFont) {
-        return Label::create(pFont);
+    Setup<Label> label(ZStringView font) {
+        return Label::create(font);
     }
-    Setup<Label> label(ZStringView pText, ZStringView pFont) {
-        return Label::create(pText, pFont);
+    Setup<Label> label(ZStringView text, ZStringView font) {
+        return Label::create(text, font);
     }
-    Setup<Label> labelRich(ZStringView pFont) {
-        return Label::createRich("", pFont);
+    Setup<Label> labelRich(ZStringView font) {
+        return Label::createRich("", font);
     }
-    Setup<Label> labelRich(ZStringView pText, ZStringView pFont) {
-        return Label::createRich(pText, pFont);
+    Setup<Label> labelRich(ZStringView text, ZStringView font) {
+        return Label::createRich(text, font);
     }
 
-    Setup<TextInput> input(CCSize pSize, std::optional<std::string> pPlaceholder, TextInputCallback pCallback) {
-        const std::string str = pPlaceholder.value_or("");
-        const float scale = pSize.height / DEFAULT_TEXT_INPUT_HEIGHT;
+    Setup<TextInput> input(CCSize size, std::optional<std::string> placeholder, TextInputCallback callback) {
+        const std::string str = placeholder.value_or("");
+        const float scale = size.height / DEFAULT_TEXT_INPUT_HEIGHT;
 
-        auto textInput = TextInput::create(pSize.width / scale, str);
-        textInput->setCallback(std::move(pCallback));
+        auto textInput = TextInput::create(size.width / scale, str);
+        textInput->setCallback(std::move(callback));
         textInput->setScale(scale);
 
         return textInput;
     }
-    Setup<TextInput> input(float pWidth, float pHeight, std::optional<std::string> pPlaceholder, TextInputCallback pCallback) {
-        return input({pWidth, pHeight}, std::move(pPlaceholder), std::move(pCallback));
+    Setup<TextInput> input(float width, float height, std::optional<std::string> placeholder, TextInputCallback callback) {
+        return input({width, height}, std::move(placeholder), std::move(callback));
     }
-    Setup<TextInput> input(float pWidth, std::optional<std::string> pPlaceholder, TextInputCallback pCallback) {
-        const std::string str = pPlaceholder.value_or("");
+    Setup<TextInput> input(float width, std::optional<std::string> placeholder, TextInputCallback callback) {
+        const std::string str = placeholder.value_or("");
 
-        auto textInput = TextInput::create(pWidth, str);
-        textInput->setCallback(std::move(pCallback));
+        auto textInput = TextInput::create(width, str);
+        textInput->setCallback(std::move(callback));
 
         return textInput;
     }
 
-    Setup<CCMenu> menu(bool pIgnoreAnchor) {
+    Setup<CCMenu> menu(bool ignoreAnchor) {
         auto node = CCMenu::create();
         
-        node->ignoreAnchorPointForPosition(pIgnoreAnchor);
+        node->ignoreAnchorPointForPosition(ignoreAnchor);
 
         return node;
     }
-    Setup<CCMenu> menu(Layout* pLayout, bool pIgnoreAnchor) {
+    Setup<CCMenu> menu(Layout* layout, bool ignoreAnchor) {
         auto node = CCMenu::create();
 
-        if (pLayout) {
-            node->setLayout(pLayout, false);
+        if (layout) {
+            node->setLayout(layout, false);
         }
 
-        node->ignoreAnchorPointForPosition(pIgnoreAnchor);
+        node->ignoreAnchorPointForPosition(ignoreAnchor);
 
         return node;
     }
 
-    Setup<CCNode> dummy(Layout* pLayout) {
+    Setup<CCNode> dummy(Layout* layout) {
         auto node = CCNode::create();
 
-        if (pLayout) {
-            node->setLayout(pLayout);
+        if (layout) {
+            node->setLayout(layout);
         }
 
         return node;
     }
 
-    Setup<NineSlice> nineSlice(ZStringView pTexture, Layout* pLayout) {
-        auto node = NineSlice::create(pTexture);
+    Setup<NineSlice> nineSlice(ZStringView texture, float scaleMultiplier) {
+        auto node = NineSlice::create(texture);
 
-        if (pLayout) {
-            node->setLayout(pLayout);
-        }
+        node->setScaleMultiplier(scaleMultiplier);
 
         return node;
     }
 
-    Setup<CCSprite> spr(ZStringView pTexture) {
-        return CCSprite::create(pTexture.c_str());
+    Setup<CCSprite> sprite(ZStringView texture) {
+        return CCSprite::create(texture.c_str());
     }
-    Setup<CCSprite> sprFrame(ZStringView pTexture) {
-        return CCSprite::createWithSpriteFrameName(pTexture.c_str());
+    Setup<CCSprite> frame(ZStringView texture) {
+        return CCSprite::createWithSpriteFrameName(texture.c_str());
     }
 
     Setup<AxisLayout> row() {

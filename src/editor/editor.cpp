@@ -2,6 +2,7 @@
 #include <Geode/modify/EditorUI.hpp>
 #include <Geode/modify/LevelEditorLayer.hpp>
 #include <utils/include.hpp>
+#include <Geode/binding/Standalones.hpp>
 
 using namespace geode::prelude;
 
@@ -9,164 +10,18 @@ namespace nwo5::editor {
     namespace impl {
         static bool s_shouldMoveObject = true;
 
-        static bool s_editButtonsLoaded = false;
-        static std::vector<EditTabButton> s_editTabButtons;
-        static std::unordered_map<std::string, CCMenuItemSpriteExtra*> s_editTabButtonMap;
-        static std::unordered_set<std::string> s_removedEditTabButtons;
-
         // its safe trust trust
         static EditorUI* s_editorUIEarlyPtr;
 
-        static int nextFreeGroupFast(int pOffset) {
-            pOffset = std::clamp(pOffset, 1, editor::constants::MAX_GROUPS);
-
-            auto keys = layer()->m_groupDict->allKeys();
-
-            if (!keys->count()) {
-                return pOffset;
-            }
-
-            std::set<int> usedGroups;
-
-            for (auto key : CCArrayExt<CCInteger*>(keys)) {
-                usedGroups.insert(key->getValue());
-            }
-
-            for (auto it = usedGroups.lower_bound(pOffset); it != usedGroups.end(); it++) {
-                if (*it == pOffset) {
-                    pOffset++;
-                } 
-                else {
-                    return pOffset;
-                }
-            }
-            
-            return pOffset > editor::constants::MAX_GROUPS ? 0 : pOffset;
-        }
-        static CCMenuItemSpriteExtra* createEditTabButton(const EditTabButton& pButton) {
-            auto button = ui()->getSpriteButton(pButton.spriteFunc(), nullptr, nullptr, pButton.scale, 1, CCPointZero);
-
-            // i *think* this is the correct thing to do cuz i shouldnt be std::move-ing a member var
-            cocos::CCMenuItemExt::assignCallback(button, geode::Function<void(CCMenuItemSpriteExtra*)>{pButton.callback});
-
-            return button;
-        }
-        static void tryRegisterEditTabButton(CCObject* pButton, CCArray* pArray) {
-            if (!pButton) {
-                return;
-            }
-
-            const auto shouldBeRemoved = s_removedEditTabButtons.contains(
-                static_cast<CCNode*>(pButton)->getID()
-            );
-
-            static_cast<CCNode*>(pButton)->setVisible(!shouldBeRemoved);
-
-            if (!shouldBeRemoved) {
-                pArray->addObject(pButton);
-            }
-        }
-
         class $modify(UtilsEditorUI, EditorUI) {
-            void updateEditorTabButtons() {
-                if (notLoaded(LoadedType::UI)) {
-                    return;
-                }
-                
-                auto buttonArray = m_editButtonBar->m_buttonArray;
-
-                if (!buttonArray) {
-                    return;
-                }
-
-                std::vector<CCObject*> robtopButtons;
-
-                for (auto obj : buttonArray->asExt()) {
-                    if (obj->getTag()) {
-                        robtopButtons.push_back(obj);
-                    }
-                }
-
-                std::vector<std::pair<int, std::pair<CCArray*, CCObject*>>> editButtons;
-
-                auto i = robtopButtons.size();
-
-                for (auto obj : robtopButtons) {
-                    editButtons.emplace_back(
-                        -(i--), std::pair<CCArray*, CCObject*>{
-                            nwo5::utils::array::before(buttonArray, obj, false), obj
-                        }
-                    );
-                    nwo5::utils::array::remove(
-                        buttonArray, 
-                        nwo5::utils::array::before(buttonArray, obj, true)
-                    );
-                }
-
-                CCArray* remainingCustomButtons = CCArray::create();
-
-                for (auto obj : buttonArray->asExt()) {
-                    remainingCustomButtons->addObject(obj);
-                }
-
-                constexpr size_t BACK_BUTTONS = 0;
-
-                editButtons.emplace_back(BACK_BUTTONS, std::pair<CCArray*, CCObject*>{remainingCustomButtons, nullptr});
-
-                nwo5::utils::array::clear(buttonArray);
-
-                s_editTabButtonMap.clear();
-
-                i = 0;
-
-                for (const auto& [prio, buttons] : editButtons) {
-                    const auto& [array, robtop] = buttons;
-
-                    for (auto button : CCArrayExt<CCNode>(array)) {
-                        tryRegisterEditTabButton(button, buttonArray);
-                    }
-
-                    while(
-                        i < s_editTabButtons.size() 
-                        && (s_editTabButtons[i].prio <= prio || prio == BACK_BUTTONS)
-                    ) {
-                        const auto& data = s_editTabButtons[i++];
-                        const auto& key = data.key;
-
-                        if (
-                            nwo5::utils::array::find<CCNode*>(buttonArray, [key] (auto pPtr) {
-                                return pPtr && pPtr->getID() == key;
-                            }).has_value()
-                        ) {
-                            continue;
-                        }
-
-                        auto button = createEditTabButton(data);
-                        button->setID(key);
-
-                        tryRegisterEditTabButton(button, buttonArray);
-                        s_editTabButtonMap[data.key] = button;
-                    }
-
-                    tryRegisterEditTabButton(robtop, buttonArray);
-                }
-
-                m_editButtonBar->reloadItems(
-                    GameManager::sharedState()->getIntGameVariable(GameVar::EditorButtonsPerRow), 
-                    GameManager::sharedState()->getIntGameVariable(GameVar::EditorButtonRows)
-                );
-
-                s_editButtonsLoaded = true;
-            }
-
             void moveObject(GameObject* obj, CCPoint amount) {
                 if (s_shouldMoveObject) {
                     EditorUI::moveObject(obj, amount);
                 }
             }
 
-            static void onModify(auto& pSelf) {
-                (void)pSelf.setHookPriority("EditorUI::init", Priority::First);
+            static void onModify(auto& self) {
+                (void)self.setHookPriority("EditorUI::init", Priority::First);
             }
 
             bool init(LevelEditorLayer* editorLayer) {
@@ -179,25 +34,18 @@ namespace nwo5::editor {
         class $modify(LevelEditorLayer) {
             bool init(GJGameLevel* level, bool noUI) {
                 s_shouldMoveObject = true;
-                s_editButtonsLoaded = false;
                 s_editorUIEarlyPtr = nullptr;
                 GameManager::get()->m_levelEditorLayer = this;
                 
-                if (!LevelEditorLayer::init(level, noUI)) {
-                    return false;
-                }
-
-                updateEditorTabButtons();
-
-                return true;
+                return LevelEditorLayer::init(level, noUI);
             }
         };
 
-        void createUndoObject(UndoCommand pCommand) {
-            ui()->createUndoObject(pCommand, false);
+        void createUndoObject(UndoCommand command) {
+            ui()->createUndoObject(command, false);
         }
-        void toggleMoveObject(bool pMove) {
-            s_shouldMoveObject = pMove;
+        void toggleMoveObject(bool move) {
+            s_shouldMoveObject = move;
         }
 
         // hjfod
@@ -226,19 +74,19 @@ namespace nwo5::editor {
         }
     }
 
-    bool loaded(LoadedType pType) {
-        switch (pType) {
+    bool loaded(LoadedType type) {
+        switch (type) {
             case LoadedType::Editor: return layer() && !layer()->m_initializing;
             case LoadedType::EditorValid: return layer();
             case LoadedType::UI: return layer() && impl::s_editorUIEarlyPtr;
             case LoadedType::UIValid: return ui();
         }
     }
-    bool notLoaded(LoadedType pType) {
-        return !loaded(pType);
+    bool notLoaded(LoadedType type) {
+        return !loaded(type);
     }
 
-    void update(bool pUpdateControls, bool pOtherwiseDeactivateControls) {
+    void update(bool updateControls, bool otherwiseDeactivateControls) {
         if (notLoaded(LoadedType::UI)) {
             return;
         }
@@ -251,7 +99,7 @@ namespace nwo5::editor {
         editor->updateStickyControls();
         editor->m_editorLayer->m_drawGridLayer->m_updateTimeMarkers = true;
         
-        if (pUpdateControls) {
+        if (updateControls) {
             if (auto control = editor->m_rotationControl; control && control->isVisible()) {
                 activateRotationControl();
             }
@@ -262,7 +110,7 @@ namespace nwo5::editor {
                 activateTransformControl();
             }
         }
-        else if (pOtherwiseDeactivateControls) {
+        else if (otherwiseDeactivateControls) {
             editor->deactivateRotationControl();
             editor->deactivateScaleControl();
             editor->deactivateTransformControl();
@@ -272,7 +120,7 @@ namespace nwo5::editor {
     float zoom() {
         return layer() ? layer()->m_objectLayer->getScale() : 0.0f;
     }
-    CCPoint center(bool pToolbar) {
+    CCPoint center(bool toolbar) {
         if (notLoaded(LoadedType::UI)) {
             return CCPointZero;
         }
@@ -280,22 +128,22 @@ namespace nwo5::editor {
         return CCPoint{
             (CCDirector::get()->getWinSize() / 2) - CCPoint{
                 layer()->m_objectLayer->getPositionX(), 
-                layer()->m_objectLayer->getPositionY() - (pToolbar ? (ui()->m_toolbarHeight / 2) : 0.0f)
+                layer()->m_objectLayer->getPositionY() - (toolbar ? (ui()->m_toolbarHeight / 2) : 0.0f)
             }
         } / zoom();
     }
-    CCSize size(bool pToolbar) {
+    CCSize size(bool toolbar) {
         if (notLoaded(LoadedType::UI)) {
             return CCSizeZero;
         }
         
         return CCSize{
             CCDirector::get()->getWinSize().width,
-            CCDirector::get()->getWinSize().height - (pToolbar ? ui()->m_toolbarHeight : 0.0f)
+            CCDirector::get()->getWinSize().height - (toolbar ? ui()->m_toolbarHeight : 0.0f)
         } / zoom();
     }
 
-    void move(cocos2d::CCPoint pPos) {
+    void move(cocos2d::CCPoint pos) {
         if (notLoaded(LoadedType::UIValid)) {
             return;
         }
@@ -304,19 +152,56 @@ namespace nwo5::editor {
         const auto currentPos = layer()->m_objectLayer->getPosition();
 
         ui()->moveGamelayer(
-            -pPos * scale + CCDirector::get()->getWinSize() / 2 - currentPos
+            -pos * scale + CCDirector::get()->getWinSize() / 2 - currentPos
         );
     }
-    void setZoom(float pZoom) {
+    void moveTo(GameObject* obj, bool zoomToFit, float zoomBuffer, float minimumZoom, float maximumZoom) {
+        const auto bounds = editor::object::bounds(obj, true);
+
+        editor::move(bounds.origin + bounds.size / 2);
+        editor::setZoom(
+            std::clamp(
+                (CCDirector::get()->getWinSize().width / bounds.size.width) / 1.5f, 
+                minimumZoom, maximumZoom
+            )
+        );
+    }
+    void moveTo(std::span<GameObject* const> objs, bool zoomToFit, float zoomBuffer, float minimumZoom, float maximumZoom) {
+        const auto bounds = editor::object::bounds(objs, true);
+
+        editor::move(bounds.origin + bounds.size / 2);
+        editor::setZoom(
+            std::clamp(
+                (CCDirector::get()->getWinSize().width / bounds.size.width) / 1.5f, 
+                minimumZoom, maximumZoom
+            )
+        );
+    }
+    void moveTo(CCArray* objs, bool zoomToFit, float zoomBuffer, float minimumZoom, float maximumZoom) {
+        const auto bounds = editor::object::bounds(objs);
+
+        editor::move(bounds.origin + bounds.size / 2);
+        editor::setZoom(
+            std::clamp(
+                (CCDirector::get()->getWinSize().width / bounds.size.width) / 1.5f, 
+                minimumZoom, maximumZoom
+            )
+        );
+    }
+
+    void setZoom(float zoom) {
+        setZoom(zoom, CCDirector::get()->getWinSize() / 2);
+    }
+    void setZoom(float zoom, CCPoint center) {
         if (notLoaded(LoadedType::UIValid)) {
             return;
         }
 
-        if (!pZoom) {
+        if (!zoom) {
             return;
         }
 
-        ui()->updateZoom(pZoom);
+        ui()->updateZoom(zoom, center);
     }
 
     bool isPlaytesting() {
@@ -326,7 +211,7 @@ namespace nwo5::editor {
         return layer() ? layer()->m_playbackMode : PlaybackMode::Not;
     }
 
-    void activateRotationControl(bool pRefresh) {
+    void activateRotationControl(bool refresh) {
         if (notLoaded(LoadedType::UI)) {
             return;
         }
@@ -335,7 +220,7 @@ namespace nwo5::editor {
             return;
         }
 
-        if (pRefresh) {
+        if (refresh) {
             deactivateRotationControl();
         }
         else if (ui()->m_rotationControl->isVisible()) {
@@ -349,7 +234,7 @@ namespace nwo5::editor {
             ui()->deactivateRotationControl();
         }
     }
-    void activateScaleControl(bool pXY, bool pRefresh) {
+    void activateScaleControl(bool xY, bool refresh) {
         if (notLoaded(LoadedType::UI)) {
             return;
         }
@@ -358,21 +243,21 @@ namespace nwo5::editor {
             return;
         }
 
-        if (pRefresh) {
+        if (refresh) {
             deactivateScaleControl();
         }
         else if (ui()->m_scaleControl->isVisible()) {
             return;
         }
 
-        ui()->activateScaleControl(nwo5::utils::CCTag::create(pXY ? 30 : 29));
+        ui()->activateScaleControl(nwo5::utils::CCTag::create(xY ? 30 : 29));
     }
     void deactivateScaleControl() {
         if (loaded(LoadedType::UI) && ui()->m_scaleControl && ui()->m_scaleControl->isVisible()) {
             ui()->deactivateScaleControl();
         }
     }
-    void activateTransformControl(bool pRefresh) {
+    void activateTransformControl(bool refresh) {
         if (notLoaded(LoadedType::UI)) {
             return;
         }
@@ -381,7 +266,7 @@ namespace nwo5::editor {
             return;
         }
 
-        if (pRefresh) {
+        if (refresh) {
             deactivateTransformControl();
         }
         else if (ui()->m_transformControl->isVisible()) {
@@ -403,133 +288,91 @@ namespace nwo5::editor {
         
         return layer()->m_currentLayer;
     }
-    bool layerSelectable(int pLayer, bool pIgnoreLocked) {
-        if (notLoaded(LoadedType::EditorValid) || pLayer > editor::constants::MAX_LAYERS || pLayer < 0 || (!pIgnoreLocked && layerLocked(pLayer))) {
+    bool layerSelectable(int layer, bool ignoreLocked) {
+        if (notLoaded(LoadedType::EditorValid) || layer > editor::constants::MAX_LAYERS || layer < 0 || (!ignoreLocked && layerLocked(layer))) {
             return false;
         }
         
-        const auto layer = currentLayer();
+        const auto cl = currentLayer();
 
-        return layer == editor::constants::ALL_LAYERS || layer == pLayer;
+        return cl == editor::constants::ALL_LAYERS || layer == cl;
     }
-    bool layerLocked(int pLayer) {
-        if (notLoaded(LoadedType::EditorValid) || pLayer > editor::constants::MAX_LAYERS || pLayer < 0) {
+    bool layerLocked(int layer) {
+        if (notLoaded(LoadedType::EditorValid) || layer > editor::constants::MAX_LAYERS || layer < 0) {
             return false;
         }
 
-        return layer()->isLayerLocked(pLayer);
+        return editor::layer()->isLayerLocked(layer);
     }
-    void setLayer(int pLayer) {
-        if (notLoaded(LoadedType::UI) || pLayer > editor::constants::MAX_LAYERS || pLayer < editor::constants::ALL_LAYERS) {
+    void setLayer(int layer) {
+        if (notLoaded(LoadedType::UI) || layer > editor::constants::MAX_LAYERS || layer < editor::constants::ALL_LAYERS) {
             return;
         }
 
-        layer()->m_currentLayer = pLayer;
+        editor::layer()->m_currentLayer = layer;
         // its fucking crazy to me that robtop calls layers "groups" internally :sob:
         ui()->updateGroupIDLabel();
     }
-    void lockLayer(int pLayer, bool pLock) {
-        if (notLoaded(LoadedType::UI) || pLayer > editor::constants::MAX_LAYERS || pLayer < editor::constants::ALL_LAYERS || layerLocked(pLayer) == pLock) {
+    void lockLayer(int layer, bool lock) {
+        if (notLoaded(LoadedType::UI) || layer > editor::constants::MAX_LAYERS || layer < editor::constants::ALL_LAYERS || layerLocked(layer) == lock) {
             return;
         }
 
         const auto editorLayer = currentLayer();
-        const auto lockingEnabled = layer()->m_layerLockingEnabled;
+        const auto lockingEnabled = editor::layer()->m_layerLockingEnabled;
 
-        layer()->m_currentLayer = pLayer;
-        layer()->m_layerLockingEnabled = true;
+        editor::layer()->m_currentLayer = layer;
+        editor::layer()->m_layerLockingEnabled = true;
         
         // i dont wanna re this function it looks like a bunch of math and im scared
-        layer()->toggleLockActiveLayer();
+        editor::layer()->toggleLockActiveLayer();
         ui()->updateGroupIDLabel();
 
-        layer()->m_currentLayer = editorLayer;
-        layer()->m_layerLockingEnabled = lockingEnabled;
+        editor::layer()->m_currentLayer = editorLayer;
+        editor::layer()->m_layerLockingEnabled = lockingEnabled;
     }
 
-    CCArray* objectArray(bool pCopy) {
-        return loaded(LoadedType::Editor) ? (pCopy ? utils::array::copy(layer()->m_objects) : layer()->m_objects) : CCArray::create();
+    CCArray* objectArray(bool copy) {
+        return loaded(LoadedType::Editor) ? (copy ? utils::array::copy(layer()->m_objects) : layer()->m_objects) : CCArray::create();
     }
-    CCArray* objectsWithGroup(int pGroup, bool pCopy) {
+    CCArray* objectsWithGroup(int group, bool copy) {
         if (notLoaded(LoadedType::Editor)) {
             return CCArray::create();
         }
         
-        if (auto ptr = layer()->m_groupDict->objectForKey(pGroup)) {
-            return pCopy ? utils::array::copy(static_cast<CCArray*>(ptr)) : static_cast<CCArray*>(ptr);
+        if (auto ptr = layer()->m_groupDict->objectForKey(group)) {
+            return copy ? utils::array::copy(static_cast<CCArray*>(ptr)) : static_cast<CCArray*>(ptr);
         }
         else {
             return CCArray::create();
         }
     }
-    GameObject* groupParent(int pGroup) {
-        return loaded(LoadedType::Editor) ? layer()->getGroupParent(pGroup) : nullptr;
+    GameObject* groupParent(int group) {
+        if (notLoaded(LoadedType::Editor)) {
+            return nullptr;
+        }
+
+        if (auto parents = static_cast<cocos2d::CCArray*>(layer()->m_parentGroupsDict->objectForKey(group)); parents->count() != 0) {
+            return static_cast<GameObject*>(parents->firstObject());
+        }
+        
+        return nullptr;
     }
 
-    cocos2d::CCPoint snappedPos(cocos2d::CCPoint pPos, std::optional<int> pID, float pGridSize) {
-        const auto offset = ui()->offsetForKey(pID.value_or(1));
-        const auto pos = pPos - offset;
-        const auto gridSize = pGridSize * (editor::object::size(pID.value_or(1)) / 30.0f);
+    cocos2d::CCPoint snappedPos(cocos2d::CCPoint pos, std::optional<int> id, float gridSize) {
+        const auto offset = offsetForKey(id.value_or(1));
+        pos -= offset;
+        gridSize *= (editor::object::size(id.value_or(1)) / 30.0f);
 
         return CCPoint{
             (std::floor(pos.x / gridSize) + 0.5f) * gridSize,
             (std::floor(pos.y / gridSize) + 0.5f) * gridSize
         } + offset;
     }
-    cocos2d::CCPoint snappedPos(GameObject* pObj, float pGridSize) {
+    cocos2d::CCPoint snappedPos(GameObject* obj, float gridSize) {
         return snappedPos(
-            pObj->getRealPosition(), editor::object::id(pObj), pGridSize
+            obj->getRealPosition(), editor::object::id(obj), gridSize
         );
-    }
-
-    int nextFreeGroup(int pOffset, bool pCheckTargetGroups) {
-        if (notLoaded(LoadedType::Editor)) {
-            return 0;
-        }
-        
-        if (!pCheckTargetGroups) {
-            return impl::nextFreeGroupFast(pOffset);
-        }
-
-        pOffset = std::clamp(pOffset, 1, 9999);
-
-        auto objs = editor::object::getAll();
-
-        if (!objs->count()) {
-            return pOffset;
-        }
-
-        std::set<int> usedGroups;
-
-        for (auto obj : CCArrayExt<GameObject*>(objs)) {
-            if (obj->m_groups) {
-                for (const auto group : *obj->m_groups) {
-                    if (group) {
-                        usedGroups.insert(group);
-                    }
-                }
-            }
-
-            if (obj->m_isTrigger) {
-                if (const auto group = static_cast<EffectGameObject*>(obj)->m_targetGroupID) {
-                    usedGroups.insert(group);
-                }
-                if (const auto group = static_cast<EffectGameObject*>(obj)->m_centerGroupID) {
-                    usedGroups.insert(group);
-                }
-            }
-        }
-
-        for (auto it = usedGroups.lower_bound(pOffset); it != usedGroups.end(); it++) {
-            if (*it == pOffset) {
-                pOffset++;
-            } 
-            else {
-                return pOffset;
-            }
-        }
-        
-        return pOffset > constants::MAX_GROUPS ? 0 : pOffset;
     }
 
     void save() {
@@ -540,108 +383,14 @@ namespace nwo5::editor {
         impl::getFakePauseLayer()->saveLevel();
     }
 
-    bool registerEditTabButton(impl::EditTabButton::SpriteFunc pSprite, std::string pKey, float pScale, int pPrio, impl::EditTabButton::Callback pCallback) {
-        if (
-            std::ranges::find_if(impl::s_editTabButtons, [&] (const auto& pButton) {
-                return pButton.key == pKey;
-            }) != impl::s_editTabButtons.end()
-        ) {
-            return false;
-        }
-
-        impl::s_editTabButtons.emplace_back(std::move(pKey), pPrio, pScale, std::move(pSprite), std::move(pCallback));
-
-        std::ranges::sort(impl::s_editTabButtons, [] (const auto& pA, const auto& pB) {
-            return pA.prio < pB.prio;
-        });
-
-        if (const auto it = impl::s_removedEditTabButtons.find(pKey); it != impl::s_removedEditTabButtons.end()) {
-            impl::s_removedEditTabButtons.erase(it);
-        }
-
-        return true;
-    }
-    bool registerEditTabButton(std::string pSprite, std::string pKey, float pScale, int pPrio, impl::EditTabButton::Callback pCallback) {
-        return registerEditTabButton([=] () { return CCSprite::create(pSprite.c_str()); }, std::move(pKey), pScale, pPrio, std::move(pCallback));
-    }
-    bool registerEditTabButton(std::string pSprite, std::string pKey, int pPrio, impl::EditTabButton::Callback pCallback) {
-        return registerEditTabButton([=] () { return CCSprite::create(pSprite.c_str()); }, std::move(pKey), 1.0f, pPrio, std::move(pCallback));
-    }
-    bool registerEditTabButton(std::string pSprite, std::string pKey, impl::EditTabButton::Callback pCallback) {
-        return registerEditTabButton([=] () { return CCSprite::create(pSprite.c_str()); }, std::move(pKey), 1.0f, 0, std::move(pCallback));
-    }
-    bool registerEditTabButtonFrame(std::string pSprite, std::string pKey, float pScale, int pPrio, impl::EditTabButton::Callback pCallback) {
-        return registerEditTabButton([=] () { return CCSprite::createWithSpriteFrameName(pSprite.c_str()); }, std::move(pKey), pScale, pPrio, std::move(pCallback));
-    }
-    bool registerEditTabButtonFrame(std::string pSprite, std::string pKey, int pPrio, impl::EditTabButton::Callback pCallback) {
-        return registerEditTabButton([=] () { return CCSprite::createWithSpriteFrameName(pSprite.c_str()); }, std::move(pKey), 1.0f, pPrio, std::move(pCallback));
-    }
-    bool registerEditTabButtonFrame(std::string pSprite, std::string pKey, impl::EditTabButton::Callback pCallback) {
-        return registerEditTabButton([=] () { return CCSprite::createWithSpriteFrameName(pSprite.c_str()); }, std::move(pKey), 1.0f, 0, std::move(pCallback));
-    }
-    bool unregisterEditTabButton(const std::string& pKey, bool pRestore) {
-        if (
-            const auto it = std::ranges::find_if(impl::s_editTabButtons, [&] (const auto& pButton) {
-                return pButton.key == pKey;
-            }); it != impl::s_editTabButtons.end()
-        ) {
-            impl::s_editTabButtonMap.erase((*it).key);
-            impl::s_editTabButtons.erase(it);
-        }
-
-        const auto it = impl::s_removedEditTabButtons.find(pKey);
-
-        if (it == impl::s_removedEditTabButtons.end() && !pRestore) {
-            impl::s_removedEditTabButtons.insert(pKey);
-
-            return true;
-        }
-        else if (it != impl::s_removedEditTabButtons.end() && pRestore) {
-            impl::s_removedEditTabButtons.erase(it);
-
-            return true;
-        }
-
-        return false;
-    }
-    CCMenuItemSpriteExtra* getEditTabButton(const std::string& pKey) {
-        if (notLoaded(LoadedType::UI) || !impl::s_editButtonsLoaded) {
-            return nullptr;
-        }
-
-        if (const auto it = impl::s_editTabButtonMap.find(pKey); it != impl::s_editTabButtonMap.end()) {
-            return (*it).second;
-        }
-
-        for (auto obj : CCArrayExt<CCMenuItemSpriteExtra*>(ui()->m_editButtonBar->m_buttonArray)) {
-            if (obj->getID() == pKey) {
-                return obj;
-            }
-        }
-
-        return nullptr;
-    }
-    void toggleEditTabButton(const std::string& pKey, bool pOn) {
-        auto button = getEditTabButton(pKey);
-
-        if (!button) {
+    void updateEditorTabButtons() {
+        if (notLoaded(LoadedType::Editor)) {
             return;
         }
 
-        button->getChildByType<ButtonSprite*>(0)->setColor(pOn ? ccWHITE : ccc3(150, 150, 150));
-        button->setEnabled(pOn);
-    }
-    bool isEditTabButtonRegistered(const std::string& pKey) {
-        if (auto button = getEditTabButton(pKey)) {
-            return button->isVisible();
-        }
-        else {
-            return false;
-        }
-    }
-    void updateEditorTabButtons() {
-        if (auto ptr = ui<impl::UtilsEditorUI>()) {
-            ptr->updateEditorTabButtons();
-        }
+        ui()->m_editButtonBar->reloadItems(
+            GameManager::get()->getIntGameVariable(GameVar::EditorButtonsPerRow),
+            GameManager::get()->getIntGameVariable(GameVar::EditorButtonRows)
+        );
     }
 }
