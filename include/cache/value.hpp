@@ -105,7 +105,7 @@ namespace nwo5::cache {
 
         /// listen to when this saved value changed
         /// @returns listener handle
-        auto listen(auto&& callback) const {
+        auto listen(auto&& callback, int priority = geode::Priority::Normal) const {
             using Ret = geode::utils::function::Return<decltype(callback)>;
             return ValueCacheChanged(m_mod, m_key).listen([customCallback = std::move(callback)] (void* setting) {
                 if constexpr (std::same_as<Ret, void>) {
@@ -116,7 +116,7 @@ namespace nwo5::cache {
                 }
 
                 return geode::ListenerResult::Propagate;
-            });
+            }, priority);
         }
 
         /// sync the underlying setting value with cached value
