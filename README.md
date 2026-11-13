@@ -25,7 +25,7 @@ make fw the editor hopefully easier :3
 u can include with
 
 ```cpp
-#include <nwo5.silly-api/include/editor/include.hpp>
+#include <nwo5.silly-api/editor/include.hpp>
 ```
 
 editor utils are split into a couple different namespaces
@@ -57,7 +57,7 @@ for example to scale an object
 
 ```cpp
 #include <Geode/modify/EditorUI.hpp>
-#include <nwo5.silly-api/include/editor/include.hpp>
+#include <nwo5.silly-api/editor/include.hpp>
 
 using namespace geode::prelude;
 
@@ -88,7 +88,7 @@ part of this mod is a way to cache/easily access geode settings thru inline vari
 u set up a setting like this
 
 ```cpp
-#include <nwo5.silly-api/include/settings/include.hpp>
+#include <nwo5.silly-api/settings/include.hpp>
 
 namespace Settings {
     // define a bool setting that corresponds to mod setting "silly-setting"
@@ -124,7 +124,7 @@ class $modify(MenuLayer) {
 somewhere in ur mod u have to load settings
 
 ```cpp
-#include <nwo5.silly-api/include/settings/include.hpp>
+#include <nwo5.silly-api/settings/include.hpp>
 
 $on_mod(Loaded) {
     nwo5::settings::SettingsManager::get()->load();
@@ -135,7 +135,7 @@ $on_mod(Loaded) {
 settings can be categorized, u can define ur categories before loading settings
 
 ```cpp
-#include <nwo5.silly-api/include/settings/include.hpp>
+#include <nwo5.silly-api/settings/include.hpp>
 
 $on_mod(Loaded) {
     nwo5::settings::SettingsManager::get()->registerCategories(
@@ -158,7 +158,7 @@ $on_mod(Loaded) {
 u can add a setting to a category like so
 
 ```cpp
-#include <nwo5.silly-api/include/settings/include.hpp>
+#include <nwo5.silly-api/settings/include.hpp>
 
 namespace Settings {
     inline nwo5::settings::Setting<bool> sillyCategorizedSetting{"silly-categorized-setting", "Silly Category"};
@@ -192,7 +192,7 @@ using MySillySetting = Setting<T, SillyData>
 there are also saved settings that use geode saved values if u want to implement settings in ur mod completely from scratch (like silly edit)
 
 ```cpp
-#include <nwo5.silly-api/include/settings/include.hpp>
+#include <nwo5.silly-api/settings/include.hpp>
 
 namespace Settings {
     // key is automatically generated with category + name

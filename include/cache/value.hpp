@@ -105,13 +105,14 @@ namespace nwo5::cache {
 
         /// listen to when this saved value changed
         /// @returns listener handle
-        auto listen(geode::Function<bool(ValueCache* setting)> callback) const {
+        auto listen(auto&& callback) const {
+            using Ret = geode::utils::function::Return<decltype(callback)>;
             return ValueCacheChanged(m_mod, m_key).listen([customCallback = std::move(callback)] (void* setting) {
-                if constexpr (std::same_as<geode::utils::function::Return<decltype(callback)>, void>) {
-                    customCallback(static_cast<T*>(setting));
+                if constexpr (std::same_as<Ret, void>) {
+                    customCallback(static_cast<ValueCache<T>*>(setting));
                 }
                 else {
-                    return customCallback(static_cast<T*>(setting));
+                    return customCallback(static_cast<ValueCache<T>*>(setting));
                 }
 
                 return geode::ListenerResult::Propagate;
