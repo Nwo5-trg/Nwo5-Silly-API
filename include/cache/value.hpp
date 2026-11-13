@@ -34,6 +34,7 @@ namespace nwo5::cache {
     public:
         using Type = T;
 
+        ValueCache() = default;
         ValueCache(std::string key, T defaultValue = T{}, geode::Mod* mod = geode::Mod::get())
             : m_default(defaultValue), m_key(key), m_mod(mod)
         {

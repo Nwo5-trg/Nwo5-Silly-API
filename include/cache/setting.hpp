@@ -38,6 +38,7 @@ namespace nwo5::cache {
     public:
         using Type = T;
 
+        SettingCache() = default;
         SettingCache(std::string key, geode::Mod* mod = geode::Mod::get())
             : m_key(key), m_mod(mod)
         {
