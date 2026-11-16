@@ -1061,7 +1061,23 @@ namespace nwo5::ui {
 
     template<typename ImplNode, std::derived_from<cocos2d::CCObject> Node>
     class Setup final
-        : public impl::SetupBase<cocos2d::CCNode, Node>
+        : public impl::SetupBase<cocos2d::CCObject, Node>,
+          public impl::SetupBase<cocos2d::CCNode, Node>,
+          public impl::SetupBase<cocos2d::CCRGBAProtocol, Node>,
+          public impl::SetupBase<cocos2d::CCSprite, Node>,
+          public impl::SetupBase<geode::NineSlice, Node>,
+          public impl::SetupBase<cocos2d::CCBlendProtocol, Node>,
+          public impl::SetupBase<cocos2d::CCMenuItem, Node>,
+          public impl::SetupBase<geode::Button, Node>,
+          public impl::SetupBase<geode::LazySprite, Node>,
+          public impl::SetupBase<geode::SliderNode, Node>,
+          public impl::SetupBase<geode::TextInput, Node>,
+          public impl::SetupBase<geode::Label, Node>,
+          public impl::SetupBase<cocos2d::CCLabelProtocol, Node>,
+          public impl::SetupBase<geode::Toggler, Node>,
+          public impl::SetupBase<geode::AxisLayout, Node>,
+          public impl::SetupBase<geode::AxisLayoutOptions, Node>,
+          public impl::SetupBase<geode::AnchorLayoutOptions, Node>
     {
     protected:
         Node* m_node;
