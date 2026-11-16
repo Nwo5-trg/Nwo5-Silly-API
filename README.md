@@ -8,11 +8,10 @@ theres a documentation for pretty much everything in headers, otherwise heres a 
 # the setting stuff is out of date and alot of it is deprecated, but if u js wanna use setting cache, remove settingsmanager->load call, change "Setting" to "SettingCache", and include nwo5/cache instead of nwo5/setting
 
 ## Features
-- geode setting cache (by making them inline variables so also ide autocomplete)
-- plethora of editor/object/selection utils
+- geode setting/saved value cache (by making them inline variables so also ide autocomplete)
+- plethora of editor utils (like 100+ functions or smth)
 - tooltips using user objects
-- api to add edit tab buttons
-- highly opinionated uibuilder alternative
+- uibuilder ripoff
 - compile time info about every trigger in the game
 - bad drawnode rewrite
 - named constants for game textures
