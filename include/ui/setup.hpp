@@ -12,13 +12,13 @@ namespace nwo5::ui {
     
     #define $class_setup(className) \
     template<std::derived_from< className > Node> \
-    class SetupBase< className, Node >
+    struct SetupBase< className, Node >
 
     #define m_node static_cast<Setup<Node>*>(this)->m_node
     
     namespace impl {
         template<typename, typename>
-        class SetupBase {};
+        struct SetupBase {};
         
         $class_setup(cocos2d::CCObject) {
             Setup<Node> addTo(cocos2d::CCArray* array) {
@@ -1081,6 +1081,9 @@ namespace nwo5::ui {
     {
     protected:
         Node* m_node;
+
+        template <typename, typename>
+        friend class impl::SetupBase;
 
     public:
         using Type = Node;

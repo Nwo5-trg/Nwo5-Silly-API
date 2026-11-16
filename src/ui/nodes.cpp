@@ -22,26 +22,26 @@ namespace nwo5::ui {
         return Button::createWithNode(CircleButtonSprite::createWithSpriteFrameName(name.c_str(), scale, color), std::move(callback));
     }
 
-    Setup<CCMenuItemToggler> toggler(CCNode* off, CCNode* on, Function<void(CCMenuItemToggler*)> callback) {
-        return CCMenuItemExt::createToggler(off, on, std::move(callback));
+    Setup<geode::Toggler> toggler(CCNode* off, CCNode* on, Function<void(geode::Toggler*, bool)> callback) {
+        return Toggler::create(off, on, std::move(callback));
     }
-    Setup<CCMenuItemToggler> togglerBase(Function<void(CCMenuItemToggler*)> callback, float scale) {
-        return CCMenuItemExt::createTogglerWithStandardSprites(scale, std::move(callback));
+    Setup<geode::Toggler> togglerBase(Function<void(geode::Toggler*, bool)> callback, float scale) {
+        return Toggler::createWithStandardSprites(scale, std::move(callback));
     }
-    Setup<CCMenuItemToggler> togglerSprite(ZStringView off, ZStringView on, Function<void(CCMenuItemToggler*)> callback, float offScale, float onScale) {
-        return CCMenuItemExt::createToggler(ui::sprite(off.c_str()).scale(offScale), ui::sprite(on.c_str()).scale(onScale), std::move(callback));
+    Setup<geode::Toggler> togglerSprite(ZStringView off, ZStringView on, Function<void(geode::Toggler*, bool)> callback, float offScale, float onScale) {
+        return Toggler::create(ui::sprite(off).scale(offScale), ui::sprite(on).scale(onScale), std::move(callback));
     }
-    Setup<CCMenuItemToggler> togglerFrame(ZStringView off, ZStringView on, Function<void(CCMenuItemToggler*)> callback, float offScale, float onScale) {
-        return CCMenuItemExt::createToggler(ui::frame(off.c_str()).scale(offScale), ui::frame(on.c_str()).scale(onScale), std::move(callback));
+    Setup<geode::Toggler> togglerFrame(ZStringView off, ZStringView on, Function<void(geode::Toggler*, bool)> callback, float offScale, float onScale) {
+        return Toggler::create(ui::frame(off).scale(offScale), ui::frame(on).scale(onScale), std::move(callback));
     }
-    Setup<CCMenuItemToggler> circleToggler(cocos2d::CCNode* off, cocos2d::CCNode* on, geode::Function<void(CCMenuItemToggler*)> callback, geode::CircleBaseColor offColor, geode::CircleBaseColor onColor) {
-        return CCMenuItemExt::createToggler(CircleButtonSprite::create(off, offColor), CircleButtonSprite::create(on, onColor), std::move(callback));
+    Setup<geode::Toggler> circleToggler(cocos2d::CCNode* off, cocos2d::CCNode* on, geode::Function<void(geode::Toggler*, bool)> callback, geode::CircleBaseColor offColor, geode::CircleBaseColor onColor) {
+        return Toggler::create(CircleButtonSprite::create(off, offColor), CircleButtonSprite::create(on, onColor), std::move(callback));
     }
-    Setup<CCMenuItemToggler> circleTogglerSprite(geode::ZStringView off, geode::ZStringView on, geode::Function<void(CCMenuItemToggler*)> callback, geode::CircleBaseColor offColor, geode::CircleBaseColor onColor, float offScale, float onScale) {
-        return CCMenuItemExt::createToggler(CircleButtonSprite::createWithSprite(off.c_str(), offScale, offColor), CircleButtonSprite::createWithSprite(on.c_str(), onScale, onColor), std::move(callback));
+    Setup<geode::Toggler> circleTogglerSprite(geode::ZStringView off, geode::ZStringView on, geode::Function<void(geode::Toggler*, bool)> callback, geode::CircleBaseColor offColor, geode::CircleBaseColor onColor, float offScale, float onScale) {
+        return Toggler::create(CircleButtonSprite::createWithSprite(off.c_str(), offScale, offColor), CircleButtonSprite::createWithSprite(on.c_str(), onScale, onColor), std::move(callback));
     }
-    Setup<CCMenuItemToggler> circleTogglerFrame(geode::ZStringView off, geode::ZStringView on, geode::Function<void(CCMenuItemToggler*)> callback, geode::CircleBaseColor offColor, geode::CircleBaseColor onColor, float offScale, float onScale) {
-        return CCMenuItemExt::createToggler(CircleButtonSprite::createWithSpriteFrameName(off.c_str(), offScale, offColor), CircleButtonSprite::createWithSpriteFrameName(on.c_str(), onScale, onColor), std::move(callback));
+    Setup<geode::Toggler> circleTogglerFrame(geode::ZStringView off, geode::ZStringView on, geode::Function<void(geode::Toggler*, bool)> callback, geode::CircleBaseColor offColor, geode::CircleBaseColor onColor, float offScale, float onScale) {
+        return Toggler::create(CircleButtonSprite::createWithSpriteFrameName(off.c_str(), offScale, offColor), CircleButtonSprite::createWithSpriteFrameName(on.c_str(), onScale, onColor), std::move(callback));
     }
 
     Setup<Label> label(ZStringView font) {
@@ -57,26 +57,26 @@ namespace nwo5::ui {
         return Label::createRich(text, font);
     }
 
-    Setup<TextInput> input(CCSize size, std::optional<std::string> placeholder, TextInputCallback callback) {
-        const std::string str = placeholder.value_or("");
-        const float scale = size.height / DEFAULT_TEXT_INPUT_HEIGHT;
-
-        auto textInput = TextInput::create(size.width / scale, str);
-        textInput->setCallback(std::move(callback));
-        textInput->setScale(scale);
-
-        return textInput;
+    Setup<TextInput> input(CCSize size, std::optional<std::string> placeholder, TextInputCallback callback, ZStringView font) {
+        auto input = TextInput::create(size, placeholder.value_or(""), font);
+        input->setCallback(std::move(callback));
+        return input;
     }
-    Setup<TextInput> input(float width, float height, std::optional<std::string> placeholder, TextInputCallback callback) {
-        return input({width, height}, std::move(placeholder), std::move(callback));
+    Setup<TextInput> input(float width, float height, std::optional<std::string> placeholder, TextInputCallback callback, ZStringView font) {
+        return input({width, height}, std::move(placeholder), std::move(callback), font);
     }
-    Setup<TextInput> input(float width, std::optional<std::string> placeholder, TextInputCallback callback) {
-        const std::string str = placeholder.value_or("");
-
-        auto textInput = TextInput::create(width, str);
-        textInput->setCallback(std::move(callback));
-
-        return textInput;
+    Setup<TextInput> input(float width, std::optional<std::string> placeholder, TextInputCallback callback, ZStringView font) {
+        auto input = TextInput::create(width, placeholder.value_or(""), font);
+        input->setCallback(std::move(callback));
+        return input;
+    }
+    Setup<TextInput> inputMultiline(CCSize size, std::optional<std::string> placeholder, TextInputCallback callback, ZStringView font) {
+        auto input = TextInput::createMultiline(size, placeholder.value_or(""), font);
+        input->setCallback(std::move(callback));
+        return input;
+    }
+    Setup<TextInput> inputMultiline(float width, float height, std::optional<std::string> placeholder, TextInputCallback callback, ZStringView font) {
+        return inputMultiline({width, height}, std::move(placeholder), std::move(callback), font);
     }
 
     Setup<CCMenu> menu(bool ignoreAnchor) {
@@ -139,4 +139,14 @@ namespace nwo5::ui {
     Setup<AnchorLayoutOptions> anchorOptions() {
         return AnchorLayoutOptions::create();
     }
+
+    // Setup<geode::ButtonBackgroundSprite> buttonSprite(geode::ZStringView text, geode::ZStringView font, geode::ZStringView background) {
+    //     return geode::ButtonBackgroundSprite::create(text, font, background);
+    // }
+    // Setup<geode::ButtonBackgroundSprite> buttonSprite(cocos2d::CCNode* node, geode::ZStringView background) {
+    //     return geode::ButtonBackgroundSprite::createWithNode(node, background);
+    // }
+    // Setup<geode::ButtonBackgroundSprite> buttonSprite(cocos2d::CCNode* node, geode::ZStringView text, geode::ZStringView font, geode::ZStringView background) {
+    //     return geode::ButtonBackgroundSprite::createWithNodeLabel(node, text, font, background);
+    // }
 }
