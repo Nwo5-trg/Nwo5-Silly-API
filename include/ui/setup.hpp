@@ -25,6 +25,11 @@ namespace nwo5::ui {
                 array->addObject(m_node);
                 return m_node;
             }
+
+            Setup<Node> tag(int tag) {
+                m_node->setTag(tag);
+                return m_node;
+            }
         };
 
         $class_setup(cocos2d::CCNode) {
@@ -349,11 +354,6 @@ namespace nwo5::ui {
             }
             Setup<Node> height(cocos2d::CCNode* copy) {
                 return height(copy->getContentHeight());
-            }
-
-            Setup<Node> tag(int tag) {
-                m_node->setTag(tag);
-                return m_node;
             }
 
             template<typename T>
