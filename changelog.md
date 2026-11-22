@@ -2,15 +2,18 @@
 **Added**
 
 - nodes namespace (moved tooltip and sillydrawnode)
-- all ui button functions return geode::Button now
 - reworked nwo5::settings (now nwo5::cache)
 - cached settings automatically load
 - cached settings are now memory managed a bit more sanely so now they dont have to strictly be static initialized
 - saved value cache
+- a bunch of setup functions
+
+**Changed**
+- all ui button functions return geode::Button now (and toggler functions return geode::Toggler)
 - moved ui::sprite/frame to ui::resources::sprite/frame
 - renamed ui::spr/sprFrame to ui::sprite/frame
-- made ui utils all inline so they can mayb get optimized
 - use geode object id names instead of my own constants (if that pr actually gets merged :pray:)
+- made ui utils all inline so they can mayb get optimized
 - m_impl nodes
 
 **Removed**
@@ -27,6 +30,7 @@
 
 **Internal**
 
+- rewrote setup (ide autocomplete should work better and also just scrolling thru the header is a bit more reasonable)
 - changed all parameters to be in camelCase
 - reorganized utils and ui namespaces
 

@@ -34,6 +34,7 @@ namespace nwo5::cache {
     public:
         using Type = T;
 
+        ValueCache() = default;
         ValueCache(std::string key, T defaultValue = T{}, geode::Mod* mod = geode::Mod::get())
             : m_default(defaultValue), m_key(key), m_mod(mod)
         {
@@ -105,17 +106,18 @@ namespace nwo5::cache {
 
         /// listen to when this saved value changed
         /// @returns listener handle
-        auto listen(geode::Function<bool(ValueCache* setting)> callback) const {
+        auto listen(auto&& callback, int priority = geode::Priority::Normal) const {
+            using Ret = geode::utils::function::Return<decltype(callback)>;
             return ValueCacheChanged(m_mod, m_key).listen([customCallback = std::move(callback)] (void* setting) {
-                if constexpr (std::same_as<geode::utils::function::Return<decltype(callback)>, void>) {
-                    customCallback(static_cast<T*>(setting));
+                if constexpr (std::same_as<Ret, void>) {
+                    customCallback(static_cast<ValueCache<T>*>(setting));
                 }
                 else {
-                    return customCallback(static_cast<T*>(setting));
+                    return customCallback(static_cast<ValueCache<T>*>(setting));
                 }
 
                 return geode::ListenerResult::Propagate;
-            });
+            }, priority);
         }
 
         /// sync the underlying setting value with cached value
