@@ -10,9 +10,15 @@ namespace nwo5::ui {
     template<typename ImplNode, std::derived_from<cocos2d::CCObject> Node = std::remove_pointer_t<ImplNode>>
     class Setup;
     
-    #define $class_setup(className) \
-    template<std::derived_from< className > Node> \
-    struct SetupBase< className, Node >
+    #define $class_setup_1(className) \
+        template<std::derived_from< className > Node> \
+        struct SetupBase< className, Node >
+    #define $class_setup_2(className, condition) \
+        template<std::derived_from< className > Node> \
+        requires condition \
+        struct SetupBase< className, Node >
+    #define $class_setup(...) \
+        GEODE_CONCAT($class_setup_, GEODE_NUMBER_OF_ARGS(__VA_ARGS__))(__VA_ARGS__)
 
     #define m_node static_cast<Setup<Node>*>(this)->m_node
     
@@ -601,9 +607,38 @@ namespace nwo5::ui {
                 m_node->setClickCallback(std::move(callback));
                 return m_node;
             }
-
             Setup<Node> callbackUnselect(geode::SliderNode::SliderCallback callback) {
                 m_node->setReleaseCallback(std::move(callback));
+                return m_node;
+            }
+
+            Setup<Node> percent(float percent) {
+                m_node->setPercent(percent);
+                return m_node;
+            }
+            Setup<Node> value(float value) {
+                m_node->setValue(value);
+                return m_node;
+            }
+            Setup<Node> min(float min) {
+                m_node->setMin(min);
+                return m_node;
+            }
+            Setup<Node> max(float max) {
+                m_node->setMax(max);
+                return m_node;
+            }
+            Setup<Node> snapStep(float value) {
+                m_node->setSnapStep(value);
+                return m_node;
+            }
+
+            Setup<Node> readOnly(bool on = true) {
+                m_node->setReadOnly(on);
+                return m_node;
+            }
+            Setup<Node> bypass(bool on = true) {
+                m_node->setSliderBypass(on);
                 return m_node;
             }
         };
@@ -803,17 +838,17 @@ namespace nwo5::ui {
             }
         };
 
-        $class_setup(cocos2d::CCLabelProtocol) {
-            Setup<Node> text(geode::ZStringView string) {
+        $class_setup(cocos2d::CCLabelProtocol, (!std::derived_from<Node, geode::Label>)) {
+            Setup<Node> text(geode::ZStringView string) requires (!std::derived_from<Node, geode::Label>) {
                 m_node->setString(string);
 
                 return m_node;
             }
-            Setup<Node> string(geode::ZStringView string) {
+            Setup<Node> string(geode::ZStringView string) requires (!std::derived_from<Node, geode::Label>) {
                 m_node->setString(string);
 
                 return m_node;
-            } 
+            }
         };
 
         $class_setup(geode::Toggler) {

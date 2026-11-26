@@ -62,6 +62,9 @@ namespace nwo5::cache {
         auto operator==(const T& val) const {
             return m_value == val;
         }
+        auto operator!=(const T& val) const {
+            return m_value != val;
+        }
         auto operator<=>(const T& val) const requires std::three_way_comparable<T> {
             return m_value <=> val;
         }
@@ -93,6 +96,27 @@ namespace nwo5::cache {
         /// get mod
         auto mod() const {
             return m_mod;
+        }
+        /// listen to when this saved value changed
+        /// @returns listener handle
+        auto listen(auto&& callback, int priority = geode::Priority::Normal) const {
+            using Ty = typename geode::SettingTypeForValueType<T>::SettingType;
+            using Ret = geode::utils::function::Return<decltype(callback)>;
+            if constexpr (std::is_same_v<Ret, void>) {
+                return geode::SettingChangedEventV3(m_mod, std::move(m_key)).listen([callback = std::forward(callback)](std::shared_ptr<geode::SettingV3> setting) {
+                    if (auto ty = geode::cast::typeinfo_pointer_cast<Ty>(setting)) {
+                        return callback(ty->getValue());
+                    }
+                }).leak();
+            }
+            else {
+                return geode::SettingChangedEventV3(m_mod, std::move(m_key)).listen([callback = std::forward(callback)](std::shared_ptr<geode::SettingV3> setting) {
+                    if (auto ty = geode::cast::typeinfo_pointer_cast<Ty>(setting)) {
+                        return callback(ty->getValue());
+                    }
+                    return Ret{};
+                }).leak();
+            }
         }
 
         /// sync the underlying setting value with cached value

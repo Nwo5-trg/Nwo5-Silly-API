@@ -1,3 +1,11 @@
+## v3.1.0
+**Added**
+- more slider node setup functions
+- listen method to SettingCache
+
+**Fixed**
+- .string/.text with geode::labels in setup
+
 ## v3.0.0
 **Added**
 

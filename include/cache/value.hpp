@@ -58,6 +58,9 @@ namespace nwo5::cache {
         auto operator==(const T& val) const {
             return m_value == val;
         }
+        auto operator!=(const T& val) const {
+            return m_value != val;
+        }
         auto operator<=>(const T& val) const requires std::three_way_comparable<T> {
             return m_value <=> val;
         }
